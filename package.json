@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "start": "ts-lib-builder --tsconfig=tsconfig.build.json",    
+    "start": "ts-lib-builder --tsconfig=tsconfig.build.json",
     "test": "echo \"Error: tests are executed with  npm run test:unit\" && exit 1",
     "test:unit": "vitest run --config vitest.test-unit.config.ts",
     "watch-test:unit": "vitest --config vitest.test-unit.config.ts"
@@ -42,5 +42,9 @@
     "ts-lib-builder": "^1.0.3",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.1.2",
+    "error-message-utils": "^1.1.0"
   }
 }
