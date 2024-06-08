@@ -3,11 +3,12 @@
 /* ************************************************************************************************
  *                                         IMPLEMENTATION                                         *
  ************************************************************************************************ */
-enum ERRORS {
-  VALUE_IS_INVALID = 'VALUE_IS_INVALID',
-  VALUE_IS_NAN = 'VALUE_IS_NAN',
-  BUILD_TYPE_IS_INVALID = 'BUILD_TYPE_IS_INVALID',
-}
+type IErrorCode = 'INVALID_VALUE' | 'INVALID_BUILD_TYPE' | 'INVALID_ROUNDING_MODE';
+const ERRORS: { [key in IErrorCode]: IErrorCode } = {
+  INVALID_VALUE: 'INVALID_VALUE',
+  INVALID_BUILD_TYPE: 'INVALID_BUILD_TYPE',
+  INVALID_ROUNDING_MODE: 'INVALID_ROUNDING_MODE',
+};
 
 
 

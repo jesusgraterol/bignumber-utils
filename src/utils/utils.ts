@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import { encodeError, extractMessage, isEncodedError } from 'error-message-utils';
+import { encodeError, isEncodedError, extractMessage } from 'error-message-utils';
 import { IBigNumber, IBigNumberValue, IRoundingModes } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
@@ -31,20 +31,36 @@ const __ROUNDING_MODES: IRoundingModes = {
  *                                         IMPLEMENTATION                                         *
  ************************************************************************************************ */
 
+/**
+ * Builds the error message that will be thrown in case the provided value cannot be instantiated.
+ * @param value
+ * @param error
+ * @returns string
+ */
+const __buildInvalidValueErrorMessage = (value: any, error?: any): string => {
+  try {
+    return error
+      ? encodeError(`BigNumber could not be instantiated with: ${value} | ${extractMessage(error)}`, ERRORS.INVALID_VALUE)
+      : encodeError(`BigNumber could not be instantiated with: ${value}.`, ERRORS.INVALID_VALUE);
+  } catch (e) {
+    return error
+      ? encodeError(`BigNumber could not be instantiated with: UNKNOWN | ${extractMessage(error)}`, ERRORS.INVALID_VALUE)
+      : encodeError('BigNumber could not be instantiated with: UNKNOWN.', ERRORS.INVALID_VALUE);
+  }
+};
 
 /**
  * Instantiates BigNumber based on a given value and returns it.
  * @param value
  * @returns IBigNumber
  * @throws
- * - VALUE_IS_NAN: if the given value is NaN
- * - VALUE_IS_INVALID: if the instantiation of BigNumber throws an error
+ * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
  */
 const getBigNumber = (value: IBigNumberValue): IBigNumber => {
   try {
     const bn = BigNumber.isBigNumber(value) ? value : BigNumber(value);
     if (bn.isNaN()) {
-      throw new Error(encodeError(`BigNumber could not be instantiated with: ${value}`, ERRORS.VALUE_IS_NAN));
+      throw new Error(__buildInvalidValueErrorMessage(value));
     }
     return bn;
   } catch (e) {
@@ -52,9 +68,11 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
     if (isEncodedError(e)) {
       throw e;
     }
-    throw new Error(encodeError(`BigNumber could not be instantiated with: ${value} | ${extractMessage(e)}`, ERRORS.VALUE_IS_INVALID));
+    throw new Error(__buildInvalidValueErrorMessage(value, e));
   }
 };
+
+
 
 
 
