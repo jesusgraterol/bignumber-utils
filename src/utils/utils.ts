@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { encodeError, isEncodedError, extractMessage } from 'error-message-utils';
-import { IBigNumber, IBigNumberValue, IRoundingModes } from '../shared/types.js';
+import { IBigNumber, IBigNumberValue } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
 /* ************************************************************************************************
@@ -11,7 +11,7 @@ import { ERRORS } from '../shared/errors.js';
  * Rounding Modes
  * Object containing all the rounding modes supported by the BigNumber Lib.
  */
-const __ROUNDING_MODES: IRoundingModes = {
+const __ROUNDING_MODES = {
   ROUND_UP: 0, // rounds away from zero
   ROUND_DOWN: 1, // rounds towards zero
   ROUND_CEIL: 2, // rounds towards Infinity

@@ -6,35 +6,26 @@ import { BigNumber } from 'bignumber.js';
 
 /**
  * BigNumber Instance
- * ...
+ * The instance of a BigNumber. It can be generated via the constructor new BigNumber(value) or by
+ * simply invoking it as a function BigNumber(value)
  */
 type IBigNumber = BigNumber;
 
 /**
  * BigNumber Rounding Mode
- * ...
+ * The type of rounding that will be applied when generating a number build
  */
 type IRoundingMode = BigNumber.RoundingMode;
-
-/**
- * BigNumber Rounding Mode Name
- * ...
- */
 type IRoundingModeName = 'ROUND_UP' | 'ROUND_DOWN' | 'ROUND_CEIL' | 'ROUND_FLOOR' | 'ROUND_HALF_UP'
 | 'ROUND_HALF_DOWN' | 'ROUND_HALF_EVEN' | 'ROUND_HALF_CEIL' | 'ROUND_HALF_FLOOR';
 
 /**
- * BigNumber Rounding Modes
- * ...
- */
-type IRoundingModes = {
-  [key in IRoundingModeName]: IRoundingMode
-};
-
-/**
  * BigNumber Value
+ * The types of values that can be used to instantiate BigNumber as well as generating a build
  */
 type IBigNumberValue = BigNumber.Value;
+
+
 
 
 
@@ -44,24 +35,26 @@ type IBigNumberValue = BigNumber.Value;
 
 /**
  * Build Type
- * ...
+ * A build can output any of the IBigNumberValue types in order to meet any requirements and
+ * overcome JavaScript's numeric limitations.
  */
 type IBuildType = 'string' | 'number' | 'bignumber';
 
 /**
- * Number Config
- * ...
+ * Build Config
+ * A number's build can be fully configured
  */
-interface INumberConfig {
-  // .
+interface IBuildConfig {
+  // the maximum number of decimals that will be present in the output
   decimalPlaces: number;
 
-  // ..
+  // determines how the value will be rounded (in case it has decimals)
   roundingMode: IRoundingModeName;
 
-  // ...
+  // the output's type
   buildType: IBuildType;
 }
+
 
 
 
@@ -74,10 +67,9 @@ export type {
   IBigNumber,
   IRoundingMode,
   IRoundingModeName,
-  IRoundingModes,
   IBigNumberValue,
 
   // types
   IBuildType,
-  INumberConfig,
+  IBuildConfig,
 };
