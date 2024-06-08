@@ -42,16 +42,16 @@ type IBuildType = 'string' | 'number' | 'bignumber';
 
 /**
  * Build Config
- * A number's build can be fully configured
+ * The configuration that will be used in order to generate a number build.
  */
 interface IBuildConfig {
-  // the maximum number of decimals that will be present in the output
+  // the maximum number of decimals that will be present in the output (Default: 2)
   decimalPlaces: number;
 
-  // determines how the value will be rounded (in case it has decimals)
+  // determines how the value will be rounded (in case it has decimals) (Default: 'ROUND_UP')
   roundingMode: IRoundingModeName;
 
-  // the output's type
+  // the output's type (Default: 'number')
   buildType: IBuildType;
 }
 
