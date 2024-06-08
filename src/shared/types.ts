@@ -31,7 +31,10 @@ type IRoundingModes = {
   [key in IRoundingModeName]: IRoundingMode
 };
 
-
+/**
+ * BigNumber Value
+ */
+type IBigNumberValue = BigNumber.Value;
 
 
 
@@ -72,6 +75,7 @@ export type {
   IRoundingMode,
   IRoundingModeName,
   IRoundingModes,
+  IBigNumberValue,
 
   // types
   IBuildType,
