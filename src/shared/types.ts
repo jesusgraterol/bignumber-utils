@@ -69,7 +69,7 @@ type IBuildType = 'string' | 'number' | 'bignumber';
  * Build Config
  * The configuration that will be used in order to generate a number build.
  */
-interface IBuildConfig {
+type IBuildConfig = {
   // the maximum number of decimals that will be present in the output (Default: 2)
   decimalPlaces: number;
 
@@ -78,7 +78,17 @@ interface IBuildConfig {
 
   // the output's type (Default: 'number')
   buildType: IBuildType;
-}
+};
+
+/**
+ * Build Output
+ * A generic type that sets the return type based on the build configuration argument.
+ */
+type IBuildOutput<T> =
+  T extends { buildType: 'string' } ? string
+    : T extends { buildType: 'number' } ? number
+      : T extends { buildType: 'bignumber' } ? IBigNumber
+        : number;
 
 
 
@@ -98,4 +108,5 @@ export type {
   // types
   IBuildType,
   IBuildConfig,
+  IBuildOutput,
 };

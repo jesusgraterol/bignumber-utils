@@ -2,11 +2,12 @@ import { BigNumber } from 'bignumber.js';
 import { encodeError, isEncodedError, extractMessage } from 'error-message-utils';
 import {
   IBigNumber,
-  IBigNumberFormat,
   IBigNumberRoundingMode,
   IBigNumberRoundingModeName,
   IBigNumberValue,
+  IBigNumberFormat,
   IBuildConfig,
+  IBuildOutput,
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
@@ -141,16 +142,16 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
  * Builds a number based on given configuration (if any).
  * @param value
  * @param configuration?
- * @returns 
+ * @returns IBuildOutput<T>
  * @throws
  * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  * - INVALID_BUILD_TYPE: if the build type is not supported
  */
-const buildNumber = (
+const buildNumber = <T extends Partial<IBuildConfig>>(
   value: IBigNumberValue,
-  configuration?: Partial<IBuildConfig>,
-): IBigNumberValue => {
+  configuration?: Partial<T>,
+): IBuildOutput<T> => {
   // build the config
   const config = __buildConfig(configuration);
 
@@ -163,11 +164,11 @@ const buildNumber = (
   // return the appropriate type
   switch (config.buildType) {
     case 'string':
-      return bn.toString();
+      return bn.toString() as IBuildOutput<T>;
     case 'number':
-      return bn.toNumber();
+      return bn.toNumber() as IBuildOutput<T>;
     case 'bignumber':
-      return bn;
+      return bn as IBuildOutput<T>;
     default:
       throw new Error(encodeError(`The buildType '${config.buildType} is invalid.'`, ERRORS.INVALID_BUILD_TYPE));
   }

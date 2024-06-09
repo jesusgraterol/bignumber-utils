@@ -36,11 +36,8 @@ describe('getBigNumber', () => {
 
 describe('buildNumber', () => {
   test('can build a BigNumber from any valid value', () => {
-    const val = buildNumber(100);
-    expect(typeof val).toBe('number');
-    expect(val).toBe(100);
-    /*[].forEach((val) => {
-
-    });*/
+    const val = buildNumber(100.58, { buildType: 'string' });
+    expect(typeof val).toBe('string');
+    expect(val).toBe('100.58');
   });
 });
