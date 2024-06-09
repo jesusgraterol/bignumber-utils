@@ -2,7 +2,7 @@ import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
 // import { IBigNumber } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
-import { getBigNumber } from './utils.js';
+import { getBigNumber, buildNumber } from './utils.js';
 
 /* ************************************************************************************************
  *                                             TESTS                                              *
@@ -30,5 +30,17 @@ describe('getBigNumber', () => {
     ].forEach((value) => {
       expect(() => getBigNumber(<any>value)).toThrowError(ERRORS.INVALID_VALUE);
     });
+  });
+});
+
+
+describe('buildNumber', () => {
+  test('can build a BigNumber from any valid value', () => {
+    const val = buildNumber(100);
+    expect(typeof val).toBe('number');
+    expect(val).toBe(100);
+    /*[].forEach((val) => {
+
+    });*/
   });
 });

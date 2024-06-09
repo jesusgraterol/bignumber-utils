@@ -6,6 +6,7 @@ import {
   IBigNumberRoundingMode,
   IBigNumberRoundingModeName,
   IBigNumberValue,
+  IBuildConfig,
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
@@ -46,6 +47,17 @@ const __buildInvalidValueErrorMessage = (value: any, error?: any): string => {
 };
 
 /**
+ * Builds the configuration that will be used to build a number.
+ * @param config
+ * @returns IBuildConfig
+ */
+const __buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => ({
+  decimalPlaces: config?.decimalPlaces ?? 2,
+  roundingMode: config?.roundingMode ?? 'ROUND_UP',
+  buildType: config?.buildType ?? 'number',
+});
+
+/**
  * Retrieves the rounding mode number based on a given name.
  * @param name
  * @returns IBigNumberRoundingMode
@@ -73,7 +85,7 @@ const __getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRounding
     case 'ROUND_HALF_FLOOR':
       return 8;
     default:
-      throw new Error(encodeError(`The rounding mode '${name}' is not supported by this library.`, ERRORS.INVALID_ROUNDING_MODE));
+      throw new Error(encodeError(`The rounding mode '${name}' is invalid.`, ERRORS.INVALID_ROUNDING_MODE));
   }
 };
 
@@ -125,6 +137,41 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
   }
 };
 
+/**
+ * Builds a number based on given configuration (if any).
+ * @param value
+ * @param configuration?
+ * @returns 
+ * @throws
+ * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_BUILD_TYPE: if the build type is not supported
+ */
+const buildNumber = (
+  value: IBigNumberValue,
+  configuration?: Partial<IBuildConfig>,
+): IBigNumberValue => {
+  // build the config
+  const config = __buildConfig(configuration);
+
+  // instantiate BigNumber whilst setting the decimal places
+  const bn = getBigNumber(value).decimalPlaces(
+    config.decimalPlaces,
+    __getRoundingMode(config.roundingMode),
+  );
+
+  // return the appropriate type
+  switch (config.buildType) {
+    case 'string':
+      return bn.toString();
+    case 'number':
+      return bn.toNumber();
+    case 'bignumber':
+      return bn;
+    default:
+      throw new Error(encodeError(`The buildType '${config.buildType} is invalid.'`, ERRORS.INVALID_BUILD_TYPE));
+  }
+};
 
 
 
@@ -138,4 +185,5 @@ export {
 
   // implementation
   getBigNumber,
+  buildNumber,
 };
