@@ -8,6 +8,20 @@ import {
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
+/**
+ * BigNumber Configuration
+ * The default config values that will apply to this BigNumber constructor.
+ * https://mikemcl.github.io/bignumber.js/#config
+ */
+BigNumber.config({
+  // the exponent value(s) at which toString returns exponential notation.
+  EXPONENTIAL_AT: 1e+9,
+});
+
+
+
+
+
 /* ************************************************************************************************
  *                                            HELPERS                                             *
  ************************************************************************************************ */
