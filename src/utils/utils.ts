@@ -1,34 +1,15 @@
 import { BigNumber } from 'bignumber.js';
 import { encodeError, isEncodedError, extractMessage } from 'error-message-utils';
-import { IBigNumber, IBigNumberValue } from '../shared/types.js';
+import {
+  IBigNumber,
+  IBigNumberRoundingMode,
+  IBigNumberRoundingModeName,
+  IBigNumberValue,
+} from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
 /* ************************************************************************************************
- *                                           CONSTANTS                                            *
- ************************************************************************************************ */
-
-/**
- * Rounding Modes
- * Object containing all the rounding modes supported by the BigNumber Lib.
- */
-const __ROUNDING_MODES = {
-  ROUND_UP: 0, // rounds away from zero
-  ROUND_DOWN: 1, // rounds towards zero
-  ROUND_CEIL: 2, // rounds towards Infinity
-  ROUND_FLOOR: 3, // rounds towards -Infinity
-  ROUND_HALF_UP: 4, // rounds towards nearest neighbour. If equidistant, rounds away from zero
-  ROUND_HALF_DOWN: 5, // rounds towards nearest neighbour. If equidistant, rounds towards zero
-  ROUND_HALF_EVEN: 6, // rounds towards nearest neighbour. If equidistant, rounds towards even neig.
-  ROUND_HALF_CEIL: 7, // rounds towards nearest neighbour. If equidistant, rounds towards Infinity
-  ROUND_HALF_FLOOR: 8, // rounds towards nearest neighbour. If equidistant, rounds towards -Infinity
-};
-
-
-
-
-
-/* ************************************************************************************************
- *                                         IMPLEMENTATION                                         *
+ *                                            HELPERS                                             *
  ************************************************************************************************ */
 
 /**
@@ -48,6 +29,45 @@ const __buildInvalidValueErrorMessage = (value: any, error?: any): string => {
       : encodeError('BigNumber could not be instantiated with: UNKNOWN.', ERRORS.INVALID_VALUE);
   }
 };
+
+/**
+ * Retrieves the rounding mode number based on a given name.
+ * @param name
+ * @returns IBigNumberRoundingMode
+ * @throws
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ */
+const __getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRoundingMode => {
+  switch (name) {
+    case 'ROUND_UP':
+      return 0;
+    case 'ROUND_DOWN':
+      return 1;
+    case 'ROUND_CEIL':
+      return 2;
+    case 'ROUND_FLOOR':
+      return 3;
+    case 'ROUND_HALF_UP':
+      return 4;
+    case 'ROUND_HALF_DOWN':
+      return 5;
+    case 'ROUND_HALF_EVEN':
+      return 6;
+    case 'ROUND_HALF_CEIL':
+      return 7;
+    case 'ROUND_HALF_FLOOR':
+      return 8;
+    default:
+      throw new Error(encodeError(`The rounding mode '${name}' is not supported by this library.`, ERRORS.INVALID_ROUNDING_MODE));
+  }
+};
+
+
+
+
+/* ************************************************************************************************
+ *                                         IMPLEMENTATION                                         *
+ ************************************************************************************************ */
 
 /**
  * Instantiates BigNumber based on a given value and returns it.
