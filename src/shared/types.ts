@@ -35,7 +35,22 @@ type IBigNumberRoundingMode = BigNumber.RoundingMode;
  */
 type IBigNumberValue = BigNumber.Value;
 
-
+/**
+ * BigNumber Format
+ * The configuration object that is applied to the toFormat method which is used to prettify
+ * numeric values.Available settings are:
+ * - prefix: string to prepend
+ * - decimalSeparator: decimal separator
+ * - groupSeparator: grouping separator of the integer part
+ * - groupSize: primary grouping size of the integer part
+ * - secondaryGroupSize: secondary grouping size of the integer part
+ * - fractionGroupSeparator: grouping separator of the fraction part
+ * - fractionGroupSize: grouping size of the fraction part
+ * - suffix: string to append
+ *
+ * For more information visit: https://mikemcl.github.io/bignumber.js/#toFor
+ */
+type IBigNumberFormat = BigNumber.Format;
 
 
 
@@ -78,6 +93,7 @@ export type {
   IBigNumberRoundingMode,
   IBigNumberRoundingModeName,
   IBigNumberValue,
+  IBigNumberFormat,
 
   // types
   IBuildType,

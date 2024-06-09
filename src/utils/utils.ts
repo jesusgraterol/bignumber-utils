@@ -2,6 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { encodeError, isEncodedError, extractMessage } from 'error-message-utils';
 import {
   IBigNumber,
+  IBigNumberFormat,
   IBigNumberRoundingMode,
   IBigNumberRoundingModeName,
   IBigNumberValue,
@@ -15,7 +16,7 @@ import { ERRORS } from '../shared/errors.js';
  */
 BigNumber.config({
   // the exponent value(s) at which toString returns exponential notation.
-  EXPONENTIAL_AT: 1e+9,
+  EXPONENTIAL_AT: 1e+9, // almost never return exponential notation
 });
 
 
@@ -76,12 +77,30 @@ const __getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRounding
   }
 };
 
+/**
+ * Builds the configuration object used to prettify a numeric value.
+ * @param config?
+ * @returns IBigNumberFormat
+ */
+const __buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberFormat => ({
+  prefix: config?.prefix ?? '',
+  decimalSeparator: config?.decimalSeparator ?? '.',
+  groupSeparator: config?.groupSeparator ?? ',',
+  groupSize: config?.groupSize ?? 3,
+  secondaryGroupSize: config?.secondaryGroupSize ?? 0,
+  fractionGroupSeparator: config?.fractionGroupSeparator ?? ' ',
+  fractionGroupSize: config?.fractionGroupSize ?? 0,
+  suffix: config?.suffix ?? '',
+});
+
 
 
 
 /* ************************************************************************************************
  *                                         IMPLEMENTATION                                         *
  ************************************************************************************************ */
+
+
 
 /**
  * Instantiates BigNumber based on a given value and returns it.
