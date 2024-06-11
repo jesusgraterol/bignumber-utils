@@ -25,8 +25,9 @@ describe('getBigNumber', () => {
 
   test('throws if an invalid value is provided', () => {
     [
-      {}, [], [1, 2, 3], undefined, null, NaN, '', new Date(), Buffer.from('Hello!'),
-      true, false, Symbol('Hello'), new Set([1, 2, 3]), new Map([['dog', 'woof'], ['asd', 'true']]),
+      {}, [], [1, 2, 3], undefined, null, NaN, '', new Date(), Buffer.from('Hello!'), true, false,
+      Symbol('Hello'), Symbol.for('Hello'), new Set([1, 2, 3]), new Map([['dog', 'woof'], ['asd', 'true']]),
+      BigNumber(NaN), BigNumber('123,123.11'), BigNumber(undefined!), BigNumber(null!),
     ].forEach((value) => {
       expect(() => getBigNumber(<any>value)).toThrowError(ERRORS.INVALID_VALUE);
     });
