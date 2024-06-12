@@ -37,8 +37,8 @@ $ npm install -S bignumber-utils
 
 ## API
 
-- `getBigNumber: (value: IBigNumberValue) => IBigNumber`
-- `buildNumber: <T extends Partial<IBuildConfig>>(value: IBigNumberValue, configuration?: Partial<T>) => IBuildOutput<T>`
+- `getBigNumber` instantiates BigNumber based on a given value and returns it
+- `buildNumber` builds a number based on given configuration (if any)
 
 
 
