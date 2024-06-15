@@ -50,7 +50,7 @@ type IBigNumberValue = BigNumber.Value;
  *
  * For more information visit: https://mikemcl.github.io/bignumber.js/#toFor
  */
-type IBigNumberFormat = BigNumber.Format;
+type IBigNumberFormat = Required<BigNumber.Format>;
 
 
 

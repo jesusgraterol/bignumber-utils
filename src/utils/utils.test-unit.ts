@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
-import { IBuildConfig, IBuildType } from '../shared/types.js';
+import { IBigNumberFormat, IBuildConfig, IBuildType } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 import {
   buildInvalidValueErrorMessage,
@@ -22,7 +22,17 @@ const iv = BigNumber(NaN);
 // default build config
 const dbc: IBuildConfig = { decimalPlaces: 2, roundingMode: 'ROUND_HALF_UP', buildType: 'number' };
 
-
+// default format config
+const dfc: IBigNumberFormat = {
+  prefix: '',
+  decimalSeparator: '.',
+  groupSeparator: ',',
+  groupSize: 3,
+  secondaryGroupSize: 0,
+  fractionGroupSeparator: ' ',
+  fractionGroupSize: 0,
+  suffix: '',
+};
 
 
 
@@ -169,5 +179,53 @@ describe('convertBigNumberToType', () => {
 
   test('throws if an invalid buildType is provided', () => {
     expect(() => convertBigNumberToType(BigNumber(100), <IBuildType>'something')).toThrowError(ERRORS.INVALID_BUILD_TYPE);
+  });
+});
+
+
+
+
+
+describe('buildFormatConfig', () => {
+  test('can build a default config object by providing invalid values', () => {
+    [
+      buildFormatConfig(), buildFormatConfig(undefined), buildFormatConfig(null!),
+      buildFormatConfig({}), buildFormatConfig({
+        prefix: undefined,
+        decimalSeparator: undefined,
+        groupSeparator: undefined,
+        groupSize: undefined,
+        secondaryGroupSize: undefined,
+        fractionGroupSeparator: undefined,
+        fractionGroupSize: undefined,
+        suffix: undefined,
+      }),
+    ].forEach((val) => {
+      expect(val).toStrictEqual(dfc);
+    });
+  });
+
+  test('can build a config object by providing a partial config object', () => {
+    expect(buildFormatConfig({ prefix: '$' })).toStrictEqual({ ...dfc, prefix: '$' });
+    expect(buildFormatConfig({ decimalSeparator: ',', groupSeparator: '.', suffix: 'BTC' })).toStrictEqual({
+      ...dfc,
+      decimalSeparator: ',',
+      groupSeparator: '.',
+      suffix: 'BTC',
+    });
+  });
+
+  test('can build a config object by providing a complete config object', () => {
+    const config: IBigNumberFormat = {
+      prefix: '$',
+      decimalSeparator: ',',
+      groupSeparator: '.',
+      groupSize: 5,
+      secondaryGroupSize: 3,
+      fractionGroupSeparator: ' / ',
+      fractionGroupSize: 2,
+      suffix: 'Bitcoin',
+    };
+    expect(buildFormatConfig(config)).toStrictEqual(config);
   });
 });
