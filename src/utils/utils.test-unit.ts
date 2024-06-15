@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
-import { IBigNumberFormat, IBuildConfig, IBuildType } from '../shared/types.js';
+import { IBigNumberFormat, IBigNumberRoundingModeName, IBuildConfig, IBuildType } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 import {
   buildInvalidValueErrorMessage,
@@ -151,6 +151,10 @@ describe('roundBigNumber', () => {
   test.todo('can apply the ROUND_HALF_CEIL mode with any number of decimal places');
 
   test.todo('can apply the ROUND_HALF_FLOOR mode with any number of decimal places');
+
+  test('throws if an invalid rounding mode is provided', () => {
+    expect(() => roundBigNumber(BigNumber(1.565), 2, <IBigNumberRoundingModeName>'invalid')).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
+  });
 });
 
 

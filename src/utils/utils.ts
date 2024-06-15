@@ -143,9 +143,6 @@ const buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberFormat
  *                                         MODULE EXPORTS                                         *
  ************************************************************************************************ */
 export {
-  // constants
-  // ...
-
   // implementation
   buildInvalidValueErrorMessage,
   buildConfig,
