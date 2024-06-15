@@ -15,7 +15,7 @@ import { ERRORS } from './shared/errors.js';
 import {
   buildInvalidValueErrorMessage,
   buildConfig,
-  getRoundingMode,
+  roundBigNumber,
   convertBigNumberToType,
 } from './utils/utils.js';
 
@@ -77,11 +77,8 @@ const buildNumber = <T extends Partial<IBuildConfig>>(
   // build the config
   const config = buildConfig(configuration);
 
-  // instantiate BigNumber whilst setting the decimal places
-  const bn = getBigNumber(value).decimalPlaces(
-    config.decimalPlaces,
-    getRoundingMode(config.roundingMode),
-  );
+  // instantiate a properly rounded BigNumber
+  const bn = roundBigNumber(getBigNumber(value), config.decimalPlaces, config.roundingMode);
 
   // return the appropriate type
   return convertBigNumberToType(bn, config.buildType) as IBuildOutput<T>;

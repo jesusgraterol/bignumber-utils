@@ -5,7 +5,8 @@ import { ERRORS } from '../shared/errors.js';
 import {
   buildInvalidValueErrorMessage,
   buildConfig,
-  getRoundingMode,
+  roundBigNumber,
+  convertBigNumberToType,
   buildFormatConfig,
 } from './utils.js';
 
