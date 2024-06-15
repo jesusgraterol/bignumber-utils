@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
-import { IBuildConfig } from '../shared/types.js';
+import { IBuildConfig, IBuildType } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 import {
   buildInvalidValueErrorMessage,
@@ -103,6 +103,7 @@ describe('roundBigNumber', () => {
     expect(roundBigNumber(BigNumber('1.5'), 2, 'ROUND_CEIL').toString()).toBe('2');
     expect(roundBigNumber(BigNumber('999'), 2, 'ROUND_CEIL').toString()).toBe('999');
     expect(roundBigNumber(BigNumber('5.000000000001'), 2, 'ROUND_CEIL').toString()).toBe('6');
+    expect(roundBigNumber(BigNumber('1005421251254.8841256948841256944'), 18, 'ROUND_CEIL').toString()).toBe('1005421251255');
   });
 
   test.todo('can apply the ROUND_FLOOR mode with any number of decimal places', () => {
@@ -110,6 +111,7 @@ describe('roundBigNumber', () => {
     expect(roundBigNumber(BigNumber('1.5'), 2, 'ROUND_FLOOR').toString()).toBe('1');
     expect(roundBigNumber(BigNumber('999'), 2, 'ROUND_FLOOR').toString()).toBe('999');
     expect(roundBigNumber(BigNumber('5.000000000001'), 2, 'ROUND_FLOOR').toString()).toBe('5');
+    expect(roundBigNumber(BigNumber('1005421251254.8841256948841256944'), 18, 'ROUND_FLOOR').toString()).toBe('1005421251254');
   });
 
   test('can apply the ROUND_HALF_UP mode with any number of decimal places', () => {
@@ -139,4 +141,33 @@ describe('roundBigNumber', () => {
   test.todo('can apply the ROUND_HALF_CEIL mode with any number of decimal places');
 
   test.todo('can apply the ROUND_HALF_FLOOR mode with any number of decimal places');
+});
+
+
+
+
+describe('convertBigNumberToType', () => {
+  test('can convert a BigNumber into a string', () => {
+    [BigNumber(123), BigNumber('54645.1254'), BigNumber('554154223548450215454.5451212445461242')].forEach((v) => {
+      expect(convertBigNumberToType(v, 'string')).toBe(v.toString());
+    });
+  });
+
+  test('can convert a BigNumber into a number', () => {
+    [BigNumber(123), BigNumber(54645.1254), BigNumber(14512.546542124548)].forEach((v) => {
+      expect(convertBigNumberToType(v, 'number')).toBe(v.toNumber());
+    });
+  });
+
+  test('can convert a BigNumber into a BigNumber', () => {
+    [BigNumber(123), BigNumber(54645.1254), BigNumber(14512.546542124548)].forEach((v) => {
+      const val = convertBigNumberToType(v, 'bignumber');
+      expect(BigNumber.isBigNumber(val)).toBe(true);
+      expect(v.isEqualTo(val)).toBe(true);
+    });
+  });
+
+  test('throws if an invalid buildType is provided', () => {
+    expect(() => convertBigNumberToType(BigNumber(100), <IBuildType>'something')).toThrowError(ERRORS.INVALID_BUILD_TYPE);
+  });
 });
