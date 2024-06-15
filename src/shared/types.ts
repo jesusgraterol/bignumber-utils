@@ -81,10 +81,10 @@ type IBuildConfig = {
 };
 
 /**
- * Build Output By Type
- * A generic type that sets the return type based on the value present in the configuration.
+ * BigNumber to Type
+ * A helper generic type used when converting a BigNumber Instance into a custom type.
  */
-type IBuildOutputByType<T> =
+type IBigNumberToType<T> =
   T extends 'string' ? string
     : T extends 'number' ? number
       : T extends 'bignumber' ? IBigNumber
@@ -118,6 +118,6 @@ export type {
   // types
   IBuildType,
   IBuildConfig,
-  IBuildOutputByType,
+  IBigNumberToType,
   IBuildOutput,
 };

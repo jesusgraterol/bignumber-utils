@@ -8,6 +8,7 @@ import {
   IBigNumberFormat,
   IBuildType,
   IBuildConfig,
+  IBigNumberToType,
   IBuildOutput,
 } from './shared/types.js';
 import { ERRORS } from './shared/errors.js';
@@ -15,7 +16,7 @@ import {
   buildInvalidValueErrorMessage,
   buildConfig,
   getRoundingMode,
-  buildNumberByType,
+  convertBigNumberToType,
 } from './utils/utils.js';
 
 /**
@@ -83,7 +84,7 @@ const buildNumber = <T extends Partial<IBuildConfig>>(
   );
 
   // return the appropriate type
-  return buildNumberByType(bn, config.buildType) as IBuildOutput<T>;
+  return convertBigNumberToType(bn, config.buildType) as IBuildOutput<T>;
 };
 
 
@@ -109,6 +110,7 @@ export {
   type IBigNumberFormat,
   type IBuildType,
   type IBuildConfig,
+  type IBigNumberToType,
   type IBuildOutput,
 
   // number builders

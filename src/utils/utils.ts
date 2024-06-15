@@ -6,7 +6,7 @@ import {
   IBigNumberFormat,
   IBuildType,
   IBuildConfig,
-  IBuildOutputByType,
+  IBigNumberToType,
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
@@ -82,22 +82,24 @@ const getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRoundingMo
 };
 
 /**
- * Builds a number based on a given type.
+ * Converts a BigNumber Instance into a custom type.
  * @param value
  * @param buildType
- * @returns IBuildOutputByType<T>
+ * @returns IBigNumberToType<T>
+ * @throws
+ * - INVALID_BUILD_TYPE: if the build type is not supported
  */
-const buildNumberByType = <T extends IBuildType>(
+const convertBigNumberToType = <T extends IBuildType>(
   value: IBigNumber,
   buildType: T,
-): IBuildOutputByType<T> => {
+): IBigNumberToType<T> => {
   switch (buildType) {
     case 'string':
-      return value.toString() as IBuildOutputByType<T>;
+      return value.toString() as IBigNumberToType<T>;
     case 'number':
-      return value.toNumber() as IBuildOutputByType<T>;
+      return value.toNumber() as IBigNumberToType<T>;
     case 'bignumber':
-      return value as IBuildOutputByType<T>;
+      return value as IBigNumberToType<T>;
     default:
       throw new Error(encodeError(`The buildType '${buildType}' is invalid for '${value}'.`, ERRORS.INVALID_BUILD_TYPE));
   }
@@ -133,6 +135,6 @@ export {
   buildInvalidValueErrorMessage,
   buildConfig,
   getRoundingMode,
-  buildNumberByType,
+  convertBigNumberToType,
   buildFormatConfig,
 };
