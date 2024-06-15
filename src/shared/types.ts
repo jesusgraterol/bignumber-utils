@@ -18,7 +18,7 @@ type IBigNumber = BigNumber;
  * - ROUND_DOWN(1): rounds towards zero
  * - ROUND_CEIL(2): rounds towards Infinity
  * - ROUND_FLOOR(3): rounds towards -Infinity
- * - ROUND_HALF_UP(4): rounds towards nearest neighbour. If equidistant, rounds away from zero
+ * - ROUND_HALF_UP(4)*: rounds towards nearest neighbour. If equidistant, rounds away from zero
  * - ROUND_HALF_DOWN(5): rounds towards nearest neighbour. If equidistant, rounds towards zero
  * - ROUND_HALF_EVEN(6): rounds towards nearest neighbour. If equidistant, rounds towards even
  * neighbour
@@ -73,7 +73,7 @@ type IBuildConfig = {
   // the maximum number of decimals that will be present in the output (Default: 2)
   decimalPlaces: number;
 
-  // determines how the value will be rounded (in case it has decimals) (Default: 'ROUND_UP')
+  // determines how the value will be rounded (in case it has decimals) (Default: 'ROUND_HALF_UP')
   roundingMode: IBigNumberRoundingModeName;
 
   // the output's type (Default: 'number')

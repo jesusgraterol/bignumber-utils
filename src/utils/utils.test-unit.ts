@@ -20,7 +20,7 @@ import {
 const iv = BigNumber(NaN);
 
 // default build config
-const dbc: IBuildConfig = { decimalPlaces: 2, roundingMode: 'ROUND_UP', buildType: 'number' };
+const dbc: IBuildConfig = { decimalPlaces: 2, roundingMode: 'ROUND_HALF_UP', buildType: 'number' };
 
 
 
@@ -87,4 +87,56 @@ describe('buildConfig', () => {
     const config: IBuildConfig = { decimalPlaces: 4, roundingMode: 'ROUND_HALF_DOWN', buildType: 'string' };
     expect(buildConfig(config)).toStrictEqual(config);
   });
+});
+
+
+
+
+
+describe('roundBigNumber', () => {
+  test.todo('can apply the ROUND_UP mode with any number of decimal places');
+
+  test.todo('can apply the ROUND_DOWN mode with any number of decimal places');
+
+  test.todo('can apply the ROUND_CEIL mode with any number of decimal places', () => {
+    expect(roundBigNumber(BigNumber('1.01'), 2, 'ROUND_CEIL').toString()).toBe('2');
+    expect(roundBigNumber(BigNumber('1.5'), 2, 'ROUND_CEIL').toString()).toBe('2');
+    expect(roundBigNumber(BigNumber('999'), 2, 'ROUND_CEIL').toString()).toBe('999');
+    expect(roundBigNumber(BigNumber('5.000000000001'), 2, 'ROUND_CEIL').toString()).toBe('6');
+  });
+
+  test.todo('can apply the ROUND_FLOOR mode with any number of decimal places', () => {
+    expect(roundBigNumber(BigNumber('1.01'), 2, 'ROUND_FLOOR').toString()).toBe('1');
+    expect(roundBigNumber(BigNumber('1.5'), 2, 'ROUND_FLOOR').toString()).toBe('1');
+    expect(roundBigNumber(BigNumber('999'), 2, 'ROUND_FLOOR').toString()).toBe('999');
+    expect(roundBigNumber(BigNumber('5.000000000001'), 2, 'ROUND_FLOOR').toString()).toBe('5');
+  });
+
+  test('can apply the ROUND_HALF_UP mode with any number of decimal places', () => {
+    expect(roundBigNumber(BigNumber('1.5'), 0, 'ROUND_HALF_UP').toString()).toBe('2');
+    expect(roundBigNumber(BigNumber(1.556), 2, 'ROUND_HALF_UP').toString()).toBe('1.56');
+    expect(roundBigNumber(BigNumber(1.555), 2, 'ROUND_HALF_UP').toString()).toBe('1.56');
+    expect(roundBigNumber(BigNumber(1.554), 2, 'ROUND_HALF_UP').toString()).toBe('1.55');
+    expect(roundBigNumber(BigNumber('1054.884125695'), 7, 'ROUND_HALF_UP').toString()).toBe('1054.8841257');
+    expect(roundBigNumber(BigNumber('1054.884125694'), 8, 'ROUND_HALF_UP').toString()).toBe('1054.88412569');
+    expect(roundBigNumber(BigNumber('1005421251254.8841256948841256944'), 18, 'ROUND_HALF_UP').toString()).toBe('1005421251254.884125694884125694');
+    expect(roundBigNumber(BigNumber('1005421251254.8841256948841256945'), 18, 'ROUND_HALF_UP').toString()).toBe('1005421251254.884125694884125695');
+  });
+
+  test('can apply the ROUND_HALF_DOWN mode with any number of decimal places', () => {
+    expect(roundBigNumber(BigNumber('1.5'), 0, 'ROUND_HALF_DOWN').toString()).toBe('1');
+    expect(roundBigNumber(BigNumber(1.556), 2, 'ROUND_HALF_DOWN').toString()).toBe('1.56');
+    expect(roundBigNumber(BigNumber(1.555), 2, 'ROUND_HALF_DOWN').toString()).toBe('1.55');
+    expect(roundBigNumber(BigNumber(1.554), 2, 'ROUND_HALF_DOWN').toString()).toBe('1.55');
+    expect(roundBigNumber(BigNumber('1054.884125695'), 7, 'ROUND_HALF_DOWN').toString()).toBe('1054.8841257');
+    expect(roundBigNumber(BigNumber('1054.884125694'), 8, 'ROUND_HALF_DOWN').toString()).toBe('1054.88412569');
+    expect(roundBigNumber(BigNumber('1005421251254.8841256948841256944'), 18, 'ROUND_HALF_DOWN').toString()).toBe('1005421251254.884125694884125694');
+    expect(roundBigNumber(BigNumber('1005421251254.8841256948841256945'), 18, 'ROUND_HALF_DOWN').toString()).toBe('1005421251254.884125694884125694');
+  });
+
+  test.todo('can apply the ROUND_HALF_EVEN mode with any number of decimal places');
+
+  test.todo('can apply the ROUND_HALF_CEIL mode with any number of decimal places');
+
+  test.todo('can apply the ROUND_HALF_FLOOR mode with any number of decimal places');
 });

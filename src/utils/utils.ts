@@ -45,7 +45,7 @@ const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
  */
 const buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => ({
   decimalPlaces: config?.decimalPlaces ?? 2,
-  roundingMode: config?.roundingMode ?? 'ROUND_UP',
+  roundingMode: config?.roundingMode ?? 'ROUND_HALF_UP',
   buildType: config?.buildType ?? 'number',
 });
 
