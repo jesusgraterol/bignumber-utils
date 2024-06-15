@@ -81,6 +81,16 @@ type IBuildConfig = {
 };
 
 /**
+ * Build Output By Type
+ * A generic type that sets the return type based on the value present in the configuration.
+ */
+type IBuildOutputByType<T> =
+  T extends 'string' ? string
+    : T extends 'number' ? number
+      : T extends 'bignumber' ? IBigNumber
+        : never;
+
+/**
  * Build Output
  * A generic type that sets the return type based on the build configuration argument.
  */
@@ -108,5 +118,6 @@ export type {
   // types
   IBuildType,
   IBuildConfig,
+  IBuildOutputByType,
   IBuildOutput,
 };

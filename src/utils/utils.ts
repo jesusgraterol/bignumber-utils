@@ -1,41 +1,35 @@
 import { BigNumber } from 'bignumber.js';
-import { encodeError, isEncodedError, extractMessage } from 'error-message-utils';
+import { encodeError, extractMessage } from 'error-message-utils';
 import {
   IBigNumber,
   IBigNumberRoundingMode,
   IBigNumberRoundingModeName,
   IBigNumberValue,
   IBigNumberFormat,
+  IBuildType,
   IBuildConfig,
+  IBuildOutputByType,
   IBuildOutput,
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
-
-/**
- * BigNumber Configuration
- * The default config values that will apply to this BigNumber constructor.
- * https://mikemcl.github.io/bignumber.js/#config
- */
-BigNumber.config({
-  // the exponent value(s) at which toString returns exponential notation.
-  EXPONENTIAL_AT: 1e+9, // almost never return exponential notation
-});
 
 
 
 
 
 /* ************************************************************************************************
- *                                            HELPERS                                             *
+ *                                         IMPLEMENTATION                                         *
  ************************************************************************************************ */
 
 /**
  * Builds the error message that will be thrown in case the provided value cannot be instantiated.
+ * The encoding of the error is managed safely as there are values in JavaScript that cannot be 
+ * stringified, such as Symbol(value).
  * @param value
  * @param error
  * @returns string
  */
-const __buildInvalidValueErrorMessage = (value: any, error?: any): string => {
+const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
   try {
     return error
       ? encodeError(`BigNumber could not be instantiated with: ${value} | ${extractMessage(error)}`, ERRORS.INVALID_VALUE)
@@ -52,7 +46,7 @@ const __buildInvalidValueErrorMessage = (value: any, error?: any): string => {
  * @param config
  * @returns IBuildConfig
  */
-const __buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => ({
+const buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => ({
   decimalPlaces: config?.decimalPlaces ?? 2,
   roundingMode: config?.roundingMode ?? 'ROUND_UP',
   buildType: config?.buildType ?? 'number',
@@ -65,7 +59,7 @@ const __buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => ({
  * @throws
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  */
-const __getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRoundingMode => {
+const getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRoundingMode => {
   switch (name) {
     case 'ROUND_UP':
       return 0;
@@ -90,12 +84,29 @@ const __getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRounding
   }
 };
 
+
+const buildNumberByType = <T extends IBuildType>(
+  value: IBigNumber,
+  buildType: T,
+): IBuildOutputByType<T> => {
+  switch (buildType) {
+    case 'string':
+      return value.toString() as IBuildOutputByType<T>;
+    case 'number':
+      return value.toNumber() as IBuildOutputByType<T>;
+    case 'bignumber':
+      return value as IBuildOutputByType<T>;
+    default:
+      throw new Error(encodeError(`The buildType '${buildType}' is invalid for '${value}'.`, ERRORS.INVALID_BUILD_TYPE));
+  }
+};
+
 /**
  * Builds the configuration object used to prettify a numeric value.
  * @param config?
  * @returns IBigNumberFormat
  */
-const __buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberFormat => ({
+const buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberFormat => ({
   prefix: config?.prefix ?? '',
   decimalSeparator: config?.decimalSeparator ?? '.',
   groupSeparator: config?.groupSeparator ?? ',',
@@ -110,74 +121,6 @@ const __buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberForm
 
 
 /* ************************************************************************************************
- *                                         IMPLEMENTATION                                         *
- ************************************************************************************************ */
-
-
-
-/**
- * Instantiates BigNumber based on a given value and returns it.
- * @param value
- * @returns IBigNumber
- * @throws
- * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
- */
-const getBigNumber = (value: IBigNumberValue): IBigNumber => {
-  try {
-    const bn = BigNumber.isBigNumber(value) ? value : BigNumber(value);
-    if (bn.isNaN()) {
-      throw new Error(__buildInvalidValueErrorMessage(value));
-    }
-    return bn;
-  } catch (e) {
-    // if it is a known error, just rethrow it
-    if (isEncodedError(e)) {
-      throw e;
-    }
-    throw new Error(__buildInvalidValueErrorMessage(value, e));
-  }
-};
-
-/**
- * Builds a number based on given configuration (if any).
- * @param value
- * @param configuration?
- * @returns IBuildOutput<T>
- * @throws
- * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
- * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_BUILD_TYPE: if the build type is not supported
- */
-const buildNumber = <T extends Partial<IBuildConfig>>(
-  value: IBigNumberValue,
-  configuration?: Partial<T>,
-): IBuildOutput<T> => {
-  // build the config
-  const config = __buildConfig(configuration);
-
-  // instantiate BigNumber whilst setting the decimal places
-  const bn = getBigNumber(value).decimalPlaces(
-    config.decimalPlaces,
-    __getRoundingMode(config.roundingMode),
-  );
-
-  // return the appropriate type
-  switch (config.buildType) {
-    case 'string':
-      return bn.toString() as IBuildOutput<T>;
-    case 'number':
-      return bn.toNumber() as IBuildOutput<T>;
-    case 'bignumber':
-      return bn as IBuildOutput<T>;
-    default:
-      throw new Error(encodeError(`The buildType '${config.buildType} is invalid.'`, ERRORS.INVALID_BUILD_TYPE));
-  }
-};
-
-
-
-
-/* ************************************************************************************************
  *                                         MODULE EXPORTS                                         *
  ************************************************************************************************ */
 export {
@@ -185,6 +128,9 @@ export {
   // ...
 
   // implementation
-  getBigNumber,
-  buildNumber,
+  buildInvalidValueErrorMessage,
+  buildConfig,
+  getRoundingMode,
+  buildNumberByType,
+  buildFormatConfig,
 };
