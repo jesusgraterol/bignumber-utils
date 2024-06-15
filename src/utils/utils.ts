@@ -87,6 +87,8 @@ const __getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRounding
  * @param decimalPlaces
  * @param roundingMode
  * @returns IBigNumber
+ * @throws
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  */
 const roundBigNumber = (
   value: IBigNumber,
