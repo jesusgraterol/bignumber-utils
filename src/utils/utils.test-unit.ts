@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
-// import { IBigNumber } from '../shared/types.js';
+import { IBuildConfig } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 import {
   buildInvalidValueErrorMessage,
@@ -18,6 +18,10 @@ import {
 
 // invalid value mocks
 const iv = BigNumber(NaN);
+
+// default build config
+const dbc: IBuildConfig = { decimalPlaces: 2, roundingMode: 'ROUND_UP', buildType: 'number' };
+
 
 
 
@@ -53,5 +57,34 @@ describe('buildInvalidValueErrorMessage', () => {
     expect(msg).toMatch('UNKNOWN');
     expect(msg).toMatch(ERRORS.INVALID_VALUE);
     expect(msg).toMatch(err.message);
+  });
+});
+
+
+
+
+describe('buildConfig', () => {
+  test('can build a default config object by providing invalid values', () => {
+    [
+      buildConfig(), buildConfig(undefined), buildConfig(null!), buildConfig({}),
+      buildConfig({ decimalPlaces: undefined, roundingMode: undefined, buildType: undefined }),
+    ].forEach((val) => {
+      expect(val).toStrictEqual(dbc);
+    });
+  });
+
+  test('can build a config object by providing a partial config object', () => {
+    expect(buildConfig({ decimalPlaces: 8 })).toStrictEqual({ ...dbc, decimalPlaces: 8 });
+    expect(buildConfig({ roundingMode: 'ROUND_CEIL' })).toStrictEqual({ ...dbc, roundingMode: 'ROUND_CEIL' });
+    expect(buildConfig({ buildType: 'string' })).toStrictEqual({ ...dbc, buildType: 'string' });
+    expect(buildConfig({
+      buildType: 'bignumber',
+      decimalPlaces: 6,
+    })).toStrictEqual({ ...dbc, buildType: 'bignumber', decimalPlaces: 6 });
+  });
+
+  test('can build a config object by providing a complete config object', () => {
+    const config: IBuildConfig = { decimalPlaces: 4, roundingMode: 'ROUND_HALF_DOWN', buildType: 'string' };
+    expect(buildConfig(config)).toStrictEqual(config);
   });
 });
