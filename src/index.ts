@@ -15,6 +15,7 @@ import {
   buildInvalidValueErrorMessage,
   buildConfig,
   getRoundingMode,
+  buildNumberByType,
 } from './utils/utils.js';
 
 /**
@@ -82,16 +83,7 @@ const buildNumber = <T extends Partial<IBuildConfig>>(
   );
 
   // return the appropriate type
-  switch (config.buildType) {
-    case 'string':
-      return bn.toString() as IBuildOutput<T>;
-    case 'number':
-      return bn.toNumber() as IBuildOutput<T>;
-    case 'bignumber':
-      return bn as IBuildOutput<T>;
-    default:
-      throw new Error(encodeError(`The buildType '${config.buildType} is invalid.'`, ERRORS.INVALID_BUILD_TYPE));
-  }
+  return buildNumberByType(bn, config.buildType) as IBuildOutput<T>;
 };
 
 

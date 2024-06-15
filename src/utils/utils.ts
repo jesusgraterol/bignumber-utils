@@ -1,15 +1,12 @@
-import { BigNumber } from 'bignumber.js';
 import { encodeError, extractMessage } from 'error-message-utils';
 import {
   IBigNumber,
   IBigNumberRoundingMode,
   IBigNumberRoundingModeName,
-  IBigNumberValue,
   IBigNumberFormat,
   IBuildType,
   IBuildConfig,
   IBuildOutputByType,
-  IBuildOutput,
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
@@ -23,7 +20,7 @@ import { ERRORS } from '../shared/errors.js';
 
 /**
  * Builds the error message that will be thrown in case the provided value cannot be instantiated.
- * The encoding of the error is managed safely as there are values in JavaScript that cannot be 
+ * The encoding of the error is managed safely as there are values in JavaScript that cannot be
  * stringified, such as Symbol(value).
  * @param value
  * @param error
@@ -84,7 +81,12 @@ const getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRoundingMo
   }
 };
 
-
+/**
+ * Builds a number based on a given type.
+ * @param value
+ * @param buildType
+ * @returns IBuildOutputByType<T>
+ */
 const buildNumberByType = <T extends IBuildType>(
   value: IBigNumber,
   buildType: T,
