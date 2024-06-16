@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import { encodeError, isEncodedError } from 'error-message-utils';
+import { encodeError, extractMessage, isEncodedError } from 'error-message-utils';
 import {
   IBigNumber,
   IBigNumberRoundingModeName,
@@ -18,7 +18,6 @@ import {
   roundBigNumber,
   convertBigNumberToType,
   buildFormatConfig,
-  getRoundingMode,
 } from './utils/utils.js';
 
 /**
@@ -63,31 +62,13 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
 };
 
 /**
- * Returns the string representation of a number value after being built and formatted based on the
- * provided configs (if any)
- * @param value
- * @param config?
- * @returns string
- */
-const prettifyNumber = (
-  value: IBigNumberValue,
-  config: { build?: Partial<IBuildConfig>, format?: Partial<IBigNumberFormat> } = {},
-): string => {
-  const { decimalPlaces, roundingMode } = buildConfig(config.build);
-  return getBigNumber(value).toFormat(
-    decimalPlaces,
-    getRoundingMode(roundingMode),
-    buildFormatConfig(config.format),
-  );
-};
-
-/**
  * Builds a number based on given configuration (if any).
  * @param value
  * @param configuration?
  * @returns IBuildOutput<T>
  * @throws
  * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  * - INVALID_BUILD_TYPE: if the build type is not supported
  */
@@ -103,6 +84,40 @@ const buildNumber = <T extends Partial<IBuildConfig>>(
 
   // return the appropriate type
   return convertBigNumberToType(bn, config.buildType) as IBuildOutput<T>;
+};
+
+/**
+ * Returns the string representation of a number value after being built and formatted based on the
+ * provided configs (if any)
+ * @param value
+ * @param config?
+ * @returns string
+ * @throws
+ * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_BIGNUMBER_FORMAT: if any of the format properties are invalid
+ */
+const prettifyNumber = (
+  value: IBigNumberValue,
+  config: { build?: Partial<IBuildConfig>, format?: Partial<IBigNumberFormat> } = {},
+): string => {
+  try {
+    return buildNumber(
+      value,
+      {
+        ...config.build,
+        buildType: 'bignumber',
+      },
+    ).toFormat(buildFormatConfig(config.format));
+  } catch (e) {
+    // if it is a known error, just rethrow it
+    if (isEncodedError(e)) {
+      throw e;
+    }
+    throw new Error(encodeError(extractMessage(e), ERRORS.INVALID_BIGNUMBER_FORMAT));
+  }
 };
 
 
@@ -181,8 +196,8 @@ export {
 
   // number builders
   getBigNumber,
-  prettifyNumber,
   buildNumber,
+  prettifyNumber,
 
   // helpers
   isNumber,

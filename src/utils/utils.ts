@@ -43,11 +43,17 @@ const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
  * set to '*_CEIL' or '*_FLOOR', the decimalPlaces will be set to 0.
  * @param config
  * @returns IBuildConfig
+ * @throws
+ * - INVALID_DECIMAL_PLACES: if an invalid number of decimal places are provided
  */
 const buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => {
   const rm = config?.roundingMode ?? 'ROUND_HALF_UP';
+  const dp = rm.includes('CEIL') || rm.includes('FLOOR') ? 0 : config?.decimalPlaces ?? 2;
+  if (typeof dp !== 'number' || dp < 0 || dp > 100) {
+    throw new Error(encodeError(`The decimalPlaces '${dp}' must be a number ranging 0 - 100.`, ERRORS.INVALID_DECIMAL_PLACES));
+  }
   return {
-    decimalPlaces: rm.includes('CEIL') || rm.includes('FLOOR') ? 0 : config?.decimalPlaces ?? 2,
+    decimalPlaces: dp,
     roundingMode: rm,
     buildType: config?.buildType ?? 'number',
   };

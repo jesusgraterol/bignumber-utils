@@ -110,6 +110,14 @@ describe('buildConfig', () => {
     expect(buildConfig({ roundingMode: 'ROUND_HALF_CEIL' }).decimalPlaces).toBe(0);
     expect(buildConfig({ roundingMode: 'ROUND_HALF_FLOOR' }).decimalPlaces).toBe(0);
   });
+
+  test('throws if an invalid decimalPlaces value is provided', () => {
+    [
+      -100, Infinity, -Infinity, 101,
+    ].forEach((val: any) => {
+      expect(() => buildConfig({ decimalPlaces: val })).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
+    });
+  });
 });
 
 
