@@ -66,7 +66,7 @@ const buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => {
  * @throws
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  */
-const getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRoundingMode => {
+const __getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRoundingMode => {
   switch (name) {
     case 'ROUND_UP':
       return 0;
@@ -104,7 +104,7 @@ const roundBigNumber = (
   value: IBigNumber,
   decimalPlaces: number,
   roundingMode: IBigNumberRoundingModeName,
-): IBigNumber => value.decimalPlaces(decimalPlaces, getRoundingMode(roundingMode));
+): IBigNumber => value.decimalPlaces(decimalPlaces, __getRoundingMode(roundingMode));
 
 /**
  * Converts a BigNumber Instance into a custom type.
@@ -156,7 +156,6 @@ export {
   // implementation
   buildInvalidValueErrorMessage,
   buildConfig,
-  getRoundingMode,
   roundBigNumber,
   convertBigNumberToType,
   buildFormatConfig,
