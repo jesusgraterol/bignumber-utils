@@ -112,7 +112,7 @@ describe('buildConfig', () => {
 
   test('throws if an invalid decimalPlaces value is provided', () => {
     [
-      -100, Infinity, -Infinity, 101,
+      -0.001, -0.00542154, -100, Infinity, -Infinity, 101,
     ].forEach((val: any) => {
       expect(() => buildConfig({ decimalPlaces: val })).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
     });

@@ -101,7 +101,11 @@ describe('Number Builders', () => {
       expect(() => buildNumber(1, { roundingMode: <IBigNumberRoundingModeName>'invalid' })).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
     });
 
-    test.todo('throws if an invalid number of decimal places is provided');
+    test('throws if an invalid number of decimal places is provided', () => {
+      expect(
+        () => buildNumber(1, { decimalPlaces: -5 }),
+      ).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
+    });
   });
 
 
