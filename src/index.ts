@@ -120,6 +120,20 @@ const isInteger = (value: any): boolean => {
   }
 };
 
+/**
+ * Returns true if the given value is a float in any of the supported types (IBigNumberValue).
+ * @param value
+ * @returns boolean
+ */
+const isFloat = (value: any): boolean => {
+  try {
+    const bn = getBigNumber(value);
+    return !bn.isInteger();
+  } catch (e) {
+    return false;
+  }
+};
+
 
 
 /* ************************************************************************************************
@@ -151,6 +165,7 @@ export {
   // helpers
   isNumber,
   isInteger,
+  isFloat,
 
   // calculations
 

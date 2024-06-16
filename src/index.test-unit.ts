@@ -8,6 +8,7 @@ import {
   buildNumber,
   isNumber,
   isInteger,
+  isFloat,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -128,6 +129,21 @@ describe('Helpers', () => {
       expect(isInteger(undefined)).toBe(false);
       expect(isInteger(100.55)).toBe(false);
       expect(isInteger('1.01')).toBe(false);
+    });
+  });
+
+
+  describe('isFloat', () => {
+    test('can determine if a value is a float', () => {
+      expect(isFloat(100.55)).toBe(true);
+      expect(isFloat('4541534154.54641515645644512')).toBe(true);
+      expect(isFloat('1.001')).toBe(true);
+    });
+
+    test('can determine if a value is not a float', () => {
+      expect(isFloat(undefined)).toBe(false);
+      expect(isFloat(100)).toBe(false);
+      expect(isFloat('1.0')).toBe(false);
     });
   });
 });
