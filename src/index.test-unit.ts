@@ -2,11 +2,12 @@ import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
 import { ERRORS } from './shared/errors.js';
 import {
+  IBigNumberRoundingModeName,
+  IBuildType,
   getBigNumber,
   buildNumber,
-  IBuildType,
-  IBigNumberRoundingModeName,
   isNumber,
+  isInteger,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -15,8 +16,8 @@ import {
 
 // valid and invalid numeric values
 const valid = [
-  -854.11, 100.54, 154124564.655,
-  '-4561.551', '100.54', '9845418.455561',
+  -854.11, 100.54, 154124564.655, 100.00,
+  '-4561.551', '100.54', '9845418.455561', '100.00', '100.',
   BigNumber(-854.11), BigNumber(100.54), BigNumber('9845418.455561'), BigNumber('-4561.551'),
   0, -0, Infinity, -Infinity,
 ];
@@ -24,6 +25,7 @@ const invalid = [
   {}, [], [1, 2, 3], undefined, null, NaN, '', new Date(), Buffer.from('Hello!'), true, false,
   Symbol('Hello'), Symbol.for('Hello'), new Set([1, 2, 3]), new Map([['dog', 'woof'], ['asd', 'true']]),
   BigNumber(NaN), BigNumber('123,123.11'), BigNumber(undefined!), BigNumber(null!),
+  '00.00.00', '123123.1231.555,28',
 ];
 
 
@@ -111,6 +113,21 @@ describe('Helpers', () => {
 
     test('can determine if a value is an invalid number', () => {
       expect(invalid.every(isNumber)).toBe(false);
+    });
+  });
+
+
+  describe('isInteger', () => {
+    test('can determine if a value is an integer', () => {
+      expect(isInteger(100)).toBe(true);
+      expect(isInteger('4541534154')).toBe(true);
+      expect(isInteger('1.')).toBe(true);
+    });
+
+    test('can determine if a value is not an integer', () => {
+      expect(isInteger(undefined)).toBe(false);
+      expect(isInteger(100.55)).toBe(false);
+      expect(isInteger('1.01')).toBe(false);
     });
   });
 });

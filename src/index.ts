@@ -93,8 +93,7 @@ const buildNumber = <T extends Partial<IBuildConfig>>(
  ************************************************************************************************ */
 
 /**
- * Returns true if the given value is a number. Keep in mind that this function supports several 
- * types other than just 'number'.
+ * Returns true if the given value is a number in any of the supported types (IBigNumberValue).
  * @param value
  * @returns boolean
  */
@@ -107,7 +106,19 @@ const isNumber = (value: any): boolean => {
   }
 };
 
-
+/**
+ * Returns true if the given value is an integer in any of the supported types (IBigNumberValue).
+ * @param value
+ * @returns boolean
+ */
+const isInteger = (value: any): boolean => {
+  try {
+    const bn = getBigNumber(value);
+    return bn.isInteger();
+  } catch (e) {
+    return false;
+  }
+};
 
 
 
@@ -139,6 +150,7 @@ export {
 
   // helpers
   isNumber,
+  isInteger,
 
   // calculations
 
