@@ -92,6 +92,21 @@ const buildNumber = <T extends Partial<IBuildConfig>>(
  *                                            HELPERS                                             *
  ************************************************************************************************ */
 
+/**
+ * Returns true if the given value is a number. Keep in mind that this function supports several 
+ * types other than just 'number'.
+ * @param value
+ * @returns boolean
+ */
+const isNumber = (value: any): boolean => {
+  try {
+    getBigNumber(value);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 
 
 
@@ -123,7 +138,7 @@ export {
   buildNumber,
 
   // helpers
-
+  isNumber,
 
   // calculations
 
