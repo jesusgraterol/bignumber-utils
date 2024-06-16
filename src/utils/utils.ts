@@ -39,6 +39,25 @@ const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
 };
 
 /**
+ * Determines the number of decimals that will be placed on the configuration based on the input.
+ * @param decimalPlaces
+ * @param roundingMode
+ * @returns number
+ * @throws
+ * - INVALID_DECIMAL_PLACES: if an invalid number of decimal places are provided
+ */
+const __getDecimalPlaces = (
+  decimalPlaces: number,
+  roundingMode: IBigNumberRoundingModeName,
+): number => {
+  const dp = roundingMode.includes('CEIL') || roundingMode.includes('FLOOR') ? 0 : decimalPlaces;
+  if (typeof dp !== 'number' || dp < 0 || dp > 100) {
+    throw new Error(encodeError(`The decimalPlaces '${dp}' must be a number ranging 0 - 100.`, ERRORS.INVALID_DECIMAL_PLACES));
+  }
+  return dp;
+};
+
+/**
  * Builds the configuration that will be used to build a number. Note that if the roundingMode is
  * set to '*_CEIL' or '*_FLOOR', the decimalPlaces will be set to 0.
  * @param config
@@ -48,12 +67,8 @@ const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
  */
 const buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => {
   const rm = config?.roundingMode ?? 'ROUND_HALF_UP';
-  const dp = rm.includes('CEIL') || rm.includes('FLOOR') ? 0 : config?.decimalPlaces ?? 2;
-  if (typeof dp !== 'number' || dp < 0 || dp > 100) {
-    throw new Error(encodeError(`The decimalPlaces '${dp}' must be a number ranging 0 - 100.`, ERRORS.INVALID_DECIMAL_PLACES));
-  }
   return {
-    decimalPlaces: dp,
+    decimalPlaces: __getDecimalPlaces(config?.decimalPlaces ?? 2, rm),
     roundingMode: rm,
     buildType: config?.buildType ?? 'number',
   };
