@@ -39,15 +39,19 @@ const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
 };
 
 /**
- * Builds the configuration that will be used to build a number.
+ * Builds the configuration that will be used to build a number. Note that if the roundingMode is
+ * set to '*_CEIL' or '*_FLOOR', the decimalPlaces will be set to 0.
  * @param config
  * @returns IBuildConfig
  */
-const buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => ({
-  decimalPlaces: config?.decimalPlaces ?? 2,
-  roundingMode: config?.roundingMode ?? 'ROUND_HALF_UP',
-  buildType: config?.buildType ?? 'number',
-});
+const buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => {
+  const rm = config?.roundingMode ?? 'ROUND_HALF_UP';
+  return {
+    decimalPlaces: rm.includes('CEIL') || rm.includes('FLOOR') ? 0 : config?.decimalPlaces ?? 2,
+    roundingMode: rm,
+    buildType: config?.buildType ?? 'number',
+  };
+};
 
 /**
  * Retrieves the rounding mode number based on a given name.

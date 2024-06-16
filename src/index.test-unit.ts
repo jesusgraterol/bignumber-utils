@@ -3,8 +3,6 @@ import { BigNumber } from 'bignumber.js';
 import { ERRORS } from './shared/errors.js';
 import { getBigNumber, buildNumber } from './index.js';
 
-
-
 /* ************************************************************************************************
  *                                             TESTS                                              *
  ************************************************************************************************ */
@@ -37,9 +35,32 @@ describe('getBigNumber', () => {
 
 
 describe('buildNumber', () => {
-  test('can build a BigNumber from any valid value', () => {
-    const val = buildNumber(100.58, { buildType: 'string' });
-    expect(typeof val).toBe('string');
-    expect(val).toBe('100.58');
+  test('can build a number from any valid value w/ default config', () => {
+    const val = buildNumber(100.585);
+    expect(val).toBeTypeOf('number');
+    expect(val).toBe(100.59);
   });
+
+  test('can specify the type for the build output', () => {
+    expect(buildNumber(110.55, { buildType: 'number' })).toBe(110.55);
+    expect(buildNumber(110.55, { buildType: 'string' })).toBe('110.55');
+    expect(BigNumber(110.55).isEqualTo(buildNumber(110.55, { buildType: 'bignumber' }))).toBe(true);
+  });
+
+  test.todo('can specify the number of decimal places for the build output', () => {
+
+  });
+
+  test.todo('can specify the rounding mode for the build output', () => {
+    expect(buildNumber(512.155, { roundingMode: 'ROUND_HALF_UP' })).toBe(512.16);
+    expect(buildNumber(512.155, { roundingMode: 'ROUND_HALF_DOWN' })).toBe(512.15);
+    expect(buildNumber(512.155, { roundingMode: 'ROUND_CEIL' })).toBe(513);
+    expect(buildNumber(512.155, { roundingMode: 'ROUND_FLOOR' })).toBe(512);
+  });
+
+  test.todo('throws if an invalid value is provided');
+
+  test.todo('throws if an invalid build type is provided');
+
+  test.todo('throws if an invalid rounding mode is provided');
 });

@@ -72,7 +72,7 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
  */
 const buildNumber = <T extends Partial<IBuildConfig>>(
   value: IBigNumberValue,
-  configuration?: Partial<T>,
+  configuration?: T,
 ): IBuildOutput<T> => {
   // build the config
   const config = buildConfig(configuration);
