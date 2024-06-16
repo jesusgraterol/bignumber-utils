@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
 import { ERRORS } from './shared/errors.js';
-import { getBigNumber, buildNumber } from './index.js';
+import { getBigNumber, buildNumber, IBuildType, IBigNumberRoundingModeName } from './index.js';
 
 /* ************************************************************************************************
  *                                             TESTS                                              *
@@ -47,20 +47,33 @@ describe('buildNumber', () => {
     expect(BigNumber(110.55).isEqualTo(buildNumber(110.55, { buildType: 'bignumber' }))).toBe(true);
   });
 
-  test.todo('can specify the number of decimal places for the build output', () => {
-
+  test('can specify the number of decimal places for the build output', () => {
+    expect(buildNumber('512.1111', { decimalPlaces: 2, buildType: 'string' })).toBe('512.11');
+    expect(buildNumber('512.1111111111111111111', { decimalPlaces: 18, buildType: 'string' })).toBe('512.111111111111111111');
+    expect(buildNumber('512.855', { decimalPlaces: 2, buildType: 'string' })).toBe('512.86');
+    expect(buildNumber('512.855', { decimalPlaces: 15, buildType: 'string' })).toBe('512.855');
   });
 
-  test.todo('can specify the rounding mode for the build output', () => {
+  test('can specify the rounding mode for the build output', () => {
     expect(buildNumber(512.155, { roundingMode: 'ROUND_HALF_UP' })).toBe(512.16);
     expect(buildNumber(512.155, { roundingMode: 'ROUND_HALF_DOWN' })).toBe(512.15);
     expect(buildNumber(512.155, { roundingMode: 'ROUND_CEIL' })).toBe(513);
+    expect(buildNumber(512.553, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(513);
+    expect(buildNumber(512.499, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(512);
     expect(buildNumber(512.155, { roundingMode: 'ROUND_FLOOR' })).toBe(512);
+    expect(buildNumber(512.51, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(513);
+    expect(buildNumber(512.5, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(512);
   });
 
-  test.todo('throws if an invalid value is provided');
+  test('throws if an invalid value is provided', () => {
+    expect(() => buildNumber(undefined!)).toThrowError(ERRORS.INVALID_VALUE);
+  });
 
-  test.todo('throws if an invalid build type is provided');
+  test('throws if an invalid build type is provided', () => {
+    expect(() => buildNumber(1, { buildType: <IBuildType>'invalid' })).toThrowError(ERRORS.INVALID_BUILD_TYPE);
+  });
 
-  test.todo('throws if an invalid rounding mode is provided');
+  test('throws if an invalid rounding mode is provided', () => {
+    expect(() => buildNumber(1, { roundingMode: <IBigNumberRoundingModeName>'invalid' })).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
+  });
 });

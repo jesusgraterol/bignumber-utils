@@ -99,13 +99,13 @@ describe('buildConfig', () => {
   });
 
   test('if the rounding mode specified is *_CEIL or *_FLOOR, it will set the decimal places to 0', () => {
-    expect(buildConfig({ roundingMode: 'ROUND_UP' }).decimalPlaces).toBe(2);
-    expect(buildConfig({ roundingMode: 'ROUND_DOWN' }).decimalPlaces).toBe(2);
+    expect(buildConfig({ roundingMode: 'ROUND_UP' }).decimalPlaces).toBe(dbc.decimalPlaces);
+    expect(buildConfig({ roundingMode: 'ROUND_DOWN' }).decimalPlaces).toBe(dbc.decimalPlaces);
     expect(buildConfig({ roundingMode: 'ROUND_CEIL' }).decimalPlaces).toBe(0);
     expect(buildConfig({ roundingMode: 'ROUND_FLOOR' }).decimalPlaces).toBe(0);
-    expect(buildConfig({ roundingMode: 'ROUND_HALF_UP' }).decimalPlaces).toBe(2);
-    expect(buildConfig({ roundingMode: 'ROUND_HALF_DOWN' }).decimalPlaces).toBe(2);
-    expect(buildConfig({ roundingMode: 'ROUND_HALF_EVEN' }).decimalPlaces).toBe(2);
+    expect(buildConfig({ roundingMode: 'ROUND_HALF_UP' }).decimalPlaces).toBe(dbc.decimalPlaces);
+    expect(buildConfig({ roundingMode: 'ROUND_HALF_DOWN' }).decimalPlaces).toBe(dbc.decimalPlaces);
+    expect(buildConfig({ roundingMode: 'ROUND_HALF_EVEN' }).decimalPlaces).toBe(dbc.decimalPlaces);
     expect(buildConfig({ roundingMode: 'ROUND_HALF_CEIL' }).decimalPlaces).toBe(0);
     expect(buildConfig({ roundingMode: 'ROUND_HALF_FLOOR' }).decimalPlaces).toBe(0);
   });
