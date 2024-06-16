@@ -17,6 +17,7 @@ import {
   buildConfig,
   roundBigNumber,
   convertBigNumberToType,
+  buildFormatConfig,
 } from './utils/utils.js';
 
 /**
@@ -58,6 +59,20 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
     }
     throw new Error(buildInvalidValueErrorMessage(value, e));
   }
+};
+
+const prettifyNumber = (
+  value: IBigNumberValue,
+  config?: Partial<IBuildConfig>,
+  formatConfig?: Partial<IBigNumberFormat>,
+): string => {
+  const { decimalPlaces, roundingMode } = buildConfig(config);
+  return getBigNumber(value).toFormat(
+    decimalPlaces,
+    // roundingMode,
+    0,
+    buildFormatConfig(formatConfig),
+  );
 };
 
 /**
@@ -160,6 +175,7 @@ export {
 
   // number builders
   getBigNumber,
+  prettifyNumber,
   buildNumber,
 
   // helpers

@@ -8,6 +8,7 @@ import {
   roundBigNumber,
   convertBigNumberToType,
   buildFormatConfig,
+  getRoundingMode,
 } from './utils.js';
 
 
@@ -108,6 +109,27 @@ describe('buildConfig', () => {
     expect(buildConfig({ roundingMode: 'ROUND_HALF_EVEN' }).decimalPlaces).toBe(dbc.decimalPlaces);
     expect(buildConfig({ roundingMode: 'ROUND_HALF_CEIL' }).decimalPlaces).toBe(0);
     expect(buildConfig({ roundingMode: 'ROUND_HALF_FLOOR' }).decimalPlaces).toBe(0);
+  });
+});
+
+
+
+
+describe('getRoundingMode', () => {
+  test('can retrieve the rounding mode by name', () => {
+    expect(getRoundingMode('ROUND_UP')).toBe(0);
+    expect(getRoundingMode('ROUND_DOWN')).toBe(1);
+    expect(getRoundingMode('ROUND_CEIL')).toBe(2);
+    expect(getRoundingMode('ROUND_FLOOR')).toBe(3);
+    expect(getRoundingMode('ROUND_HALF_UP')).toBe(4);
+    expect(getRoundingMode('ROUND_HALF_DOWN')).toBe(5);
+    expect(getRoundingMode('ROUND_HALF_EVEN')).toBe(6);
+    expect(getRoundingMode('ROUND_HALF_CEIL')).toBe(7);
+    expect(getRoundingMode('ROUND_HALF_FLOOR')).toBe(8);
+  });
+
+  test('throws if an unsupported rounding mode is provided', () => {
+    expect(() => getRoundingMode(<IBigNumberRoundingModeName>'invalid')).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
   });
 });
 
