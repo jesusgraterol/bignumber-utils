@@ -9,6 +9,7 @@ import {
   isNumber,
   isInteger,
   isFloat,
+  prettifyNumber,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -52,6 +53,35 @@ describe('Number Builders', () => {
       invalid.forEach((value) => {
         expect(() => getBigNumber(<any>value)).toThrowError(ERRORS.INVALID_VALUE);
       });
+    });
+  });
+
+
+
+  describe('prettifyNumber', () => {
+    test('can prettify a number with any number of decimals and any rounding mode', () => {
+      expect(prettifyNumber(1.555, { build: { roundingMode: 'ROUND_HALF_UP' } })).toBe('1.56');
+      expect(prettifyNumber(1.555, { build: { roundingMode: 'ROUND_HALF_DOWN' } })).toBe('1.55');
+      expect(prettifyNumber(105142.821546985, { build: { decimalPlaces: 8, roundingMode: 'ROUND_HALF_DOWN' } })).toBe('105,142.82154698');
+    });
+
+    test('can separate groups with any character', () => {
+      expect(prettifyNumber(15426525.84, { format: { groupSeparator: ' ' } })).toBe('15 426 525.84');
+      expect(prettifyNumber(15426525.84, { format: { groupSeparator: '-' } })).toBe('15-426-525.84');
+    });
+
+    test('can use any character to separate thousands and decimals', () => {
+      expect(prettifyNumber(15426525.84, { format: { groupSeparator: '.', decimalSeparator: ',' } })).toBe('15.426.525,84');
+    });
+
+    test('can add a prefix to any number', () => {
+      expect(prettifyNumber(15426525.84, { format: { prefix: '$' } })).toBe('$15,426,525.84');
+      expect(prettifyNumber(15426525.84, { format: { prefix: 'USD ' } })).toBe('USD 15,426,525.84');
+    });
+
+    test('can add a suffix to any number', () => {
+      expect(prettifyNumber(15426525.84, { format: { suffix: '$' } })).toBe('15,426,525.84$');
+      expect(prettifyNumber(15426525.84, { format: { suffix: ' USD' } })).toBe('15,426,525.84 USD');
     });
   });
 

@@ -18,6 +18,7 @@ import {
   roundBigNumber,
   convertBigNumberToType,
   buildFormatConfig,
+  getRoundingMode,
 } from './utils/utils.js';
 
 /**
@@ -61,17 +62,22 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
   }
 };
 
+/**
+ * Returns the string representation of a number value after being built and formatted based on the
+ * provided configs (if any)
+ * @param value
+ * @param config?
+ * @returns string
+ */
 const prettifyNumber = (
   value: IBigNumberValue,
-  config?: Partial<IBuildConfig>,
-  formatConfig?: Partial<IBigNumberFormat>,
+  config: { build?: Partial<IBuildConfig>, format?: Partial<IBigNumberFormat> } = {},
 ): string => {
-  const { decimalPlaces, roundingMode } = buildConfig(config);
+  const { decimalPlaces, roundingMode } = buildConfig(config.build);
   return getBigNumber(value).toFormat(
     decimalPlaces,
-    // roundingMode,
-    0,
-    buildFormatConfig(formatConfig),
+    getRoundingMode(roundingMode),
+    buildFormatConfig(config.format),
   );
 };
 

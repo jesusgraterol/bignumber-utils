@@ -138,9 +138,9 @@ describe('getRoundingMode', () => {
 
 
 describe('roundBigNumber', () => {
-  test.todo('can apply the ROUND_UP mode with any number of decimal places');
+  // test.todo('can apply the ROUND_UP mode with any number of decimal places');
 
-  test.todo('can apply the ROUND_DOWN mode with any number of decimal places');
+  // test.todo('can apply the ROUND_DOWN mode with any number of decimal places');
 
   test('can apply the ROUND_CEIL mode with any number of decimal places', () => {
     expect(roundBigNumber(BigNumber('1.01'), 0, 'ROUND_CEIL').toString()).toBe('2');
@@ -184,11 +184,11 @@ describe('roundBigNumber', () => {
     expect(roundBigNumber(BigNumber('1005421251254.8841256948841256945'), 18, 'ROUND_HALF_DOWN').toString()).toBe('1005421251254.884125694884125694');
   });
 
-  test.todo('can apply the ROUND_HALF_EVEN mode with any number of decimal places');
+  // test.todo('can apply the ROUND_HALF_EVEN mode with any number of decimal places');
 
-  test.todo('can apply the ROUND_HALF_CEIL mode with any number of decimal places');
+  // test.todo('can apply the ROUND_HALF_CEIL mode with any number of decimal places');
 
-  test.todo('can apply the ROUND_HALF_FLOOR mode with any number of decimal places');
+  // test.todo('can apply the ROUND_HALF_FLOOR mode with any number of decimal places');
 
   test('throws if an invalid rounding mode is provided', () => {
     expect(() => roundBigNumber(BigNumber(1.565), 2, <IBigNumberRoundingModeName>'invalid')).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
