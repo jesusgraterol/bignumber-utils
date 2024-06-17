@@ -10,6 +10,7 @@ import {
   isInteger,
   isFloat,
   prettifyNumber,
+  isBigNumber,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -147,6 +148,24 @@ describe('Number Builders', () => {
 
 
 describe('Helpers', () => {
+  describe('isBigNumber', () => {
+    test('can identify when a value is a BigNumber Instance', () => {
+      [
+        getBigNumber(1), getBigNumber('123'), getBigNumber(BigNumber(1)),
+      ].forEach((val) => {
+        expect(isBigNumber(val)).toBe(true);
+      });
+    });
+
+    test('can identify when a value is not a BigNumber Instance', () => {
+      [
+        112.55, '1234.55', new Date(), getBigNumber('123').toString(),
+      ].forEach((val) => {
+        expect(isBigNumber(val)).toBe(false);
+      });
+    });
+  });
+
   describe('isNumber', () => {
     test('can determine if a value is a valid number', () => {
       expect(valid.every(isNumber)).toBe(true);

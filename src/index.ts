@@ -129,6 +129,13 @@ const prettifyNumber = (
  ************************************************************************************************ */
 
 /**
+ * Verifies if a given value is a BigNumber Instance.
+ * @param value
+ * @returns boolean
+ */
+const isBigNumber = (value: any): value is IBigNumber => BigNumber.isBigNumber(value);
+
+/**
  * Returns true if the given value is a number in any of the supported types (IBigNumberValue).
  * @param value
  * @returns boolean
@@ -200,6 +207,7 @@ export {
   prettifyNumber,
 
   // helpers
+  isBigNumber,
   isNumber,
   isInteger,
   isFloat,
