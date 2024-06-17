@@ -129,14 +129,16 @@ describe('Number Builders', () => {
     test('can add a prefix to any number', () => {
       expect(prettifyNumber(15426525.84, { format: { prefix: '$' } })).toBe('$15,426,525.84');
       expect(prettifyNumber(15426525.84, { format: { prefix: 'USD ' } })).toBe('USD 15,426,525.84');
+      expect(prettifyNumber(15426525.846545124, { build: { decimalPlaces: 8 }, format: { prefix: 'BTC ' } })).toBe('BTC 15,426,525.84654512');
+      expect(prettifyNumber('15426525.846545124846545124', { build: { decimalPlaces: 18 }, format: { prefix: 'ETH ' } })).toBe('ETH 15,426,525.846545124846545124');
     });
 
     test('can add a suffix to any number', () => {
       expect(prettifyNumber(15426525.84, { format: { suffix: '$' } })).toBe('15,426,525.84$');
       expect(prettifyNumber(15426525.84, { format: { suffix: ' USD' } })).toBe('15,426,525.84 USD');
+      expect(prettifyNumber(15426525.846545124, { build: { decimalPlaces: 8 }, format: { suffix: ' BTC' } })).toBe('15,426,525.84654512 BTC');
+      expect(prettifyNumber('15426525.846545124846545124', { build: { decimalPlaces: 18 }, format: { suffix: ' ETH' } })).toBe('15,426,525.846545124846545124 ETH');
     });
-
-    test.todo('throws if an invalid format config is provided');
   });
 });
 
