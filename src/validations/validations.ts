@@ -27,7 +27,7 @@ const validateDecimalPlaces = (decimalPlaces: number): void => {
  */
 const validateValuesArray = (values: IBigNumberValue[], calculationName: string): void => {
   if (!Array.isArray(values)) {
-    throw new Error(encodeError(`Cannot calculate the ${calculationName} on an invalid sequence of BigNumber Values. Received: ${values}`, ERRORS.INVALID_VALUES_ARRAY));
+    throw new Error(encodeError(`Cannot run ${calculationName} on an invalid sequence of BigNumber Values. Received: ${values}`, ERRORS.INVALID_VALUES_ARRAY));
   }
 };
 

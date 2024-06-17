@@ -5,12 +5,13 @@ import {
   IBigNumberRoundingModeName,
   IBuildType,
   getBigNumber,
+  prettifyNumber,
   buildNumber,
+  isBigNumber,
   isNumber,
   isInteger,
   isFloat,
-  prettifyNumber,
-  isBigNumber,
+  calculateSum,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -228,5 +229,47 @@ describe('Helpers', () => {
 
 
 describe('calculations', () => {
-  test.todo('...');
+  describe('calculateSum', () => {
+    test('can calculate the sum for any array of numeric values', () => {
+      expect(calculateSum([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(8061);
+      expect(calculateSum([100, 50, 99.11, 68.3])).toBe(317.41);
+      expect(calculateSum([])).toBe(0);
+      expect(calculateSum([
+        '0.286304850273819327', '0.00290532', '0.00251940040614675', '0.03506759540691015',
+      ], { decimalPlaces: 18, buildType: 'string' })).toBe('0.326797166086876227');
+    });
+
+    test('throws if an invalid array of values is provided', () => {
+      expect(() => calculateSum(undefined!)).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+      expect(() => calculateSum(null!)).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+      // @ts-ignore
+      expect(() => calculateSum({})).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+      // @ts-ignore
+      expect(() => calculateSum(1)).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+      // @ts-ignore
+      expect(() => calculateSum('asd')).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+    });
+
+    test('throws if any of the values in the array is invalid', () => {
+      expect(() => calculateSum([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654), NaN])).toThrowError(ERRORS.INVALID_VALUE);
+    });
+
+    test('throws if the decimal places is invalid', () => {
+      expect(
+        () => calculateSum([1, 86], { decimalPlaces: -1 }),
+      ).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
+    });
+
+    test('throws if the build type is invalid', () => {
+      expect(
+        () => calculateSum([1, 86], { buildType: <IBuildType>'invalid' }),
+      ).toThrowError(ERRORS.INVALID_BUILD_TYPE);
+    });
+
+    test('throws if the rounding mode is invalid', () => {
+      expect(
+        () => calculateSum([1, 86], { roundingMode: <IBigNumberRoundingModeName>'invalid' }),
+      ).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
+    });
+  });
 });

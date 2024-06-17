@@ -12,6 +12,7 @@ import {
   IBuildOutput,
 } from './shared/types.js';
 import { ERRORS } from './shared/errors.js';
+import { validateValuesArray } from './validations/validations.js';
 import {
   buildInvalidValueErrorMessage,
   buildConfig,
@@ -184,7 +185,8 @@ const isFloat = (value: any): value is number => {
  ************************************************************************************************ */
 
 /**
- * 
+ * Calculates the SUM for a given list of numeric values. The types of the values can be mixed.
+ * For example: [2, new BigNumber(14), '15.9999', 12]
  * @param values
  * @param config?
  * @returns IBuildOutput<T>
@@ -199,9 +201,7 @@ const calculateSum = <T extends Partial<IBuildConfig>>(
   values: IBigNumberValue[],
   config?: T,
 ): IBuildOutput<T> => {
-  if (!Array.isArray(values)) {
-    throw new Error(encodeError(`Cannot perform a calculation on an invalid sequence of BigNumber Values. Received: ${values}`, ERRORS.INVALID_VALUES_ARRAY));
-  }
+  validateValuesArray(values, 'calculateSum');
   return buildNumber(
     values.length > 0 ? BigNumber.sum.apply(null, values) : 0,
     buildConfig(config),
@@ -237,5 +237,5 @@ export {
   isFloat,
 
   // calculations
-
+  calculateSum,
 };
