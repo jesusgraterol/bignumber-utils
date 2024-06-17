@@ -140,7 +140,7 @@ const isBigNumber = (value: any): value is IBigNumber => BigNumber.isBigNumber(v
  * @param value
  * @returns boolean
  */
-const isNumber = (value: any): boolean => {
+const isNumber = (value: any): value is number => {
   try {
     getBigNumber(value);
     return true;
@@ -154,7 +154,7 @@ const isNumber = (value: any): boolean => {
  * @param value
  * @returns boolean
  */
-const isInteger = (value: any): boolean => {
+const isInteger = (value: any): value is number => {
   try {
     const bn = getBigNumber(value);
     return bn.isInteger();
@@ -168,7 +168,7 @@ const isInteger = (value: any): boolean => {
  * @param value
  * @returns boolean
  */
-const isFloat = (value: any): boolean => {
+const isFloat = (value: any): value is number => {
   try {
     const bn = getBigNumber(value);
     return !bn.isInteger();
@@ -183,6 +183,30 @@ const isFloat = (value: any): boolean => {
  *                                          CALCULATIONS                                          *
  ************************************************************************************************ */
 
+/**
+ * 
+ * @param values
+ * @param config?
+ * @returns IBuildOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ */
+const calculateSum = <T extends Partial<IBuildConfig>>(
+  values: IBigNumberValue[],
+  config?: T,
+): IBuildOutput<T> => {
+  if (!Array.isArray(values)) {
+    throw new Error(encodeError(`Cannot perform a calculation on an invalid sequence of BigNumber Values. Received: ${values}`, ERRORS.INVALID_VALUES_ARRAY));
+  }
+  return buildNumber(
+    values.length > 0 ? BigNumber.sum.apply(null, values) : 0,
+    buildConfig(config),
+  ) as IBuildOutput<T>;
+};
 
 
 

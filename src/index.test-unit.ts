@@ -50,6 +50,22 @@ describe('Number Builders', () => {
       });
     });
 
+    test('regardless of how BigNumber is instantiated, the value is always identical', () => {
+      const fromString = getBigNumber('456452154.5645412');
+      const fromNumber = getBigNumber(456452154.5645412);
+      const fromBigNumber = getBigNumber(BigNumber(456452154.5645412));
+
+      // ensure they are all instances of BigNumber
+      expect(BigNumber.isBigNumber(fromString)).toBe(true);
+      expect(BigNumber.isBigNumber(fromNumber)).toBe(true);
+      expect(BigNumber.isBigNumber(fromBigNumber)).toBe(true);
+
+      // they should be all equals to one another
+      expect(fromString.isEqualTo(fromNumber)).toBe(true);
+      expect(fromNumber.isEqualTo(fromBigNumber)).toBe(true);
+      expect(fromString.isEqualTo(fromBigNumber)).toBe(true);
+    });
+
     test('throws if an invalid value is provided', () => {
       invalid.forEach((value) => {
         expect(() => getBigNumber(<any>value)).toThrowError(ERRORS.INVALID_VALUE);
@@ -205,4 +221,12 @@ describe('Helpers', () => {
       expect(isFloat('1.0')).toBe(false);
     });
   });
+});
+
+
+
+
+
+describe('calculations', () => {
+  test.todo('...');
 });

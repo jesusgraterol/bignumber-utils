@@ -9,7 +9,7 @@ import {
   IBigNumberToType,
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
-
+import { validateDecimalPlaces } from '../validations/validations.js';
 
 
 
@@ -44,16 +44,14 @@ const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
  * @param roundingMode
  * @returns number
  * @throws
- * - INVALID_DECIMAL_PLACES: if an invalid number of decimal places are provided
+ * - INVALID_DECIMAL_PLACES: if decimalPlaces is not a number or it is outside of the 0 - 100 range
  */
 const __getDecimalPlaces = (
   decimalPlaces: number,
   roundingMode: IBigNumberRoundingModeName,
 ): number => {
   const dp = roundingMode.includes('CEIL') || roundingMode.includes('FLOOR') ? 0 : decimalPlaces;
-  if (typeof dp !== 'number' || dp < 0 || dp > 100) {
-    throw new Error(encodeError(`The decimalPlaces '${dp}' must be a number ranging 0 - 100.`, ERRORS.INVALID_DECIMAL_PLACES));
-  }
+  validateDecimalPlaces(dp);
   return dp;
 };
 
@@ -160,6 +158,7 @@ const buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberFormat
   fractionGroupSize: config?.fractionGroupSize ?? 0,
   suffix: config?.suffix ?? '',
 });
+
 
 
 
