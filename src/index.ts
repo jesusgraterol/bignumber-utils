@@ -180,6 +180,8 @@ const isFloat = (value: any): value is number => {
 
 
 
+
+
 /* ************************************************************************************************
  *                                          CALCULATIONS                                          *
  ************************************************************************************************ */
@@ -207,6 +209,8 @@ const calculateSum = <T extends Partial<IBuildConfig>>(
     buildConfig(config),
   ) as IBuildOutput<T>;
 };
+
+
 
 
 

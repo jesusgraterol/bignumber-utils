@@ -67,6 +67,59 @@ describe('Number Builders', () => {
       expect(fromString.isEqualTo(fromBigNumber)).toBe(true);
     });
 
+    test('can make use of any of the instance methods', () => {
+      expect(getBigNumber(1).absoluteValue().toNumber()).toBe(1);
+      expect(getBigNumber(-1).absoluteValue().toNumber()).toBe(1);
+
+      expect(getBigNumber(355).dividedBy(113).toString()).toBe('3.14159292035398230088');
+
+      expect(getBigNumber(5).dividedToIntegerBy(3).toString()).toBe('1');
+
+      expect(getBigNumber(0.7).exponentiatedBy(2).toString()).toBe('0.49');
+
+      expect(getBigNumber(-12.7).integerValue().toString()).toBe('-13');
+
+      expect(getBigNumber(1).isEqualTo(1)).toBe(true);
+
+      expect(getBigNumber(1).isFinite()).toBe(true);
+      expect(getBigNumber(Infinity).isFinite()).toBe(false);
+
+      expect(getBigNumber(0.1).isGreaterThan(0.01)).toBe(true);
+      expect(getBigNumber(0.1).isGreaterThanOrEqualTo(0.1)).toBe(true);
+
+      expect(getBigNumber(1).isInteger()).toBe(true);
+      expect(getBigNumber(0.11).isInteger()).toBe(false);
+
+      expect(getBigNumber(0.11).isLessThan(0.2)).toBe(true);
+      expect(getBigNumber(0.11).isLessThanOrEqualTo(0.11)).toBe(true);
+
+      expect(getBigNumber(-1).isNegative()).toBe(true);
+
+      expect(getBigNumber(1).isPositive()).toBe(true);
+
+      expect(getBigNumber(0).isZero()).toBe(true);
+
+      expect(getBigNumber(5).minus(1).toString()).toBe('4');
+
+      expect(getBigNumber(1).modulo(0.9).toString()).toBe('0.1');
+
+      expect(getBigNumber(0.6).multipliedBy(3).toString()).toBe('1.8');
+
+      expect(getBigNumber(0.6).negated().toString()).toBe('-0.6');
+      expect(getBigNumber(-0.6).negated().toString()).toBe('0.6');
+
+      expect(getBigNumber(0.1).plus(0.2).toString()).toBe('0.3');
+
+      expect(getBigNumber(1.23).shiftedBy(3).toString()).toBe('1230');
+      expect(getBigNumber(1.23).shiftedBy(-3).toString()).toBe('0.00123');
+
+      expect(getBigNumber(16).squareRoot().toString()).toBe('4');
+
+      expect(getBigNumber(45.6).toExponential().toString()).toBe('4.56e+1');
+
+      expect(getBigNumber(1.75).toFraction().toString()).toBe('7,4');
+    });
+
     test('throws if an invalid value is provided', () => {
       invalid.forEach((value) => {
         expect(() => getBigNumber(<any>value)).toThrowError(ERRORS.INVALID_VALUE);
