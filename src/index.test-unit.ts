@@ -14,6 +14,7 @@ import {
   calculateSum,
   calculateMin,
   calculateMax,
+  calculateMean,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -285,10 +286,13 @@ describe('Helpers', () => {
 
 describe('Essential Calculations', () => {
   describe('calculateSum', () => {
+    test('returns 0 if an empty list of values is provided', () => {
+      expect(calculateSum([])).toBe(0);
+    });
+
     test('can calculate the sum for any array of numeric values', () => {
       expect(calculateSum([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(8061);
       expect(calculateSum([100, 50, 99.11, 68.3])).toBe(317.41);
-      expect(calculateSum([])).toBe(0);
       expect(calculateSum([
         '0.286304850273819327', '0.00290532', '0.00251940040614675', '0.03506759540691015',
       ], { decimalPlaces: 18, buildType: 'string' })).toBe('0.326797166086876227');
@@ -331,6 +335,10 @@ describe('Essential Calculations', () => {
 
 
   describe('calculateMin', () => {
+    test('returns 0 if an empty list of values is provided', () => {
+      expect(calculateMin([])).toBe(0);
+    });
+
     test('can identify the smallest value in an array of ints and floats', () => {
       expect(calculateMin([100, 200, 300, 400, 500])).toBe(100);
       expect(calculateMin([100.54, 201.69, 302.55, 988.25, 631.12])).toBe(100.54);
@@ -344,6 +352,10 @@ describe('Essential Calculations', () => {
 
 
   describe('calculateMax', () => {
+    test('returns 0 if an empty list of values is provided', () => {
+      expect(calculateMax([])).toBe(0);
+    });
+
     test('can identify the largest value in an array of ints and floats', () => {
       expect(calculateMax([100, 200, 300, 400, 500])).toBe(500);
       expect(calculateMax([100.54, 201.69, 302.55, 988.25, 631.12])).toBe(988.25);
@@ -351,6 +363,23 @@ describe('Essential Calculations', () => {
 
     test('can identify the largest value in an array of mixed types', () => {
       expect(calculateMax([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(8041.66);
+    });
+  });
+
+  describe('calculateMean', () => {
+    test('returns 0 if an empty list of values is provided', () => {
+      expect(calculateMean([])).toBe(0);
+    });
+
+    test('can calculate the mean of list comprised by integers and floats', () => {
+      expect(calculateMean([100, 200, 300, 400, 500])).toBe(300);
+      expect(calculateMean([100.54, 201.69, 302.55, 988.25, 631.12])).toBe(444.83);
+    });
+
+    test('can calculate the mean of a list comprised by values with mixed types', () => {
+      expect(calculateMean([
+        1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654),
+      ])).toBe(895.67);
     });
   });
 });

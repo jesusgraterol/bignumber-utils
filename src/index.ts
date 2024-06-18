@@ -280,10 +280,15 @@ const calculateMean = <T extends Partial<IBuildConfig>>(
   config?: T,
 ): IBuildOutput<T> => {
   validateValuesArray(values, 'calculateMean');
-  return buildNumber(
-    values.length > 0 ? BigNumber.max.apply(null, values) : 0,
-    buildConfig(config),
-  ) as IBuildOutput<T>;
+
+  // calculate the sum without rounding if there are items in the array. Otherwise, the mean is 0
+  if (values.length > 0) {
+    return buildNumber(
+      BigNumber.sum.apply(null, values).dividedBy(values.length),
+      buildConfig(config),
+    ) as IBuildOutput<T>;
+  }
+  return buildNumber(0, buildConfig(config)) as IBuildOutput<T>;
 };
 
 
@@ -319,4 +324,5 @@ export {
   calculateSum,
   calculateMin,
   calculateMax,
+  calculateMean,
 };
