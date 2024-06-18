@@ -12,7 +12,7 @@ This package provides a streamlined interface for working with arbitrary-precisi
 
 Install the package:
 ```bash
-$ npm install -S bignumber-utils
+npm install -S bignumber-utils
 ```
 
 
@@ -37,8 +37,46 @@ $ npm install -S bignumber-utils
 
 ## API
 
-- `getBigNumber` instantiates BigNumber based on a given value and returns it
-- `buildNumber` builds a number based on given configuration (if any)
+### Number Builders
+
+- **`getBigNumber`** instantiates BigNumber based on a given value
+- **`buildNumber`** builds a number based on given configuration (if any)
+- **`prettifyNumber`** returns the string representation of a number value after being built and formatted based on the provided configs (if any)
+
+
+
+### Helpers
+
+- **`isBigNumber`** verifies if a given value is a BigNumber Instance
+- **`isNumber`** returns `true` if the given value is a number in any of the supported types (`IBigNumberValue`)
+- **`isInteger`** returns `true` if the given value is an integer in any of the supported types (`IBigNumberValue`)
+- **`isFloat`** returns `true` if the given value is a float in any of the supported types (`IBigNumberValue`)
+
+
+
+### Essential Calculations
+
+- **`calculateSum`** calculates the SUM for a given list of numeric values
+- **`calculateMin`** identifies and returns the smallest value in an array
+- **`calculateMax`** identifies and returns the largest value in an array
+- **`calculateMean`** calculates and returns the mean of an array of values
+- **`calculateMedian`** calculates and returns the median of an array of values
+
+
+
+### Advanced Calculations
+
+@TODO
+
+
+### BigNumber Methods
+
+Since this library is built on top of `bignumber.js`, whenever you invoke `getBigNumber(value)` or `buildNumber(value, { buildType: 'bignumber' })` you can make use of any method within the BigNumber Instace. 
+
+The list of methods can be found [here](https://mikemcl.github.io/bignumber.js/)
+
+
+
 
 
 

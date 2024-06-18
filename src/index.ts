@@ -40,7 +40,7 @@ BigNumber.config({
  ************************************************************************************************ */
 
 /**
- * Instantiates BigNumber based on a given value and returns it.
+ * Instantiates BigNumber based on a given value.
  * @param value
  * @returns IBigNumber
  * @throws
@@ -349,6 +349,14 @@ const calculateMedian = <T extends Partial<IBuildConfig>>(
 
 
 
+
+/* ************************************************************************************************
+ *                                      ADVANCED CALCULATIONS                                     *
+ ************************************************************************************************ */
+
+
+
+
 /* ************************************************************************************************
  *                                         MODULE EXPORTS                                         *
  ************************************************************************************************ */
@@ -381,4 +389,7 @@ export {
   calculateMax,
   calculateMean,
   calculateMedian,
+
+  // advanced calculations
+
 };
