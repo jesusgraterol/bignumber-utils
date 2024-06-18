@@ -12,6 +12,7 @@ import {
   isInteger,
   isFloat,
   calculateSum,
+  calculateMin,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -323,6 +324,19 @@ describe('calculations', () => {
       expect(
         () => calculateSum([1, 86], { roundingMode: <IBigNumberRoundingModeName>'invalid' }),
       ).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
+    });
+  });
+
+
+
+  describe('calculateMin', () => {
+    test('can identify the smallest value in an array of ints and floats', () => {
+      expect(calculateMin([100, 200, 300, 400, 500])).toBe(100);
+      expect(calculateMin([100.54, 201.69, 302.55, 988.25, 631.12])).toBe(100.54);
+    });
+
+    test('can identify the smallest value in an array of mixed types', () => {
+      expect(calculateMin([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(-800.65);
     });
   });
 });

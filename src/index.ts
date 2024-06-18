@@ -189,6 +189,7 @@ const isFloat = (value: any): value is number => {
 /**
  * Calculates the SUM for a given list of numeric values. The types of the values can be mixed.
  * For example: [2, new BigNumber(14), '15.9999', 12]
+ * Important: it returns 0 if the array is empty.
  * @param values
  * @param config?
  * @returns IBuildOutput<T>
@@ -210,6 +211,55 @@ const calculateSum = <T extends Partial<IBuildConfig>>(
   ) as IBuildOutput<T>;
 };
 
+/**
+ * Identifies and returns the smallest value in an array. The types of the values can be mixed.
+ * For example: [2, new BigNumber(14), '15.9999', 12]
+ * Important: it returns 0 if the array is empty.
+ * @param values
+ * @param config?
+ * @returns IBuildOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ */
+const calculateMin = <T extends Partial<IBuildConfig>>(
+  values: IBigNumberValue[],
+  config?: T,
+): IBuildOutput<T> => {
+  validateValuesArray(values, 'calculateMin');
+  return buildNumber(
+    values.length > 0 ? BigNumber.min.apply(null, values) : 0,
+    buildConfig(config),
+  ) as IBuildOutput<T>;
+};
+
+/**
+ * Identifies and returns the largest value in an array. The types of the values can be mixed.
+ * For example: [2, new BigNumber(14), '15.9999', 12]
+ * Important: it returns 0 if the array is empty.
+ * @param values
+ * @param config?
+ * @returns IBuildOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ */
+const calculateMax = <T extends Partial<IBuildConfig>>(
+  values: IBigNumberValue[],
+  config?: T,
+): IBuildOutput<T> => {
+  validateValuesArray(values, 'calculateMin');
+  return buildNumber(
+    values.length > 0 ? BigNumber.min.apply(null, values) : 0,
+    buildConfig(config),
+  ) as IBuildOutput<T>;
+};
 
 
 
@@ -242,4 +292,6 @@ export {
 
   // calculations
   calculateSum,
+  calculateMin,
+  calculateMax,
 };
