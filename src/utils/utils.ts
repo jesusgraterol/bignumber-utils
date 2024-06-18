@@ -159,6 +159,24 @@ const buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberFormat
   suffix: config?.suffix ?? '',
 });
 
+/**
+ * Sorting function used to order BigNumbers ascendingly.
+ * @param sortOrder
+ * @returns (a: IBigNumber, b: IBigNumber): number
+ */
+const sortBigNumbers = (sortOrder: 'asc' | 'desc') => (
+  a: IBigNumber,
+  b: IBigNumber,
+): number => {
+  if (a.isLessThan(b)) {
+    return sortOrder === 'asc' ? -1 : 1;
+  }
+  if (a.isGreaterThan(b)) {
+    return sortOrder === 'asc' ? 1 : -1;
+  }
+  return 0;
+};
+
 
 
 
@@ -173,4 +191,5 @@ export {
   roundBigNumber,
   convertBigNumberToType,
   buildFormatConfig,
+  sortBigNumbers,
 };

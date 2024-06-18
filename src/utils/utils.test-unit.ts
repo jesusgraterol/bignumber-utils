@@ -8,6 +8,7 @@ import {
   roundBigNumber,
   convertBigNumberToType,
   buildFormatConfig,
+  sortBigNumbers,
 } from './utils.js';
 
 
@@ -255,5 +256,34 @@ describe('buildFormatConfig', () => {
       suffix: 'Bitcoin',
     };
     expect(buildFormatConfig(config)).toStrictEqual(config);
+  });
+});
+
+
+
+
+describe('sortBigNumbers', () => {
+  test('can determine the correct order value based on the given sort order', () => {
+    expect(sortBigNumbers('asc')(BigNumber(1), BigNumber(1))).toBe(0);
+    expect(sortBigNumbers('asc')(BigNumber(1), BigNumber(2))).toBe(-1);
+    expect(sortBigNumbers('asc')(BigNumber(2), BigNumber(1))).toBe(1);
+
+    expect(sortBigNumbers('desc')(BigNumber(1), BigNumber(1))).toBe(0);
+    expect(sortBigNumbers('desc')(BigNumber(1), BigNumber(2))).toBe(1);
+    expect(sortBigNumbers('desc')(BigNumber(2), BigNumber(1))).toBe(-1);
+  });
+
+  test('can sort a list of BigNumbers ascendingly', () => {
+    const bns = [BigNumber(5), BigNumber(7), BigNumber(4), BigNumber(15)];
+    bns.sort(sortBigNumbers('asc'));
+    expect(bns).toStrictEqual([BigNumber(4), BigNumber(5), BigNumber(7), BigNumber(15)]);
+  });
+
+
+
+  test('can sort a list of BigNumbers descendingly', () => {
+    const bns = [BigNumber(5), BigNumber(7), BigNumber(4), BigNumber(15)];
+    bns.sort(sortBigNumbers('desc'));
+    expect(bns).toStrictEqual([BigNumber(15), BigNumber(7), BigNumber(5), BigNumber(4)]);
   });
 });

@@ -19,6 +19,7 @@ import {
   roundBigNumber,
   convertBigNumberToType,
   buildFormatConfig,
+  sortBigNumbers,
 } from './utils/utils.js';
 
 /**
@@ -292,21 +293,6 @@ const calculateMean = <T extends Partial<IBuildConfig>>(
 };
 
 /**
- * Sorting function used to order BigNumbers ascendingly.
- * @param values
- * @returns number
- */
-const __sortBigNumbersAscendingly = (a: IBigNumber, b: IBigNumber): number => {
-  if (a.isLessThan(b)) {
-    return -1;
-  }
-  if (a.isGreaterThan(b)) {
-    return 1;
-  }
-  return 0;
-};
-
-/**
  * Calculates and returns the median of an array of values. The types of the values can be mixed.
  * For example: [2, new BigNumber(14), '15.9999', 12]
  * Important: it returns 0 if the array is empty.
@@ -331,8 +317,8 @@ const calculateMedian = <T extends Partial<IBuildConfig>>(
     // calculate the the index of the item that is in the very middle
     const half = Math.floor(values.length / 2);
 
-    // ensure all values are BigNumbers
-    const bnValues = values.map(getBigNumber).sort(__sortBigNumbersAscendingly);
+    // ensure all values are BigNumbers and then sort them ascendingly
+    const bnValues = values.map(getBigNumber).sort(sortBigNumbers('asc'));
 
     // if the total number of items is an uneven number, just pick the middle one. Otherwise,
     // calculate the mean of both middle values
