@@ -15,6 +15,7 @@ import {
   calculateMin,
   calculateMax,
   calculateMean,
+  calculateMedian,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -366,6 +367,8 @@ describe('Essential Calculations', () => {
     });
   });
 
+
+
   describe('calculateMean', () => {
     test('returns 0 if an empty list of values is provided', () => {
       expect(calculateMean([])).toBe(0);
@@ -380,6 +383,32 @@ describe('Essential Calculations', () => {
       expect(calculateMean([
         1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654),
       ])).toBe(895.67);
+    });
+  });
+
+
+
+  describe('calculateMedian', () => {
+    test('returns 0 if an empty list of values is provided', () => {
+      expect(calculateMedian([])).toBe(0);
+    });
+
+    test('can calculate the mean of list comprised by integers and floats', () => {
+      expect(calculateMedian([342])).toBe(342);
+      expect(calculateMedian([342, 654])).toBe(498);
+      expect(calculateMedian([342, 654, 987])).toBe(654);
+      expect(calculateMedian([1093, 987, 342, 654])).toBe(820.5);
+      expect(calculateMedian([342, 654, 987, 1093, 2234, 6243, 7087, 20123])).toBe(1663.5);
+      expect(calculateMedian([1093.55, 711.41, 987.13, 342, 654.99, 84.32, -55.99])).toBe(654.99);
+      expect(calculateMedian([
+        1093.55, 711.41, 987.13, 342, 654.99, 84.32, -55.99, 25132.33,
+      ])).toBe(683.2);
+    });
+
+    test('can calculate the mean of a list comprised by values with mixed types', () => {
+      expect(calculateMedian([
+        1093.55, '711.41', BigNumber(987.13), 342, '654.99', BigNumber(84.32), '-55.99', 25132.33,
+      ])).toBe(683.2);
     });
   });
 });

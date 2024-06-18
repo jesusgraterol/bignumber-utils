@@ -291,6 +291,61 @@ const calculateMean = <T extends Partial<IBuildConfig>>(
   return buildNumber(0, buildConfig(config)) as IBuildOutput<T>;
 };
 
+/**
+ * Sorting function used to order BigNumbers ascendingly.
+ * @param values
+ * @returns number
+ */
+const __sortBigNumbersAscendingly = (a: IBigNumber, b: IBigNumber): number => {
+  if (a.isLessThan(b)) {
+    return -1;
+  }
+  if (a.isGreaterThan(b)) {
+    return 1;
+  }
+  return 0;
+};
+
+/**
+ * Calculates and returns the median of an array of values. The types of the values can be mixed.
+ * For example: [2, new BigNumber(14), '15.9999', 12]
+ * Important: it returns 0 if the array is empty.
+ * @param values
+ * @param config?
+ * @returns IBuildOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ */
+const calculateMedian = <T extends Partial<IBuildConfig>>(
+  values: IBigNumberValue[],
+  config?: T,
+): IBuildOutput<T> => {
+  validateValuesArray(values, 'calculateMedian');
+
+  // proceed if there are items in the array. Otherwise, the median is 0
+  if (values.length > 0) {
+    // calculate the the index of the item that is in the very middle
+    const half = Math.floor(values.length / 2);
+
+    // ensure all values are BigNumbers
+    const bnValues = values.map(getBigNumber).sort(__sortBigNumbersAscendingly);
+
+    // if the total number of items is an uneven number, just pick the middle one. Otherwise,
+    // calculate the mean of both middle values
+    const res = values.length % 2
+      ? bnValues[half]
+      : bnValues[half - 1].plus(bnValues[half]).dividedBy(2);
+
+    // finally, return the median
+    return buildNumber(res, buildConfig(config)) as IBuildOutput<T>;
+  }
+  return buildNumber(0, buildConfig(config)) as IBuildOutput<T>;
+};
+
 
 
 
@@ -325,4 +380,5 @@ export {
   calculateMin,
   calculateMax,
   calculateMean,
+  calculateMedian,
 };
