@@ -13,6 +13,7 @@ import {
   isFloat,
   calculateSum,
   calculateMin,
+  calculateMax,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -282,7 +283,7 @@ describe('Helpers', () => {
 
 
 
-describe('calculations', () => {
+describe('Essential Calculations', () => {
   describe('calculateSum', () => {
     test('can calculate the sum for any array of numeric values', () => {
       expect(calculateSum([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(8061);
@@ -337,6 +338,19 @@ describe('calculations', () => {
 
     test('can identify the smallest value in an array of mixed types', () => {
       expect(calculateMin([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(-800.65);
+    });
+  });
+
+
+
+  describe('calculateMax', () => {
+    test('can identify the largest value in an array of ints and floats', () => {
+      expect(calculateMax([100, 200, 300, 400, 500])).toBe(500);
+      expect(calculateMax([100.54, 201.69, 302.55, 988.25, 631.12])).toBe(988.25);
+    });
+
+    test('can identify the largest value in an array of mixed types', () => {
+      expect(calculateMax([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(8041.66);
     });
   });
 });

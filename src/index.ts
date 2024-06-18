@@ -183,7 +183,7 @@ const isFloat = (value: any): value is number => {
 
 
 /* ************************************************************************************************
- *                                          CALCULATIONS                                          *
+ *                                     ESSENTIAL CALCULATIONS                                     *
  ************************************************************************************************ */
 
 /**
@@ -254,9 +254,34 @@ const calculateMax = <T extends Partial<IBuildConfig>>(
   values: IBigNumberValue[],
   config?: T,
 ): IBuildOutput<T> => {
-  validateValuesArray(values, 'calculateMin');
+  validateValuesArray(values, 'calculateMax');
   return buildNumber(
-    values.length > 0 ? BigNumber.min.apply(null, values) : 0,
+    values.length > 0 ? BigNumber.max.apply(null, values) : 0,
+    buildConfig(config),
+  ) as IBuildOutput<T>;
+};
+
+/**
+ * Calculates and returns the mean of an array of values. The types of the values can be mixed.
+ * For example: [2, new BigNumber(14), '15.9999', 12]
+ * Important: it returns 0 if the array is empty.
+ * @param values
+ * @param config?
+ * @returns IBuildOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ */
+const calculateMean = <T extends Partial<IBuildConfig>>(
+  values: IBigNumberValue[],
+  config?: T,
+): IBuildOutput<T> => {
+  validateValuesArray(values, 'calculateMean');
+  return buildNumber(
+    values.length > 0 ? BigNumber.max.apply(null, values) : 0,
     buildConfig(config),
   ) as IBuildOutput<T>;
 };
@@ -290,7 +315,7 @@ export {
   isInteger,
   isFloat,
 
-  // calculations
+  // essential calculations
   calculateSum,
   calculateMin,
   calculateMax,
