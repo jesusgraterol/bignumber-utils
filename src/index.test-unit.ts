@@ -3,10 +3,10 @@ import { BigNumber } from 'bignumber.js';
 import { ERRORS } from './shared/errors.js';
 import {
   IBigNumberRoundingModeName,
-  IBuildType,
+  IType,
   getBigNumber,
   prettifyNumber,
-  buildValue,
+  processValue,
   isBigNumber,
   isNumber,
   isInteger,
@@ -46,7 +46,7 @@ const invalid = [
 
 describe('Number Builders', () => {
   describe('getBigNumber', () => {
-    test('can instantiate BigNumber with any valid number', () => {
+    test('can instantiate BigNumber with any valid value', () => {
       valid.forEach((value) => {
         const bn = getBigNumber(value);
         expect(bn).toBeInstanceOf(BigNumber);
@@ -133,52 +133,52 @@ describe('Number Builders', () => {
 
 
 
-  describe('buildValue', () => {
-    test('can build a number from any valid value w/ default config', () => {
-      const val = buildValue(100.585);
+  describe('processValue', () => {
+    test('can process any valid value w/ default config', () => {
+      const val = processValue(100.585);
       expect(val).toBeTypeOf('number');
       expect(val).toBe(100.59);
     });
 
-    test('can specify the type for the build output', () => {
-      expect(buildValue(110.55, { buildType: 'number' })).toBe(110.55);
-      expect(buildValue(110.55, { buildType: 'string' })).toBe('110.55');
-      expect(BigNumber(110.55).isEqualTo(buildValue(110.55, { buildType: 'bignumber' }))).toBe(true);
+    test('can specify the type for the processing output', () => {
+      expect(processValue(110.55, { type: 'number' })).toBe(110.55);
+      expect(processValue(110.55, { type: 'string' })).toBe('110.55');
+      expect(BigNumber(110.55).isEqualTo(processValue(110.55, { type: 'bignumber' }))).toBe(true);
     });
 
-    test('can specify the number of decimal places for the build output', () => {
-      expect(buildValue('512.1111', { decimalPlaces: 2, buildType: 'string' })).toBe('512.11');
-      expect(buildValue('512.1111111111111111111', { decimalPlaces: 18, buildType: 'string' })).toBe('512.111111111111111111');
-      expect(buildValue('512.855', { decimalPlaces: 2, buildType: 'string' })).toBe('512.86');
-      expect(buildValue('512.855', { decimalPlaces: 15, buildType: 'string' })).toBe('512.855');
+    test('can specify the number of decimal places for the processing output', () => {
+      expect(processValue('512.1111', { decimalPlaces: 2, type: 'string' })).toBe('512.11');
+      expect(processValue('512.1111111111111111111', { decimalPlaces: 18, type: 'string' })).toBe('512.111111111111111111');
+      expect(processValue('512.855', { decimalPlaces: 2, type: 'string' })).toBe('512.86');
+      expect(processValue('512.855', { decimalPlaces: 15, type: 'string' })).toBe('512.855');
     });
 
-    test('can specify the rounding mode for the build output', () => {
-      expect(buildValue(512.155, { roundingMode: 'ROUND_HALF_UP' })).toBe(512.16);
-      expect(buildValue(512.155, { roundingMode: 'ROUND_HALF_DOWN' })).toBe(512.15);
-      expect(buildValue(512.155, { roundingMode: 'ROUND_CEIL' })).toBe(513);
-      expect(buildValue(512.553, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(513);
-      expect(buildValue(512.499, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(512);
-      expect(buildValue(512.155, { roundingMode: 'ROUND_FLOOR' })).toBe(512);
-      expect(buildValue(512.51, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(513);
-      expect(buildValue(512.5, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(512);
+    test('can specify the rounding mode for the processing output', () => {
+      expect(processValue(512.155, { roundingMode: 'ROUND_HALF_UP' })).toBe(512.16);
+      expect(processValue(512.155, { roundingMode: 'ROUND_HALF_DOWN' })).toBe(512.15);
+      expect(processValue(512.155, { roundingMode: 'ROUND_CEIL' })).toBe(513);
+      expect(processValue(512.553, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(513);
+      expect(processValue(512.499, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(512);
+      expect(processValue(512.155, { roundingMode: 'ROUND_FLOOR' })).toBe(512);
+      expect(processValue(512.51, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(513);
+      expect(processValue(512.5, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(512);
     });
 
     test('throws if an invalid value is provided', () => {
-      expect(() => buildValue(undefined!)).toThrowError(ERRORS.INVALID_VALUE);
+      expect(() => processValue(undefined!)).toThrowError(ERRORS.INVALID_VALUE);
     });
 
-    test('throws if an invalid build type is provided', () => {
-      expect(() => buildValue(1, { buildType: <IBuildType>'invalid' })).toThrowError(ERRORS.INVALID_BUILD_TYPE);
+    test('throws if an invalid type is provided', () => {
+      expect(() => processValue(1, { type: <IType>'invalid' })).toThrowError(ERRORS.INVALID_TYPE);
     });
 
     test('throws if an invalid rounding mode is provided', () => {
-      expect(() => buildValue(1, { roundingMode: <IBigNumberRoundingModeName>'invalid' })).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
+      expect(() => processValue(1, { roundingMode: <IBigNumberRoundingModeName>'invalid' })).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
     });
 
     test('throws if an invalid number of decimal places is provided', () => {
       expect(
-        () => buildValue(1, { decimalPlaces: -5 }),
+        () => processValue(1, { decimalPlaces: -5 }),
       ).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
     });
   });
@@ -187,9 +187,9 @@ describe('Number Builders', () => {
 
   describe('prettifyNumber', () => {
     test('can prettify a number with any number of decimals and any rounding mode', () => {
-      expect(prettifyNumber(1.555, { build: { roundingMode: 'ROUND_HALF_UP' } })).toBe('1.56');
-      expect(prettifyNumber(1.555, { build: { roundingMode: 'ROUND_HALF_DOWN' } })).toBe('1.55');
-      expect(prettifyNumber(105142.821546985, { build: { decimalPlaces: 8, roundingMode: 'ROUND_HALF_DOWN' } })).toBe('105,142.82154698');
+      expect(prettifyNumber(1.555, { processing: { roundingMode: 'ROUND_HALF_UP' } })).toBe('1.56');
+      expect(prettifyNumber(1.555, { processing: { roundingMode: 'ROUND_HALF_DOWN' } })).toBe('1.55');
+      expect(prettifyNumber(105142.821546985, { processing: { decimalPlaces: 8, roundingMode: 'ROUND_HALF_DOWN' } })).toBe('105,142.82154698');
     });
 
     test('can separate groups with any character', () => {
@@ -204,15 +204,15 @@ describe('Number Builders', () => {
     test('can add a prefix to any number', () => {
       expect(prettifyNumber(15426525.84, { format: { prefix: '$' } })).toBe('$15,426,525.84');
       expect(prettifyNumber(15426525.84, { format: { prefix: 'USD ' } })).toBe('USD 15,426,525.84');
-      expect(prettifyNumber(15426525.846545124, { build: { decimalPlaces: 8 }, format: { prefix: 'BTC ' } })).toBe('BTC 15,426,525.84654512');
-      expect(prettifyNumber('15426525.846545124846545124', { build: { decimalPlaces: 18 }, format: { prefix: 'ETH ' } })).toBe('ETH 15,426,525.846545124846545124');
+      expect(prettifyNumber(15426525.846545124, { processing: { decimalPlaces: 8 }, format: { prefix: 'BTC ' } })).toBe('BTC 15,426,525.84654512');
+      expect(prettifyNumber('15426525.846545124846545124', { processing: { decimalPlaces: 18 }, format: { prefix: 'ETH ' } })).toBe('ETH 15,426,525.846545124846545124');
     });
 
     test('can add a suffix to any number', () => {
       expect(prettifyNumber(15426525.84, { format: { suffix: '$' } })).toBe('15,426,525.84$');
       expect(prettifyNumber(15426525.84, { format: { suffix: ' USD' } })).toBe('15,426,525.84 USD');
-      expect(prettifyNumber(15426525.846545124, { build: { decimalPlaces: 8 }, format: { suffix: ' BTC' } })).toBe('15,426,525.84654512 BTC');
-      expect(prettifyNumber('15426525.846545124846545124', { build: { decimalPlaces: 18 }, format: { suffix: ' ETH' } })).toBe('15,426,525.846545124846545124 ETH');
+      expect(prettifyNumber(15426525.846545124, { processing: { decimalPlaces: 8 }, format: { suffix: ' BTC' } })).toBe('15,426,525.84654512 BTC');
+      expect(prettifyNumber('15426525.846545124846545124', { processing: { decimalPlaces: 18 }, format: { suffix: ' ETH' } })).toBe('15,426,525.846545124846545124 ETH');
     });
   });
 });
@@ -291,12 +291,12 @@ describe('Essential Calculations', () => {
       expect(calculateSum([])).toBe(0);
     });
 
-    test('can calculate the sum for any array of numeric values', () => {
+    test('can calculate the sum for any array of values', () => {
       expect(calculateSum([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(8061);
       expect(calculateSum([100, 50, 99.11, 68.3])).toBe(317.41);
       expect(calculateSum([
         '0.286304850273819327', '0.00290532', '0.00251940040614675', '0.03506759540691015',
-      ], { decimalPlaces: 18, buildType: 'string' })).toBe('0.326797166086876227');
+      ], { decimalPlaces: 18, type: 'string' })).toBe('0.326797166086876227');
     });
 
     test('throws if an invalid array of values is provided', () => {
@@ -314,16 +314,16 @@ describe('Essential Calculations', () => {
       expect(() => calculateSum([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654), NaN])).toThrowError(ERRORS.INVALID_VALUE);
     });
 
-    test('throws if the decimal places is invalid', () => {
+    test('throws if the decimal places are invalid', () => {
       expect(
         () => calculateSum([1, 86], { decimalPlaces: -1 }),
       ).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
     });
 
-    test('throws if the build type is invalid', () => {
+    test('throws if the processing output type is invalid', () => {
       expect(
-        () => calculateSum([1, 86], { buildType: <IBuildType>'invalid' }),
-      ).toThrowError(ERRORS.INVALID_BUILD_TYPE);
+        () => calculateSum([1, 86], { type: <IType>'invalid' }),
+      ).toThrowError(ERRORS.INVALID_TYPE);
     });
 
     test('throws if the rounding mode is invalid', () => {
@@ -374,12 +374,12 @@ describe('Essential Calculations', () => {
       expect(calculateMean([])).toBe(0);
     });
 
-    test('can calculate the mean of list comprised by integers and floats', () => {
+    test('can calculate the mean for a list comprised by integers and floats', () => {
       expect(calculateMean([100, 200, 300, 400, 500])).toBe(300);
       expect(calculateMean([100.54, 201.69, 302.55, 988.25, 631.12])).toBe(444.83);
     });
 
-    test('can calculate the mean of a list comprised by values with mixed types', () => {
+    test('can calculate the mean for a list comprised by values with mixed types', () => {
       expect(calculateMean([
         1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654),
       ])).toBe(895.67);
@@ -393,7 +393,7 @@ describe('Essential Calculations', () => {
       expect(calculateMedian([])).toBe(0);
     });
 
-    test('can calculate the mean of list comprised by integers and floats', () => {
+    test('can calculate the mean for a list comprised by integers and floats', () => {
       expect(calculateMedian([342])).toBe(342);
       expect(calculateMedian([342, 654])).toBe(498);
       expect(calculateMedian([342, 654, 987])).toBe(654);
@@ -405,7 +405,7 @@ describe('Essential Calculations', () => {
       ])).toBe(683.2);
     });
 
-    test('can calculate the mean of a list comprised by values with mixed types', () => {
+    test('can calculate the mean for a list comprised by values with mixed types', () => {
       expect(calculateMedian([
         1093.55, '711.41', BigNumber(987.13), 342, '654.99', BigNumber(84.32), '-55.99', 25132.33,
       ])).toBe(683.2);

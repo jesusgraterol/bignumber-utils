@@ -6,10 +6,10 @@ import {
   IBigNumberRoundingMode,
   IBigNumberValue,
   IBigNumberFormat,
-  IBuildType,
-  IBuildConfig,
+  IType,
+  IConfig,
   IBigNumberToType,
-  IBuildOutput,
+  IOutput,
 } from './shared/types.js';
 import { ERRORS } from './shared/errors.js';
 import { validateValuesArray } from './validations/validations.js';
@@ -41,7 +41,7 @@ BigNumber.config({
  ************************************************************************************************ */
 
 /**
- * Instantiates BigNumber based on a given value.
+ * Instantiates BigNumber from a valid numeric value.
  * @param value
  * @returns IBigNumber
  * @throws
@@ -64,20 +64,20 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
 };
 
 /**
- * Builds a value based on given configuration (if any).
+ * Processes and outputs a value to match the requirements specified in the configuration (if any).
  * @param value
  * @param configuration?
- * @returns IBuildOutput<T>
+ * @returns IOutput<T>
  * @throws
  * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the build type is not supported
  */
-const buildValue = <T extends Partial<IBuildConfig>>(
+const processValue = <T extends Partial<IConfig>>(
   value: IBigNumberValue,
   configuration?: T,
-): IBuildOutput<T> => {
+): IOutput<T> => {
   // build the config
   const config = buildConfig(configuration);
 
@@ -85,12 +85,12 @@ const buildValue = <T extends Partial<IBuildConfig>>(
   const bn = roundBigNumber(getBigNumber(value), config.decimalPlaces, config.roundingMode);
 
   // return the appropriate type
-  return convertBigNumberToType(bn, config.buildType) as IBuildOutput<T>;
+  return convertBigNumberToType(bn, config.type) as IOutput<T>;
 };
 
 /**
- * Returns the string representation of a number value after being built and formatted based on the
- * provided configs (if any)
+ * Generates the string representation of a value after being processed and formatted to match the
+ * requirements specified in the configuration (if any).
  * @param value
  * @param config?
  * @returns string
@@ -98,19 +98,19 @@ const buildValue = <T extends Partial<IBuildConfig>>(
  * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the build type is not supported
  * - INVALID_BIGNUMBER_FORMAT: if any of the format properties are invalid
  */
 const prettifyNumber = (
   value: IBigNumberValue,
-  config: { build?: Partial<IBuildConfig>, format?: Partial<IBigNumberFormat> } = {},
+  config: { processing?: Partial<IConfig>, format?: Partial<IBigNumberFormat> } = {},
 ): string => {
   try {
-    return buildValue(
+    return processValue(
       value,
       {
-        ...config.build,
-        buildType: 'bignumber',
+        ...config.processing,
+        type: 'bignumber',
       },
     ).toFormat(buildFormatConfig(config.format));
   } catch (e) {
@@ -131,14 +131,14 @@ const prettifyNumber = (
  ************************************************************************************************ */
 
 /**
- * Verifies if a given value is a BigNumber Instance.
+ * Verifies if the value is a BigNumber Instance.
  * @param value
  * @returns boolean
  */
 const isBigNumber = (value: any): value is IBigNumber => BigNumber.isBigNumber(value);
 
 /**
- * Returns true if the given value is a number in any of the supported types (IBigNumberValue).
+ * Verifies if the value is a number in any of the supported types (IBigNumberValue).
  * @param value
  * @returns boolean
  */
@@ -152,7 +152,7 @@ const isNumber = (value: any): value is number => {
 };
 
 /**
- * Returns true if the given value is an integer in any of the supported types (IBigNumberValue).
+ * Verifies if the value is an integer in any of the supported types (IBigNumberValue).
  * @param value
  * @returns boolean
  */
@@ -166,7 +166,7 @@ const isInteger = (value: any): value is number => {
 };
 
 /**
- * Returns true if the given value is a float in any of the supported types (IBigNumberValue).
+ * Verifies if the value is a float in any of the supported types (IBigNumberValue).
  * @param value
  * @returns boolean
  */
@@ -188,128 +188,118 @@ const isFloat = (value: any): value is number => {
  ************************************************************************************************ */
 
 /**
- * Calculates the SUM for a given list of numeric values. The types of the values can be mixed.
- * For example: [2, new BigNumber(14), '15.9999', 12]
- * Important: it returns 0 if the array is empty.
+ * Calculates the sum for an array of values. It returns 0 if the array is empty.
  * @param values
  * @param config?
- * @returns IBuildOutput<T>
+ * @returns IOutput<T>
  * @throws
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_BUILD_TYPE: if the build type is not supported
- * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
-const calculateSum = <T extends Partial<IBuildConfig>>(
+const calculateSum = <T extends Partial<IConfig>>(
   values: IBigNumberValue[],
   config?: T,
-): IBuildOutput<T> => {
+): IOutput<T> => {
   validateValuesArray(values, 'calculateSum');
-  return buildValue(
+  return processValue(
     values.length > 0 ? BigNumber.sum.apply(null, values) : 0,
     buildConfig(config),
-  ) as IBuildOutput<T>;
+  ) as IOutput<T>;
 };
 
 /**
- * Identifies and returns the smallest value in an array. The types of the values can be mixed.
- * For example: [2, new BigNumber(14), '15.9999', 12]
- * Important: it returns 0 if the array is empty.
+ * Identifies the smallest value in an array. It returns 0 if the array is empty.
  * @param values
  * @param config?
- * @returns IBuildOutput<T>
+ * @returns IOutput<T>
  * @throws
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_BUILD_TYPE: if the build type is not supported
- * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
-const calculateMin = <T extends Partial<IBuildConfig>>(
+const calculateMin = <T extends Partial<IConfig>>(
   values: IBigNumberValue[],
   config?: T,
-): IBuildOutput<T> => {
+): IOutput<T> => {
   validateValuesArray(values, 'calculateMin');
-  return buildValue(
+  return processValue(
     values.length > 0 ? BigNumber.min.apply(null, values) : 0,
     buildConfig(config),
-  ) as IBuildOutput<T>;
+  ) as IOutput<T>;
 };
 
 /**
- * Identifies and returns the largest value in an array. The types of the values can be mixed.
- * For example: [2, new BigNumber(14), '15.9999', 12]
- * Important: it returns 0 if the array is empty.
+ * Identifies the largest value in an array. It returns 0 if the array is empty.
  * @param values
  * @param config?
- * @returns IBuildOutput<T>
+ * @returns IOutput<T>
  * @throws
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_BUILD_TYPE: if the build type is not supported
- * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
-const calculateMax = <T extends Partial<IBuildConfig>>(
+const calculateMax = <T extends Partial<IConfig>>(
   values: IBigNumberValue[],
   config?: T,
-): IBuildOutput<T> => {
+): IOutput<T> => {
   validateValuesArray(values, 'calculateMax');
-  return buildValue(
+  return processValue(
     values.length > 0 ? BigNumber.max.apply(null, values) : 0,
     buildConfig(config),
-  ) as IBuildOutput<T>;
+  ) as IOutput<T>;
 };
 
 /**
- * Calculates and returns the mean of an array of values. The types of the values can be mixed.
- * For example: [2, new BigNumber(14), '15.9999', 12]
- * Important: it returns 0 if the array is empty.
+ * Calculates the mean for an array of values. It returns 0 if the array is empty.
  * @param values
  * @param config?
- * @returns IBuildOutput<T>
+ * @returns IOutput<T>
  * @throws
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_BUILD_TYPE: if the build type is not supported
- * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
-const calculateMean = <T extends Partial<IBuildConfig>>(
+const calculateMean = <T extends Partial<IConfig>>(
   values: IBigNumberValue[],
   config?: T,
-): IBuildOutput<T> => {
+): IOutput<T> => {
   validateValuesArray(values, 'calculateMean');
 
   // calculate the sum without rounding if there are items in the array. Otherwise, the mean is 0
   if (values.length > 0) {
-    return buildValue(
+    return processValue(
       BigNumber.sum.apply(null, values).dividedBy(values.length),
       buildConfig(config),
-    ) as IBuildOutput<T>;
+    ) as IOutput<T>;
   }
-  return buildValue(0, buildConfig(config)) as IBuildOutput<T>;
+  return processValue(0, buildConfig(config)) as IOutput<T>;
 };
 
 /**
- * Calculates and returns the median of an array of values. The types of the values can be mixed.
- * For example: [2, new BigNumber(14), '15.9999', 12]
- * Important: it returns 0 if the array is empty.
+ * Calculates the median for an array of values. It returns 0 if the array is empty.
  * @param values
  * @param config?
- * @returns IBuildOutput<T>
+ * @returns IOutput<T>
  * @throws
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_BUILD_TYPE: if the build type is not supported
- * - INVALID_BIGNUMBER_VALUES_ARRAY: if the provided values arg is not a valid array
+ * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
-const calculateMedian = <T extends Partial<IBuildConfig>>(
+const calculateMedian = <T extends Partial<IConfig>>(
   values: IBigNumberValue[],
   config?: T,
-): IBuildOutput<T> => {
+): IOutput<T> => {
   validateValuesArray(values, 'calculateMedian');
 
   // proceed if there are items in the array. Otherwise, the median is 0
@@ -327,9 +317,9 @@ const calculateMedian = <T extends Partial<IBuildConfig>>(
       : bnValues[half - 1].plus(bnValues[half]).dividedBy(2);
 
     // finally, return the median
-    return buildValue(res, buildConfig(config)) as IBuildOutput<T>;
+    return processValue(res, buildConfig(config)) as IOutput<T>;
   }
-  return buildValue(0, buildConfig(config)) as IBuildOutput<T>;
+  return processValue(0, buildConfig(config)) as IOutput<T>;
 };
 
 
@@ -353,14 +343,14 @@ export {
   type IBigNumberRoundingMode,
   type IBigNumberValue,
   type IBigNumberFormat,
-  type IBuildType,
-  type IBuildConfig,
+  type IType,
+  type IConfig,
   type IBigNumberToType,
-  type IBuildOutput,
+  type IOutput,
 
   // number builders
   getBigNumber,
-  buildValue,
+  processValue,
   prettifyNumber,
 
   // helpers

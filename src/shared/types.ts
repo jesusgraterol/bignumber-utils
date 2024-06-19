@@ -77,14 +77,14 @@ type IType = 'string' | 'number' | 'bignumber';
  * The configuration that will be used to process a value.
  */
 type IConfig = {
-  // the maximum number of decimals that will be present in the output (Default: 2)
-  decimalPlaces: number;
+  // the maximum number of decimals that will be present in the output
+  decimalPlaces: number; // Default: 2
 
-  // determines how the value will be rounded (in case it has decimals) (Default: 'ROUND_HALF_UP')
-  roundingMode: IBigNumberRoundingModeName;
+  // determines how the value will be rounded (in case it has decimals)
+  roundingMode: IBigNumberRoundingModeName; // Default: 'ROUND_HALF_UP'
 
-  // the output's type (Default: 'number')
-  type: IType;
+  // the output's type
+  type: IType; // Default: 'number'
 };
 
 /**
