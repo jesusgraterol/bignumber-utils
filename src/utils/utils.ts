@@ -51,7 +51,7 @@ const __getDecimalPlaces = (
   decimalPlaces: number,
   roundingMode: IBigNumberRoundingModeName,
 ): number => {
-  const dp = roundingMode.includes('CEIL') || roundingMode.includes('FLOOR') ? 0 : decimalPlaces;
+  const dp = roundingMode.endsWith('CEIL') || roundingMode.endsWith('FLOOR') ? 0 : decimalPlaces;
   validateDecimalPlaces(dp);
   return dp;
 };

@@ -9,7 +9,8 @@
     "start": "ts-lib-builder --tsconfig=tsconfig.build.json",
     "test": "echo \"Error: tests are executed with  npm run test:unit\" && exit 1",
     "test:unit": "vitest run --config vitest.test-unit.config.ts",
-    "watch-test:unit": "vitest --config vitest.test-unit.config.ts"
+    "watch-test:unit": "vitest --config vitest.test-unit.config.ts",
+    "test:bench": "vitest bench"
   },
   "repository": {
     "type": "git",
