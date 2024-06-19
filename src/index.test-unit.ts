@@ -6,7 +6,7 @@ import {
   IBuildType,
   getBigNumber,
   prettifyNumber,
-  buildNumber,
+  buildValue,
   isBigNumber,
   isNumber,
   isInteger,
@@ -133,52 +133,52 @@ describe('Number Builders', () => {
 
 
 
-  describe('buildNumber', () => {
+  describe('buildValue', () => {
     test('can build a number from any valid value w/ default config', () => {
-      const val = buildNumber(100.585);
+      const val = buildValue(100.585);
       expect(val).toBeTypeOf('number');
       expect(val).toBe(100.59);
     });
 
     test('can specify the type for the build output', () => {
-      expect(buildNumber(110.55, { buildType: 'number' })).toBe(110.55);
-      expect(buildNumber(110.55, { buildType: 'string' })).toBe('110.55');
-      expect(BigNumber(110.55).isEqualTo(buildNumber(110.55, { buildType: 'bignumber' }))).toBe(true);
+      expect(buildValue(110.55, { buildType: 'number' })).toBe(110.55);
+      expect(buildValue(110.55, { buildType: 'string' })).toBe('110.55');
+      expect(BigNumber(110.55).isEqualTo(buildValue(110.55, { buildType: 'bignumber' }))).toBe(true);
     });
 
     test('can specify the number of decimal places for the build output', () => {
-      expect(buildNumber('512.1111', { decimalPlaces: 2, buildType: 'string' })).toBe('512.11');
-      expect(buildNumber('512.1111111111111111111', { decimalPlaces: 18, buildType: 'string' })).toBe('512.111111111111111111');
-      expect(buildNumber('512.855', { decimalPlaces: 2, buildType: 'string' })).toBe('512.86');
-      expect(buildNumber('512.855', { decimalPlaces: 15, buildType: 'string' })).toBe('512.855');
+      expect(buildValue('512.1111', { decimalPlaces: 2, buildType: 'string' })).toBe('512.11');
+      expect(buildValue('512.1111111111111111111', { decimalPlaces: 18, buildType: 'string' })).toBe('512.111111111111111111');
+      expect(buildValue('512.855', { decimalPlaces: 2, buildType: 'string' })).toBe('512.86');
+      expect(buildValue('512.855', { decimalPlaces: 15, buildType: 'string' })).toBe('512.855');
     });
 
     test('can specify the rounding mode for the build output', () => {
-      expect(buildNumber(512.155, { roundingMode: 'ROUND_HALF_UP' })).toBe(512.16);
-      expect(buildNumber(512.155, { roundingMode: 'ROUND_HALF_DOWN' })).toBe(512.15);
-      expect(buildNumber(512.155, { roundingMode: 'ROUND_CEIL' })).toBe(513);
-      expect(buildNumber(512.553, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(513);
-      expect(buildNumber(512.499, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(512);
-      expect(buildNumber(512.155, { roundingMode: 'ROUND_FLOOR' })).toBe(512);
-      expect(buildNumber(512.51, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(513);
-      expect(buildNumber(512.5, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(512);
+      expect(buildValue(512.155, { roundingMode: 'ROUND_HALF_UP' })).toBe(512.16);
+      expect(buildValue(512.155, { roundingMode: 'ROUND_HALF_DOWN' })).toBe(512.15);
+      expect(buildValue(512.155, { roundingMode: 'ROUND_CEIL' })).toBe(513);
+      expect(buildValue(512.553, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(513);
+      expect(buildValue(512.499, { roundingMode: 'ROUND_HALF_CEIL' })).toBe(512);
+      expect(buildValue(512.155, { roundingMode: 'ROUND_FLOOR' })).toBe(512);
+      expect(buildValue(512.51, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(513);
+      expect(buildValue(512.5, { roundingMode: 'ROUND_HALF_FLOOR' })).toBe(512);
     });
 
     test('throws if an invalid value is provided', () => {
-      expect(() => buildNumber(undefined!)).toThrowError(ERRORS.INVALID_VALUE);
+      expect(() => buildValue(undefined!)).toThrowError(ERRORS.INVALID_VALUE);
     });
 
     test('throws if an invalid build type is provided', () => {
-      expect(() => buildNumber(1, { buildType: <IBuildType>'invalid' })).toThrowError(ERRORS.INVALID_BUILD_TYPE);
+      expect(() => buildValue(1, { buildType: <IBuildType>'invalid' })).toThrowError(ERRORS.INVALID_BUILD_TYPE);
     });
 
     test('throws if an invalid rounding mode is provided', () => {
-      expect(() => buildNumber(1, { roundingMode: <IBigNumberRoundingModeName>'invalid' })).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
+      expect(() => buildValue(1, { roundingMode: <IBigNumberRoundingModeName>'invalid' })).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
     });
 
     test('throws if an invalid number of decimal places is provided', () => {
       expect(
-        () => buildNumber(1, { decimalPlaces: -5 }),
+        () => buildValue(1, { decimalPlaces: -5 }),
       ).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
     });
   });

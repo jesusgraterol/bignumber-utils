@@ -1,6 +1,11 @@
 import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
-import { IBigNumberFormat, IBigNumberRoundingModeName, IBuildConfig, IBuildType } from '../shared/types.js';
+import {
+  IBigNumberRoundingModeName,
+  IBigNumberFormat,
+  IBuildConfig,
+  IBuildType,
+} from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 import {
   buildInvalidValueErrorMessage,
@@ -272,6 +277,8 @@ describe('sortBigNumbers', () => {
     expect(sortBigNumbers('desc')(BigNumber(1), BigNumber(2))).toBe(1);
     expect(sortBigNumbers('desc')(BigNumber(2), BigNumber(1))).toBe(-1);
   });
+
+
 
   test('can sort a list of BigNumbers ascendingly', () => {
     const bns = [BigNumber(5), BigNumber(7), BigNumber(4), BigNumber(15)];

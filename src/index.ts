@@ -64,7 +64,7 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
 };
 
 /**
- * Builds a number based on given configuration (if any).
+ * Builds a value based on given configuration (if any).
  * @param value
  * @param configuration?
  * @returns IBuildOutput<T>
@@ -74,7 +74,7 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  * - INVALID_BUILD_TYPE: if the build type is not supported
  */
-const buildNumber = <T extends Partial<IBuildConfig>>(
+const buildValue = <T extends Partial<IBuildConfig>>(
   value: IBigNumberValue,
   configuration?: T,
 ): IBuildOutput<T> => {
@@ -106,7 +106,7 @@ const prettifyNumber = (
   config: { build?: Partial<IBuildConfig>, format?: Partial<IBigNumberFormat> } = {},
 ): string => {
   try {
-    return buildNumber(
+    return buildValue(
       value,
       {
         ...config.build,
@@ -206,7 +206,7 @@ const calculateSum = <T extends Partial<IBuildConfig>>(
   config?: T,
 ): IBuildOutput<T> => {
   validateValuesArray(values, 'calculateSum');
-  return buildNumber(
+  return buildValue(
     values.length > 0 ? BigNumber.sum.apply(null, values) : 0,
     buildConfig(config),
   ) as IBuildOutput<T>;
@@ -231,7 +231,7 @@ const calculateMin = <T extends Partial<IBuildConfig>>(
   config?: T,
 ): IBuildOutput<T> => {
   validateValuesArray(values, 'calculateMin');
-  return buildNumber(
+  return buildValue(
     values.length > 0 ? BigNumber.min.apply(null, values) : 0,
     buildConfig(config),
   ) as IBuildOutput<T>;
@@ -256,7 +256,7 @@ const calculateMax = <T extends Partial<IBuildConfig>>(
   config?: T,
 ): IBuildOutput<T> => {
   validateValuesArray(values, 'calculateMax');
-  return buildNumber(
+  return buildValue(
     values.length > 0 ? BigNumber.max.apply(null, values) : 0,
     buildConfig(config),
   ) as IBuildOutput<T>;
@@ -284,12 +284,12 @@ const calculateMean = <T extends Partial<IBuildConfig>>(
 
   // calculate the sum without rounding if there are items in the array. Otherwise, the mean is 0
   if (values.length > 0) {
-    return buildNumber(
+    return buildValue(
       BigNumber.sum.apply(null, values).dividedBy(values.length),
       buildConfig(config),
     ) as IBuildOutput<T>;
   }
-  return buildNumber(0, buildConfig(config)) as IBuildOutput<T>;
+  return buildValue(0, buildConfig(config)) as IBuildOutput<T>;
 };
 
 /**
@@ -327,9 +327,9 @@ const calculateMedian = <T extends Partial<IBuildConfig>>(
       : bnValues[half - 1].plus(bnValues[half]).dividedBy(2);
 
     // finally, return the median
-    return buildNumber(res, buildConfig(config)) as IBuildOutput<T>;
+    return buildValue(res, buildConfig(config)) as IBuildOutput<T>;
   }
-  return buildNumber(0, buildConfig(config)) as IBuildOutput<T>;
+  return buildValue(0, buildConfig(config)) as IBuildOutput<T>;
 };
 
 
@@ -360,7 +360,7 @@ export {
 
   // number builders
   getBigNumber,
-  buildNumber,
+  buildValue,
   prettifyNumber,
 
   // helpers

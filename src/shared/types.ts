@@ -6,14 +6,15 @@ import { BigNumber } from 'bignumber.js';
 
 /**
  * BigNumber Instance
- * The instance of a BigNumber. It can be generated via the constructor new BigNumber(value) or by
- * simply invoking it as a function BigNumber(value)
+ * The instance of a BigNumber. It can be generated via the constructor "new BigNumber(value)"" or
+ * by simply invoking it as a function "BigNumber(value)". When using this library, it can be
+ * generated via the "getBigNumber(value)" function.
  */
 type IBigNumber = BigNumber;
 
 /**
  * BigNumber Rounding Mode
- * The type of rounding that will be used when generating a number build. The supported modes are:
+ * The type of rounding that will be used when processing a value. The supported modes are:
  * - ROUND_UP(0): rounds away from zero
  * - ROUND_DOWN(1): rounds towards zero
  * - ROUND_CEIL(2): rounds towards Infinity
@@ -24,6 +25,10 @@ type IBigNumber = BigNumber;
  * neighbour
  * - ROUND_HALF_CEIL(7): rounds towards nearest neighbour. If equidistant, rounds towards Infinity
  * - ROUND_HALF_FLOOR(8): rounds towards nearest neighbour. If equidistant, rounds towards -Infinity
+ *
+ * More information:
+ * - https://mikemcl.github.io/bignumber.js/#rounding-mode
+ * - https://mikemcl.github.io/bignumber.js/#constructor-properties
  */
 type IBigNumberRoundingModeName = 'ROUND_UP' | 'ROUND_DOWN' | 'ROUND_CEIL' | 'ROUND_FLOOR'
 | 'ROUND_HALF_UP' | 'ROUND_HALF_DOWN' | 'ROUND_HALF_EVEN' | 'ROUND_HALF_CEIL' | 'ROUND_HALF_FLOOR';
@@ -31,14 +36,15 @@ type IBigNumberRoundingMode = BigNumber.RoundingMode;
 
 /**
  * BigNumber Value
- * The types of values that can be used to instantiate BigNumber as well as generating a build
+ * The types that can be used to instantiate BigNumber. Moreover, any of these types can be obtained
+ * when processing a value by setting it in the configuration object (type prop).
  */
 type IBigNumberValue = BigNumber.Value;
 
 /**
  * BigNumber Format
- * The configuration object that is applied to the toFormat method which is used to prettify
- * numeric values.Available settings are:
+ * The configuration object that is applied to the toFormat method which is used to prettify values.
+ * Available settings are:
  * - prefix: string to prepend
  * - decimalSeparator: decimal separator
  * - groupSeparator: grouping separator of the integer part
@@ -48,7 +54,8 @@ type IBigNumberValue = BigNumber.Value;
  * - fractionGroupSize: grouping size of the fraction part
  * - suffix: string to append
  *
- * For more information visit: https://mikemcl.github.io/bignumber.js/#toFor
+ * More information:
+ * - https://mikemcl.github.io/bignumber.js/#toFor
  */
 type IBigNumberFormat = Required<BigNumber.Format>;
 
@@ -59,17 +66,17 @@ type IBigNumberFormat = Required<BigNumber.Format>;
  ************************************************************************************************ */
 
 /**
- * Build Type
- * A build can output any of the IBigNumberValue types in order to meet any requirements and
- * overcome JavaScript's numeric limitations.
+ * Type
+ * When a value is processed, it can output an IBigNumberValue type in order to meet the project's
+ * requirements and overcome JavaScript's numeric limitations.
  */
-type IBuildType = 'string' | 'number' | 'bignumber';
+type IType = 'string' | 'number' | 'bignumber';
 
 /**
- * Build Config
- * The configuration that will be used in order to generate a number build.
+ * Config
+ * The configuration that will be used to process a value.
  */
-type IBuildConfig = {
+type IConfig = {
   // the maximum number of decimals that will be present in the output (Default: 2)
   decimalPlaces: number;
 
@@ -77,12 +84,12 @@ type IBuildConfig = {
   roundingMode: IBigNumberRoundingModeName;
 
   // the output's type (Default: 'number')
-  buildType: IBuildType;
+  type: IType;
 };
 
 /**
  * BigNumber to Type
- * A helper generic type used when converting a BigNumber Instance into a custom type.
+ * A generic type helper used when converting a BigNumber Instance into a custom type.
  */
 type IBigNumberToType<T> =
   T extends 'string' ? string
@@ -91,13 +98,14 @@ type IBigNumberToType<T> =
         : never;
 
 /**
- * Build Output
- * A generic type that sets the return type based on the build configuration argument.
+ * Output
+ * A generic type that sets the return type for the function that processes value based on the
+ * provided configuration (type prop).
  */
-type IBuildOutput<T> =
-  T extends { buildType: 'string' } ? string
-    : T extends { buildType: 'number' } ? number
-      : T extends { buildType: 'bignumber' } ? IBigNumber
+type IOutput<T> =
+  T extends { type: 'string' } ? string
+    : T extends { type: 'number' } ? number
+      : T extends { type: 'bignumber' } ? IBigNumber
         : number;
 
 
@@ -116,8 +124,8 @@ export type {
   IBigNumberFormat,
 
   // types
-  IBuildType,
-  IBuildConfig,
+  IType,
+  IConfig,
   IBigNumberToType,
-  IBuildOutput,
+  IOutput,
 };
