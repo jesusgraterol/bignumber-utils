@@ -45,14 +45,14 @@ type IBigNumberValue = BigNumber.Value;
  * BigNumber Format
  * The configuration object that is applied to the toFormat method which is used to prettify values.
  * Available settings are:
- * - prefix: string to prepend
- * - decimalSeparator: decimal separator
- * - groupSeparator: grouping separator of the integer part
- * - groupSize: primary grouping size of the integer part
- * - secondaryGroupSize: secondary grouping size of the integer part
- * - fractionGroupSeparator: grouping separator of the fraction part
- * - fractionGroupSize: grouping size of the fraction part
- * - suffix: string to append
+ * - prefix: string to prepend                                          Default: ''
+ * - decimalSeparator: decimal separator                                Default: '.'
+ * - groupSeparator: grouping separator of the integer part             Default: ','
+ * - groupSize: primary grouping size of the integer part               Default: 3
+ * - secondaryGroupSize: secondary grouping size of the integer part    Default: 0
+ * - fractionGroupSeparator: grouping separator of the fraction part    Default: ' '
+ * - fractionGroupSize: grouping size of the fraction part              Default: 0
+ * - suffix: string to append                                           Default: ''
  *
  * More information:
  * - https://mikemcl.github.io/bignumber.js/#toFor

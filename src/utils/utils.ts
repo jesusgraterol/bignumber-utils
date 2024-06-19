@@ -4,8 +4,8 @@ import {
   IBigNumberRoundingMode,
   IBigNumberRoundingModeName,
   IBigNumberFormat,
-  IBuildType,
-  IBuildConfig,
+  IType,
+  IConfig,
   IBigNumberToType,
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
@@ -23,7 +23,7 @@ import { validateDecimalPlaces } from '../validations/validations.js';
  * The encoding of the error is managed safely as there are values in JavaScript that cannot be
  * stringified, such as Symbol(value).
  * @param value
- * @param error
+ * @param error?
  * @returns string
  */
 const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
@@ -39,7 +39,8 @@ const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
 };
 
 /**
- * Determines the number of decimals that will be placed on the configuration based on the input.
+ * Determines the number of decimals that will be placed in the configuration. If any '*_FLOOR' or
+ * '*_CEIL' variation is set as the rounding mode, the decimal places will be set to 0.
  * @param decimalPlaces
  * @param roundingMode
  * @returns number
@@ -56,24 +57,23 @@ const __getDecimalPlaces = (
 };
 
 /**
- * Builds the configuration that will be used to build a number. Note that if the roundingMode is
- * set to '*_CEIL' or '*_FLOOR', the decimalPlaces will be set to 0.
+ * Builds the configuration that will be used to process a value.
  * @param config
- * @returns IBuildConfig
+ * @returns IConfig
  * @throws
  * - INVALID_DECIMAL_PLACES: if an invalid number of decimal places are provided
  */
-const buildConfig = (config?: Partial<IBuildConfig>): IBuildConfig => {
+const buildConfig = (config?: Partial<IConfig>): IConfig => {
   const rm = config?.roundingMode ?? 'ROUND_HALF_UP';
   return {
     decimalPlaces: __getDecimalPlaces(config?.decimalPlaces ?? 2, rm),
     roundingMode: rm,
-    buildType: config?.buildType ?? 'number',
+    type: config?.type ?? 'number',
   };
 };
 
 /**
- * Retrieves the rounding mode number based on a given name.
+ * Determines the rounding mode number by name.
  * @param name
  * @returns IBigNumberRoundingMode
  * @throws
@@ -122,16 +122,16 @@ const roundBigNumber = (
 /**
  * Converts a BigNumber Instance into a custom type.
  * @param value
- * @param buildType
+ * @param type
  * @returns IBigNumberToType<T>
  * @throws
  * - INVALID_BUILD_TYPE: if the build type is not supported
  */
-const convertBigNumberToType = <T extends IBuildType>(
+const convertBigNumberToType = <T extends IType>(
   value: IBigNumber,
-  buildType: T,
+  type: T,
 ): IBigNumberToType<T> => {
-  switch (buildType) {
+  switch (type) {
     case 'string':
       return value.toString() as IBigNumberToType<T>;
     case 'number':
@@ -139,12 +139,12 @@ const convertBigNumberToType = <T extends IBuildType>(
     case 'bignumber':
       return value as IBigNumberToType<T>;
     default:
-      throw new Error(encodeError(`The buildType '${buildType}' is invalid for '${value}'.`, ERRORS.INVALID_BUILD_TYPE));
+      throw new Error(encodeError(`The buildType '${type}' is invalid for '${value}'.`, ERRORS.INVALID_TYPE));
   }
 };
 
 /**
- * Builds the configuration object used to prettify a numeric value.
+ * Builds the configuration object used to prettify a value.
  * @param config?
  * @returns IBigNumberFormat
  */
@@ -160,19 +160,19 @@ const buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberFormat
 });
 
 /**
- * Sorting function used to order BigNumbers ascendingly.
- * @param sortOrder
+ * Sorting function used to order a BigNumber Array in any direction.
+ * @param direction
  * @returns (a: IBigNumber, b: IBigNumber): number
  */
-const sortBigNumbers = (sortOrder: 'asc' | 'desc') => (
+const sortBigNumbers = (direction: 'asc' | 'desc') => (
   a: IBigNumber,
   b: IBigNumber,
 ): number => {
   if (a.isLessThan(b)) {
-    return sortOrder === 'asc' ? -1 : 1;
+    return direction === 'asc' ? -1 : 1;
   }
   if (a.isGreaterThan(b)) {
-    return sortOrder === 'asc' ? 1 : -1;
+    return direction === 'asc' ? 1 : -1;
   }
   return 0;
 };

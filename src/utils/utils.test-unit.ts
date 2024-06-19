@@ -3,8 +3,8 @@ import { BigNumber } from 'bignumber.js';
 import {
   IBigNumberRoundingModeName,
   IBigNumberFormat,
-  IBuildConfig,
-  IBuildType,
+  IConfig,
+  IType,
 } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 import {
@@ -26,7 +26,7 @@ import {
 const iv = BigNumber(NaN);
 
 // default build config
-const dbc: IBuildConfig = { decimalPlaces: 2, roundingMode: 'ROUND_HALF_UP', buildType: 'number' };
+const dbc: IConfig = { decimalPlaces: 2, roundingMode: 'ROUND_HALF_UP', type: 'number' };
 
 // default format config
 const dfc: IBigNumberFormat = {
@@ -83,7 +83,7 @@ describe('buildConfig', () => {
   test('can build a default config object by providing invalid values', () => {
     [
       buildConfig(), buildConfig(undefined), buildConfig(null!), buildConfig({}),
-      buildConfig({ decimalPlaces: undefined, roundingMode: undefined, buildType: undefined }),
+      buildConfig({ decimalPlaces: undefined, roundingMode: undefined, type: undefined }),
     ].forEach((val) => {
       expect(val).toStrictEqual(dbc);
     });
@@ -92,15 +92,15 @@ describe('buildConfig', () => {
   test('can build a config object by providing a partial config object', () => {
     expect(buildConfig({ decimalPlaces: 8 })).toStrictEqual({ ...dbc, decimalPlaces: 8 });
     expect(buildConfig({ roundingMode: 'ROUND_HALF_EVEN' })).toStrictEqual({ ...dbc, roundingMode: 'ROUND_HALF_EVEN' });
-    expect(buildConfig({ buildType: 'string' })).toStrictEqual({ ...dbc, buildType: 'string' });
+    expect(buildConfig({ type: 'string' })).toStrictEqual({ ...dbc, type: 'string' });
     expect(buildConfig({
-      buildType: 'bignumber',
+      type: 'bignumber',
       decimalPlaces: 6,
-    })).toStrictEqual({ ...dbc, buildType: 'bignumber', decimalPlaces: 6 });
+    })).toStrictEqual({ ...dbc, type: 'bignumber', decimalPlaces: 6 });
   });
 
   test('can build a config object by providing a complete config object', () => {
-    const config: IBuildConfig = { decimalPlaces: 4, roundingMode: 'ROUND_HALF_DOWN', buildType: 'string' };
+    const config: IConfig = { decimalPlaces: 4, roundingMode: 'ROUND_HALF_DOWN', type: 'string' };
     expect(buildConfig(config)).toStrictEqual(config);
   });
 
@@ -211,8 +211,8 @@ describe('convertBigNumberToType', () => {
     });
   });
 
-  test('throws if an invalid buildType is provided', () => {
-    expect(() => convertBigNumberToType(BigNumber(100), <IBuildType>'something')).toThrowError(ERRORS.INVALID_BUILD_TYPE);
+  test('throws if an invalid type is provided', () => {
+    expect(() => convertBigNumberToType(BigNumber(100), <IType>'something')).toThrowError(ERRORS.INVALID_TYPE);
   });
 });
 
