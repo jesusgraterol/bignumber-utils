@@ -12,7 +12,7 @@ import {
   IOutput,
 } from './shared/types.js';
 import { ERRORS } from './shared/errors.js';
-import { validateValuesArray } from './validations/validations.js';
+import { validateValuesArray, validatePositiveValue } from './validations/validations.js';
 import {
   buildInvalidValueErrorMessage,
   buildConfig,
@@ -332,7 +332,7 @@ const calculateMedian = <T extends Partial<IConfig>>(
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  * - INVALID_TYPE: if the processing type is not supported
- * - NEGATIVE_VALUE_NOT_ALLOWED: if the oldValue is less than or equal to 0
+ * - NEGATIVE_VALUE_NOT_ALLOWED: if the value is not positive
  */
 const calculatePercentageChange = <T extends Partial<IConfig>>(
   oldValue: IBigNumberValue,
@@ -345,17 +345,22 @@ const calculatePercentageChange = <T extends Partial<IConfig>>(
   let change: IBigNumber;
 
   // ensure the old value is valid
-  if (oldValueBN.isLessThanOrEqualTo(0)) {
-    throw new Error(encodeError(`The old value '${oldValue}' must be greater than 0.`, ERRORS.NEGATIVE_VALUE_NOT_ALLOWED));
-  }
+  validatePositiveValue(oldValueBN);
 
   // calculate the change experienced by the value based on the direction
   if (newValueBN.isGreaterThan(oldValueBN)) {
-    change = newValueBN.minus(oldValueBN).dividedBy(oldValueBN).times(100);
+    change = newValueBN
+      .minus(oldValueBN)
+      .dividedBy(oldValueBN)
+      .times(100);
   } else if (oldValueBN.isGreaterThan(newValueBN)) {
     // the max decrease supported by this func is 100%
     change = newValueBN.isGreaterThan(0)
-      ? oldValueBN.minus(newValueBN).dividedBy(oldValueBN).times(100).negated()
+      ? oldValueBN
+        .minus(newValueBN)
+        .dividedBy(oldValueBN)
+        .times(100)
+        .negated()
       : getBigNumber(-100);
   } else {
     change = getBigNumber(0);
@@ -366,15 +371,41 @@ const calculatePercentageChange = <T extends Partial<IConfig>>(
 };
 
 
-/* const adjustByPercentage = <T extends Partial<IConfig>>(
+const adjustByPercentage = <T extends Partial<IConfig>>(
   value: IBigNumberValue,
   percentage: IBigNumberValue,
   config?: T,
 ): IOutput<T> => {
   // init values
-  // let adjusted: IBigNumber;
-  return processValue(value, config);
-}; */
+  const valueBN = getBigNumber(value);
+  const percentageBN = getBigNumber(percentage);
+  let adjusted: IBigNumber;
+
+  // ensure the value is valid
+  validatePositiveValue(valueBN);
+
+  // perform the adjustment based on the percentage and direction
+  if (percentageBN.isGreaterThan(0)) {
+    adjusted = percentageBN
+      .dividedBy(100)
+      .plus(1)
+      .times(valueBN);
+  } else if (percentageBN.isLessThan(0)) {
+    adjusted = percentageBN.isGreaterThan(-100)
+      ? percentageBN
+        .times(-1)
+        .dividedBy(100)
+        .minus(1)
+        .times(valueBN)
+        .times(-1)
+      : getBigNumber(0);
+  } else {
+    adjusted = valueBN;
+  }
+
+  // return the adjusted value
+  return processValue(adjusted, config);
+};
 
 
 /* ************************************************************************************************
@@ -412,5 +443,5 @@ export {
 
   // advanced calculations
   calculatePercentageChange,
-  // adjustByPercentage,
+  adjustByPercentage,
 };

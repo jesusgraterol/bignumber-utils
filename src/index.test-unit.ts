@@ -17,6 +17,7 @@ import {
   calculateMean,
   calculateMedian,
   calculatePercentageChange,
+  adjustByPercentage,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -474,6 +475,36 @@ describe('Advanced Calculations', () => {
 
 
   describe('adjustByPercentage', () => {
-    test.todo('');
+    test('throws if the value is less than or equal to 0', () => {
+      expect(() => adjustByPercentage(0, 100)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(() => adjustByPercentage(-10, 100)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+    });
+
+    test('can increase values by percentage', () => {
+      expect(adjustByPercentage(100, 50)).toBe(150);
+      expect(adjustByPercentage(100, 100)).toBe(200);
+      expect(adjustByPercentage(57700, 1)).toBe(58277);
+      expect(adjustByPercentage(57700, 3.95)).toBe(59979.15);
+      expect(adjustByPercentage(12.55, 10889500)).toBe(1366644.8);
+      expect(adjustByPercentage(64842.66, 0.00599914)).toBe(64846.55);
+      expect(adjustByPercentage(64842.66, 0.00154219)).toBe(64843.66);
+      expect(adjustByPercentage(76366.9654123, 11.8864, { decimalPlaces: 7 })).toBe(85444.2483891);
+    });
+
+    test('can decrease values by percentage', () => {
+      expect(adjustByPercentage(100, -50)).toBe(50);
+      expect(adjustByPercentage(100, -90)).toBe(10);
+      expect(adjustByPercentage(100, -99.99)).toBe(0.01);
+      expect(adjustByPercentage(57700, -2)).toBe(56546);
+      expect(adjustByPercentage(56936.63, -35)).toBe(37008.81);
+      expect(adjustByPercentage(68355.66, -88.9487)).toBe(7554.19);
+      expect(adjustByPercentage(12.536, -0.00797703, { decimalPlaces: 3 })).toBe(12.535);
+      expect(adjustByPercentage(51042366.652316645, -99.9989)).toBe(561.47);
+    });
+
+    test('a value can only decrease 100%', () => {
+      expect(adjustByPercentage(100, -100)).toBe(0);
+      expect(adjustByPercentage(100, -5000)).toBe(0);
+    });
   });
 });
