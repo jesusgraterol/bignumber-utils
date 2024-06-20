@@ -366,6 +366,16 @@ const calculatePercentageChange = <T extends Partial<IConfig>>(
 };
 
 
+/* const adjustByPercentage = <T extends Partial<IConfig>>(
+  value: IBigNumberValue,
+  percentage: IBigNumberValue,
+  config?: T,
+): IOutput<T> => {
+  // init values
+  // let adjusted: IBigNumber;
+  return processValue(value, config);
+}; */
+
 
 /* ************************************************************************************************
  *                                         MODULE EXPORTS                                         *
@@ -402,4 +412,5 @@ export {
 
   // advanced calculations
   calculatePercentageChange,
+  // adjustByPercentage,
 };

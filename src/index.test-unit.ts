@@ -471,4 +471,9 @@ describe('Advanced Calculations', () => {
       expect(calculatePercentageChange(1, -1)).toBe(-100);
     });
   });
+
+
+  describe('adjustByPercentage', () => {
+    test.todo('');
+  });
 });

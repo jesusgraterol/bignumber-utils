@@ -1,7 +1,11 @@
 import { describe, test, expect } from 'vitest';
 import { BigNumber } from 'bignumber.js';
 import { ERRORS } from '../shared/errors.js';
-import { validateDecimalPlaces, validateValuesArray } from './validations.js';
+import {
+  validateDecimalPlaces,
+  validateValuesArray,
+  validatePositiveValue,
+} from './validations.js';
 
 describe('validateDecimalPlaces', () => {
   test('does not throw if a valid number of decimal places is provided', () => {
@@ -39,5 +43,30 @@ describe('validateValuesArray', () => {
     ].forEach((v: any) => {
       expect(() => validateValuesArray(v, 'test')).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
     });
+  });
+});
+
+
+
+
+describe('validatePositiveValue', () => {
+  test('does not throw if a valid positive value is provided', () => {
+    expect(validatePositiveValue(BigNumber(1))).toBeUndefined();
+  });
+
+  test('does not throw if zero is provided but is allowed', () => {
+    expect(validatePositiveValue(BigNumber(0), true)).toBeUndefined();
+  });
+
+  test('throws if zero is provided and is not allowed', () => {
+    expect(
+      () => validatePositiveValue(BigNumber(0), false),
+    ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+  });
+
+  test('throws if a negative value is provided', () => {
+    expect(
+      () => validatePositiveValue(BigNumber(-1)),
+    ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
   });
 });

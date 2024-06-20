@@ -1,5 +1,5 @@
 import { encodeError } from 'error-message-utils';
-import { IBigNumberValue } from '../shared/types.js';
+import { IBigNumber, IBigNumberValue } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
 /* ************************************************************************************************
@@ -31,6 +31,21 @@ const validateValuesArray = (values: IBigNumberValue[], calculationName: string)
   }
 };
 
+/**
+ * Ensures the provided value is positive.
+ * @param value
+ * @param allowZero?
+ * @throws
+ * - NEGATIVE_VALUE_NOT_ALLOWED: if the value is not positive
+ */
+const validatePositiveValue = (value: IBigNumber, allowZero?: boolean) => {
+  if (allowZero && value.isLessThan(0)) {
+    throw new Error(encodeError(`The value '${value}' must be greater than or equal to 0.`, ERRORS.NEGATIVE_VALUE_NOT_ALLOWED));
+  } else if (!allowZero && value.isLessThanOrEqualTo(0)) {
+    throw new Error(encodeError(`The value '${value}' must be greater than 0.`, ERRORS.NEGATIVE_VALUE_NOT_ALLOWED));
+  }
+};
+
 
 
 
@@ -41,4 +56,5 @@ export {
   // implementation
   validateDecimalPlaces,
   validateValuesArray,
+  validatePositiveValue,
 };
