@@ -19,8 +19,8 @@ import {
   calculatePercentageChange,
   adjustByPercentage,
   calculatePercentageRepresentation,
-  calculateExchangeFee,
   calculateExchange,
+  calculateExchangeFee,
   calculateWeightedEntry,
 } from './index.js';
 
