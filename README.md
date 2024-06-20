@@ -23,10 +23,54 @@ npm install -S bignumber-utils
 
 ## Usage
 
-@TODO
-
 ```typescript
-// ...
+import {
+  getBigNumber,
+  isBigNumber,
+  isInteger,
+  isFloat
+  prettifyValue,
+  calculateSum,
+} from 'bignumber-utils';
+
+let value = getBigNumber('1456550199.54631546987123654159');
+
+
+isBigNumber(value); // true
+
+
+value = processValue(value, { 
+  decimalPlaces: 18, 
+  roundingMode: 'ROUND_HALF_UP',
+  type: 'string'
+});
+// '1456550199.546315469871236542'
+
+isBigNumber(value); // false
+isInteger(value); // false
+isFloat(value); // true
+
+
+prettifyValue(value, { format: { prefix: '$' } });
+// '$1,456,550,199.546315469871236542'
+
+prettifyValue(value, { 
+  format: { 
+    groupSeparator: '.', 
+    decimalSeparator: ',',
+    suffix: ' BTC'
+  } 
+});
+// '1.456.550.199,546315469871236542 BTC'
+
+
+calculateSum([1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]);
+// 8061
+
+calculateSum(
+  ['0.286304850273819327', '0.00290532', '0.00251940040614675', '0.03506759540691015'], 
+  { decimalPlaces: 18, type: 'string' });
+// '0.326797166086876227'
 ```
 
 
@@ -37,36 +81,60 @@ npm install -S bignumber-utils
 
 ## API
 
-### Number Builders
+### Value Processors
 
-- **`getBigNumber`** instantiates BigNumber based on a given value
-- **`buildNumber`** builds a number based on given configuration (if any)
-- **`prettifyNumber`** returns the string representation of a number value after being built and formatted based on the provided configs (if any)
+- **`getBigNumber`** instantiates `BigNumber` from a valid numeric value.
+
+- **`processValue`** processes and outputs a value to match the requirements specified in the configuration (if any).
+
+- **`prettifyValue`** generates the string representation of a value after being processed and formatted to match the requirements specified in the configuration (if any).
 
 
 
 ### Helpers
 
-- **`isBigNumber`** verifies if a given value is a BigNumber Instance
-- **`isNumber`** returns `true` if the given value is a number in any of the supported types (`IBigNumberValue`)
-- **`isInteger`** returns `true` if the given value is an integer in any of the supported types (`IBigNumberValue`)
-- **`isFloat`** returns `true` if the given value is a float in any of the supported types (`IBigNumberValue`)
+- **`isBigNumber`** verifies if the value is a `BigNumber` Instance.
+
+- **`isNumber`** verifies if the value is a number in any of the supported types (`IBigNumberValue`).
+
+- **`isInteger`** verifies if the value is an integer in any of the supported types (`IBigNumberValue`).
+
+- **`isFloat`** verifies if the value is a float in any of the supported types (`IBigNumberValue`).
 
 
 
 ### Essential Calculations
 
-- **`calculateSum`** calculates the SUM for a given list of numeric values
-- **`calculateMin`** identifies and returns the smallest value in an array
-- **`calculateMax`** identifies and returns the largest value in an array
-- **`calculateMean`** calculates and returns the mean of an array of values
-- **`calculateMedian`** calculates and returns the median of an array of values
+- **`calculateSum`** calculates the sum for an array of values.
+
+- **`calculateMin`** identifies the smallest value in an array.
+
+- **`calculateMax`** identifies the largest value in an array.
+
+- **`calculateMean`** calculates the mean for an array of values.
+
+- **`calculateMedian`** calculates the median for an array of values.
 
 
 
-### Advanced Calculations
+### Percentage Calculations
 
-@TODO
+- **`calculatePercentageChange`** calculates the percentage change experienced by a value.
+
+- **`adjustByPercentage`** changes a value by a percentage.
+
+- **`calculatePercentageRepresentation`** calculates the percentage representation of a value based on a total.
+
+
+
+### Financial Calculations
+
+- **`calculateExchange`** calculates the asset amount that will be received once the exchange executes.
+
+- **`calculateExchangeFee`** calculates the fee amount that will be charged when executing a currency exchange based on a percentage.
+
+- **`calculateWeightedEntry`** calculates the weighted average trade price when a position can have several entries at different prices for different amounts.
+
 
 
 ### BigNumber Methods

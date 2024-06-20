@@ -37,7 +37,7 @@ BigNumber.config({
 
 
 /* ************************************************************************************************
- *                                        NUMBER BUILDERS                                         *
+ *                                        VALUE PROCESSORS                                        *
  ************************************************************************************************ */
 
 /**
@@ -574,7 +574,7 @@ export {
   type IBigNumberToType,
   type IOutput,
 
-  // number builders
+  // value processors
   getBigNumber,
   processValue,
   prettifyValue,

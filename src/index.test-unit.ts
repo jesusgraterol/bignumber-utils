@@ -50,7 +50,7 @@ const invalid = [
  *                                             TESTS                                              *
  ************************************************************************************************ */
 
-describe('Number Builders', () => {
+describe('Value Procesors', () => {
   describe('getBigNumber', () => {
     test('can instantiate BigNumber with any valid value', () => {
       valid.forEach((value) => {
