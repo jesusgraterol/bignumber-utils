@@ -20,6 +20,7 @@ import {
   adjustByPercentage,
   calculatePercentageRepresentation,
   calculateExchangeFee,
+  calculateExchange,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -548,7 +549,25 @@ describe('Percentage Calculations', () => {
 
 describe('Financial Calculations', () => {
   describe('calculateExchange', () => {
-    test.todo('throws if the value or the rate aren\'t positive values');
+    test('throws if the value or the rate aren\'t positive values', () => {
+      expect(() => calculateExchange(0, 1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(() => calculateExchange(-1, 1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(() => calculateExchange(1, 0)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(() => calculateExchange(1, -1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+    });
+
+    test('can calculate the exchange of an asset for another based on a rate', () => {
+      expect(calculateExchange(158794.2755, 64813.99)).toBe(2.45);
+      expect(calculateExchange(0.6481399, 64813.99, { decimalPlaces: 5 })).toBe(0.00001);
+      expect(calculateExchange(132798.00856, 85.64, { decimalPlaces: 3 })).toBe(1550.654);
+      expect(calculateExchange(132280620.06660, 85.64, { decimalPlaces: 3 })).toBe(1544612.565);
+      expect(calculateExchange(2032794.0782869, 0.0001691)).toBe(12021254159);
+      expect(calculateExchange(0.0001691, 0.0001691)).toBe(1);
+      expect(calculateExchange(0.08970286, 0.05409, { decimalPlaces: 4 })).toBe(1.6584);
+      expect(calculateExchange(3761.50243950, 0.05409)).toBe(69541.55);
+      expect(calculateExchange(8476.59012425, 0.00001003)).toBe(845123641.5);
+      expect(calculateExchange('6584205701.94816543', 0.00001003)).toBe(656451216545181);
+    });
   });
 
   describe('calculateExchangeFee', () => {

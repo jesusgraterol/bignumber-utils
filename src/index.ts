@@ -457,6 +457,34 @@ const calculatePercentageRepresentation = <T extends Partial<IConfig>>(
  ************************************************************************************************ */
 
 /**
+ * Calculates the asset amount that will be received once the exchange executes.
+ * @param value
+ * @param rate
+ * @param config?
+ * @returns IOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_TYPE: if the processing type is not supported
+ * - NEGATIVE_VALUE_NOT_ALLOWED: if the value or rate are not positive
+ */
+const calculateExchange = <T extends Partial<IConfig>>(
+  value: IBigNumberValue,
+  rate: IBigNumberValue,
+  config?: T,
+): IOutput<T> => {
+  // init and validate values
+  const valueBN = getBigNumber(value);
+  const rateBN = getBigNumber(rate);
+  validatePositiveValue(valueBN);
+  validatePositiveValue(rateBN);
+
+  // return the asset amount that will be received after the exchange
+  return processValue(valueBN.dividedBy(rateBN), config);
+};
+
+/**
  * Calculates the fee amount that will be charged when executing a currency exchange based on a
  * percentage.
  * @param value
@@ -484,6 +512,8 @@ const calculateExchangeFee = <T extends Partial<IConfig>>(
   // return the fee that will be charged
   return processValue(feePercentageBN.times(value).dividedBy(100), config);
 };
+
+
 
 
 
@@ -526,6 +556,6 @@ export {
   calculatePercentageRepresentation,
 
   // financial calculations
-
+  calculateExchange,
   calculateExchangeFee,
 };
