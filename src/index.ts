@@ -72,7 +72,7 @@ const getBigNumber = (value: IBigNumberValue): IBigNumber => {
  * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the processing type is not supported
  */
 const processValue = <T extends Partial<IConfig>>(
   value: IBigNumberValue,
@@ -98,10 +98,10 @@ const processValue = <T extends Partial<IConfig>>(
  * - INVALID_VALUE: if the given value is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the processing type is not supported
  * - INVALID_BIGNUMBER_FORMAT: if any of the format properties are invalid
  */
-const prettifyNumber = (
+const prettifyValue = (
   value: IBigNumberValue,
   config: { processing?: Partial<IConfig>, format?: Partial<IBigNumberFormat> } = {},
 ): string => {
@@ -196,7 +196,7 @@ const isFloat = (value: any): value is number => {
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the processing type is not supported
  * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
 const calculateSum = <T extends Partial<IConfig>>(
@@ -204,10 +204,7 @@ const calculateSum = <T extends Partial<IConfig>>(
   config?: T,
 ): IOutput<T> => {
   validateValuesArray(values, 'calculateSum');
-  return processValue(
-    values.length > 0 ? BigNumber.sum.apply(null, values) : 0,
-    buildConfig(config),
-  ) as IOutput<T>;
+  return processValue(values.length > 0 ? BigNumber.sum.apply(null, values) : 0, config);
 };
 
 /**
@@ -219,7 +216,7 @@ const calculateSum = <T extends Partial<IConfig>>(
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the processing type is not supported
  * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
 const calculateMin = <T extends Partial<IConfig>>(
@@ -227,10 +224,7 @@ const calculateMin = <T extends Partial<IConfig>>(
   config?: T,
 ): IOutput<T> => {
   validateValuesArray(values, 'calculateMin');
-  return processValue(
-    values.length > 0 ? BigNumber.min.apply(null, values) : 0,
-    buildConfig(config),
-  ) as IOutput<T>;
+  return processValue(values.length > 0 ? BigNumber.min.apply(null, values) : 0, config);
 };
 
 /**
@@ -242,7 +236,7 @@ const calculateMin = <T extends Partial<IConfig>>(
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the processing type is not supported
  * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
 const calculateMax = <T extends Partial<IConfig>>(
@@ -250,10 +244,7 @@ const calculateMax = <T extends Partial<IConfig>>(
   config?: T,
 ): IOutput<T> => {
   validateValuesArray(values, 'calculateMax');
-  return processValue(
-    values.length > 0 ? BigNumber.max.apply(null, values) : 0,
-    buildConfig(config),
-  ) as IOutput<T>;
+  return processValue(values.length > 0 ? BigNumber.max.apply(null, values) : 0, config);
 };
 
 /**
@@ -265,7 +256,7 @@ const calculateMax = <T extends Partial<IConfig>>(
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the processing type is not supported
  * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
 const calculateMean = <T extends Partial<IConfig>>(
@@ -276,12 +267,9 @@ const calculateMean = <T extends Partial<IConfig>>(
 
   // calculate the sum without rounding if there are items in the array. Otherwise, the mean is 0
   if (values.length > 0) {
-    return processValue(
-      BigNumber.sum.apply(null, values).dividedBy(values.length),
-      buildConfig(config),
-    ) as IOutput<T>;
+    return processValue(BigNumber.sum.apply(null, values).dividedBy(values.length), config);
   }
-  return processValue(0, buildConfig(config)) as IOutput<T>;
+  return processValue(0, config);
 };
 
 /**
@@ -293,7 +281,7 @@ const calculateMean = <T extends Partial<IConfig>>(
  * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
- * - INVALID_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the processing type is not supported
  * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
  */
 const calculateMedian = <T extends Partial<IConfig>>(
@@ -317,9 +305,9 @@ const calculateMedian = <T extends Partial<IConfig>>(
       : bnValues[half - 1].plus(bnValues[half]).dividedBy(2);
 
     // finally, return the median
-    return processValue(res, buildConfig(config)) as IOutput<T>;
+    return processValue(res, config);
   }
-  return processValue(0, buildConfig(config)) as IOutput<T>;
+  return processValue(0, config);
 };
 
 
@@ -330,6 +318,41 @@ const calculateMedian = <T extends Partial<IConfig>>(
  *                                      ADVANCED CALCULATIONS                                     *
  ************************************************************************************************ */
 
+/**
+ * Calculates the percentage change experienced by a value. Note that if the value increased, the
+ * change will be positive. Otherwise, it will be negative. If there was no change, it returns 0.
+ * @param oldValue
+ * @param newValue
+ * @param config?
+ * @returns IOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_TYPE: if the processing type is not supported
+ */
+const calculatePercentageChange = <T extends Partial<IConfig>>(
+  oldValue: IBigNumberValue,
+  newValue: IBigNumberValue,
+  config?: T,
+): IOutput<T> => {
+  // init values
+  const oldValueBN = getBigNumber(oldValue);
+  const newValueBN = getBigNumber(newValue);
+  let change: IBigNumber;
+
+  // calculate the change experienced by the value based on the direction
+  if (newValueBN.isGreaterThan(oldValueBN)) {
+    change = newValueBN.minus(oldValueBN).dividedBy(oldValueBN).times(100);
+  } else if (oldValueBN.isGreaterThan(newValueBN)) {
+    change = oldValueBN.minus(newValueBN).dividedBy(oldValueBN).times(100).negated();
+  } else {
+    change = getBigNumber(0);
+  }
+
+  // return the % change
+  return processValue(change, config);
+};
 
 
 
@@ -351,7 +374,7 @@ export {
   // number builders
   getBigNumber,
   processValue,
-  prettifyNumber,
+  prettifyValue,
 
   // helpers
   isBigNumber,
@@ -367,5 +390,5 @@ export {
   calculateMedian,
 
   // advanced calculations
-
+  calculatePercentageChange,
 };

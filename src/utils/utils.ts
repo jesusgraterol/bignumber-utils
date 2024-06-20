@@ -125,7 +125,7 @@ const roundBigNumber = (
  * @param type
  * @returns IBigNumberToType<T>
  * @throws
- * - INVALID_BUILD_TYPE: if the build type is not supported
+ * - INVALID_TYPE: if the processing type is not supported
  */
 const convertBigNumberToType = <T extends IType>(
   value: IBigNumber,
