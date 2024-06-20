@@ -438,11 +438,9 @@ const calculatePercentageRepresentation = <T extends Partial<IConfig>>(
   total: IBigNumberValue,
   config?: T,
 ): IOutput<T> => {
-  // init values
+  // init and validate values
   const valueBN = getBigNumber(value);
   const totalBN = getBigNumber(total);
-
-  // ensure both values are valid
   validatePositiveValue(valueBN);
   validatePositiveValue(totalBN);
 
@@ -451,6 +449,41 @@ const calculatePercentageRepresentation = <T extends Partial<IConfig>>(
 };
 
 
+
+
+
+/* ************************************************************************************************
+ *                                     FINANCIAL CALCULATIONS                                     *
+ ************************************************************************************************ */
+
+/**
+ * Calculates the fee amount that will be charged when executing a currency exchange based on a
+ * percentage.
+ * @param value
+ * @param feePercentage
+ * @param config?
+ * @returns IOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_TYPE: if the processing type is not supported
+ * - NEGATIVE_VALUE_NOT_ALLOWED: if the value or feePercentage are not positive
+ */
+const calculateExchangeFee = <T extends Partial<IConfig>>(
+  value: IBigNumberValue,
+  feePercentage: IBigNumberValue,
+  config?: T,
+): IOutput<T> => {
+  // init and validate values
+  const valueBN = getBigNumber(value);
+  const feePercentageBN = getBigNumber(feePercentage);
+  validatePositiveValue(valueBN);
+  validatePositiveValue(feePercentageBN, true);
+
+  // return the fee that will be charged
+  return processValue(feePercentageBN.times(value).dividedBy(100), config);
+};
 
 
 
@@ -491,4 +524,8 @@ export {
   calculatePercentageChange,
   adjustByPercentage,
   calculatePercentageRepresentation,
+
+  // financial calculations
+
+  calculateExchangeFee,
 };

@@ -19,6 +19,7 @@ import {
   calculatePercentageChange,
   adjustByPercentage,
   calculatePercentageRepresentation,
+  calculateExchangeFee,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -537,6 +538,37 @@ describe('Percentage Calculations', () => {
       expect(calculatePercentageRepresentation(1, 3)).toBe(33.33);
       expect(calculatePercentageRepresentation(1.105, 2997)).toBe(0.04);
       expect(calculatePercentageRepresentation(5000, 1000)).toBe(500);
+    });
+  });
+});
+
+
+
+
+
+describe('Financial Calculations', () => {
+  describe('calculateExchange', () => {
+    test.todo('throws if the value or the rate aren\'t positive values');
+  });
+
+  describe('calculateExchangeFee', () => {
+    test('throws if the value or the fee aren\'t positive values', () => {
+      expect(() => calculateExchangeFee(0, 0.1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(() => calculateExchangeFee(-1, 0.1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(() => calculateExchangeFee(1, -0.1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+    });
+
+    test('the feePercentage can be zero', () => {
+      expect(calculateExchangeFee(100, 0)).toBe(0);
+    });
+
+    test('can calculate the fee that will be charged to any exchange', () => {
+      expect(calculateExchangeFee(1000, 1)).toBe(10);
+      expect(calculateExchangeFee(300, 10)).toBe(30);
+      expect(calculateExchangeFee(100, 35)).toBe(35);
+      expect(calculateExchangeFee(25.2774561, 0.075, { decimalPlaces: 8 })).toBe(0.01895809);
+      expect(calculateExchangeFee(1007857.5445, 0.075, { decimalPlaces: 8 })).toBe(755.89315838);
+      expect(calculateExchangeFee(158794.2755, 0.075, { decimalPlaces: 8 })).toBe(119.09570663);
     });
   });
 });
