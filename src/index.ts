@@ -315,7 +315,7 @@ const calculateMedian = <T extends Partial<IConfig>>(
 
 
 /* ************************************************************************************************
- *                                      ADVANCED CALCULATIONS                                     *
+ *                                     PERCENTAGE CALCULATIONS                                    *
  ************************************************************************************************ */
 
 /**
@@ -332,7 +332,7 @@ const calculateMedian = <T extends Partial<IConfig>>(
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  * - INVALID_TYPE: if the processing type is not supported
- * - NEGATIVE_VALUE_NOT_ALLOWED: if the value is not positive
+ * - NEGATIVE_VALUE_NOT_ALLOWED: if the oldValue is not positive
  */
 const calculatePercentageChange = <T extends Partial<IConfig>>(
   oldValue: IBigNumberValue,
@@ -370,7 +370,20 @@ const calculatePercentageChange = <T extends Partial<IConfig>>(
   return processValue(change, config);
 };
 
-
+/**
+ * Changes a value by a percentage. If the % is positive, it increases the value. Otherwise, it
+ * decreases it.
+ * @param value
+ * @param percentage
+ * @param config?
+ * @returns IOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_TYPE: if the processing type is not supported
+ * - NEGATIVE_VALUE_NOT_ALLOWED: if the value is not positive
+ */
 const adjustByPercentage = <T extends Partial<IConfig>>(
   value: IBigNumberValue,
   percentage: IBigNumberValue,
@@ -407,6 +420,39 @@ const adjustByPercentage = <T extends Partial<IConfig>>(
   return processValue(adjusted, config);
 };
 
+/**
+ * Calculates the percentage representation of a value based on a total.
+ * @param value
+ * @param total
+ * @param config?
+ * @returns IOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_TYPE: if the processing type is not supported
+ * - NEGATIVE_VALUE_NOT_ALLOWED: if the value or total are not positive
+ */
+const calculatePercentageRepresentation = <T extends Partial<IConfig>>(
+  value: IBigNumberValue,
+  total: IBigNumberValue,
+  config?: T,
+): IOutput<T> => {
+  // init values
+  const valueBN = getBigNumber(value);
+  const totalBN = getBigNumber(total);
+
+  // ensure both values are valid
+  validatePositiveValue(valueBN);
+  validatePositiveValue(totalBN);
+
+  // return the representation
+  return processValue(valueBN.times(100).dividedBy(totalBN), config);
+};
+
+
+
+
 
 /* ************************************************************************************************
  *                                         MODULE EXPORTS                                         *
@@ -441,7 +487,8 @@ export {
   calculateMean,
   calculateMedian,
 
-  // advanced calculations
+  // percentage calculations
   calculatePercentageChange,
   adjustByPercentage,
+  calculatePercentageRepresentation,
 };

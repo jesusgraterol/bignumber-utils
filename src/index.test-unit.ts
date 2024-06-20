@@ -18,6 +18,7 @@ import {
   calculateMedian,
   calculatePercentageChange,
   adjustByPercentage,
+  calculatePercentageRepresentation,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -419,7 +420,7 @@ describe('Essential Calculations', () => {
 
 
 
-describe('Advanced Calculations', () => {
+describe('Percentage Calculations', () => {
   describe('calculatePercentageChange', () => {
     test('throws if the oldValue is less than or equal to 0', () => {
       expect(
@@ -505,6 +506,37 @@ describe('Advanced Calculations', () => {
     test('a value can only decrease 100%', () => {
       expect(adjustByPercentage(100, -100)).toBe(0);
       expect(adjustByPercentage(100, -5000)).toBe(0);
+    });
+  });
+
+
+  describe('calculatePercentageRepresentation', () => {
+    test('throws if the value or the total are less than or equal to 0', () => {
+      expect(
+        () => calculatePercentageRepresentation(0, 100),
+      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(
+        () => calculatePercentageRepresentation(-10, 100),
+      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(
+        () => calculatePercentageRepresentation(100, 0),
+      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(
+        () => calculatePercentageRepresentation(100, -10),
+      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+    });
+
+    test('can calculate the percentage representation of a value', () => {
+      expect(calculatePercentageRepresentation(50, 100)).toBe(50);
+      expect(calculatePercentageRepresentation(100, 1000)).toBe(10);
+      expect(calculatePercentageRepresentation(30, 100)).toBe(30);
+      expect(calculatePercentageRepresentation(26, 50)).toBe(52);
+      expect(calculatePercentageRepresentation(24, 50)).toBe(48);
+      expect(calculatePercentageRepresentation(5, 50)).toBe(10);
+      expect(calculatePercentageRepresentation(50, 75, { decimalPlaces: 3 })).toBe(66.667);
+      expect(calculatePercentageRepresentation(1, 3)).toBe(33.33);
+      expect(calculatePercentageRepresentation(1.105, 2997)).toBe(0.04);
+      expect(calculatePercentageRepresentation(5000, 1000)).toBe(500);
     });
   });
 });
