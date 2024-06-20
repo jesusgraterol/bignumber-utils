@@ -16,6 +16,7 @@ import {
   calculateMax,
   calculateMean,
   calculateMedian,
+  calculatePercentageChange,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -418,5 +419,56 @@ describe('Essential Calculations', () => {
 
 
 describe('Advanced Calculations', () => {
-  test.todo('...');
+  describe('calculatePercentageChange', () => {
+    test('throws if the oldValue is less than or equal to 0', () => {
+      expect(
+        () => calculatePercentageChange(0, 100),
+      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(
+        () => calculatePercentageChange(-10, 100),
+      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+    });
+
+    test('can calculate the % change when a value has not changed', () => {
+      expect(calculatePercentageChange(100, 100)).toBe(0);
+      expect(calculatePercentageChange(155.55, 155.55)).toBe(0);
+    });
+
+    test('can calculate the % change of a value increase', () => {
+      expect(calculatePercentageChange(100, 150)).toBe(50);
+      expect(calculatePercentageChange(1555.6544122, 554366.123124)).toBe(35535.56);
+      expect(calculatePercentageChange(745.655, 1225.446, { decimalPlaces: 4 })).toBe(64.3449);
+      expect(calculatePercentageChange(1635.661, 1639.55, { decimalPlaces: 6 })).toBe(0.237763);
+      expect(calculatePercentageChange(4.66, 4.67, { decimalPlaces: 6 })).toBe(0.214592);
+      expect(
+        calculatePercentageChange(
+          '5412151.54561245487451',
+          '78998154125.6632113',
+          { decimalPlaces: 10, type: 'string' },
+        ),
+      ).toBe('1459544.1629522691');
+    });
+
+    test('can calculate the % change of a value decrease', () => {
+      expect(calculatePercentageChange(150, 100, { decimalPlaces: 4 })).toBe(-33.3333);
+      expect(
+        calculatePercentageChange(554366.123124, 1555.6544122, { decimalPlaces: 4 }),
+      ).toBe(-99.7194);
+      expect(calculatePercentageChange(1225.446, 745.655, { decimalPlaces: 4 })).toBe(-39.1524);
+      expect(calculatePercentageChange(1639.55, 1635.661, { decimalPlaces: 6 })).toBe(-0.237199);
+      expect(calculatePercentageChange(4.67, 4.66, { decimalPlaces: 6 })).toBe(-0.214133);
+      expect(
+        calculatePercentageChange(
+          '78998154125.6632113',
+          '5412151.54561245487451',
+          { decimalPlaces: 4, type: 'string' },
+        ),
+      ).toBe('-99.9931');
+    });
+
+    test('a value can only decrease -100%', () => {
+      expect(calculatePercentageChange(1, 0)).toBe(-100);
+      expect(calculatePercentageChange(1, -1)).toBe(-100);
+    });
+  });
 });

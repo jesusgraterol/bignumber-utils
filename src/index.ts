@@ -321,6 +321,8 @@ const calculateMedian = <T extends Partial<IConfig>>(
 /**
  * Calculates the percentage change experienced by a value. Note that if the value increased, the
  * change will be positive. Otherwise, it will be negative. If there was no change, it returns 0.
+ * Moreover, the largest decrease supported by this library is -100%. If newValue is less than or
+ * equal to 0, -100 will be returned.
  * @param oldValue
  * @param newValue
  * @param config?
@@ -330,6 +332,7 @@ const calculateMedian = <T extends Partial<IConfig>>(
  * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
  * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
  * - INVALID_TYPE: if the processing type is not supported
+ * - NEGATIVE_VALUE_NOT_ALLOWED: if the oldValue is less than or equal to 0
  */
 const calculatePercentageChange = <T extends Partial<IConfig>>(
   oldValue: IBigNumberValue,
@@ -341,11 +344,19 @@ const calculatePercentageChange = <T extends Partial<IConfig>>(
   const newValueBN = getBigNumber(newValue);
   let change: IBigNumber;
 
+  // ensure the old value is valid
+  if (oldValueBN.isLessThanOrEqualTo(0)) {
+    throw new Error(encodeError(`The old value '${oldValue}' must be greater than 0.`, ERRORS.NEGATIVE_VALUE_NOT_ALLOWED));
+  }
+
   // calculate the change experienced by the value based on the direction
   if (newValueBN.isGreaterThan(oldValueBN)) {
     change = newValueBN.minus(oldValueBN).dividedBy(oldValueBN).times(100);
   } else if (oldValueBN.isGreaterThan(newValueBN)) {
-    change = oldValueBN.minus(newValueBN).dividedBy(oldValueBN).times(100).negated();
+    // the max decrease supported by this func is 100%
+    change = newValueBN.isGreaterThan(0)
+      ? oldValueBN.minus(newValueBN).dividedBy(oldValueBN).times(100).negated()
+      : getBigNumber(-100);
   } else {
     change = getBigNumber(0);
   }
