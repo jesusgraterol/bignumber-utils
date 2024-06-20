@@ -557,6 +557,7 @@ describe('Financial Calculations', () => {
     });
 
     test('can calculate the exchange of an asset for another based on a rate', () => {
+      expect(calculateExchange(100, 65000, { decimalPlaces: 5 })).toBe(0.00154);
       expect(calculateExchange(158794.2755, 64813.99)).toBe(2.45);
       expect(calculateExchange(0.6481399, 64813.99, { decimalPlaces: 5 })).toBe(0.00001);
       expect(calculateExchange(132798.00856, 85.64, { decimalPlaces: 3 })).toBe(1550.654);

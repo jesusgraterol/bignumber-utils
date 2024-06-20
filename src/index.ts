@@ -458,6 +458,7 @@ const calculatePercentageRepresentation = <T extends Partial<IConfig>>(
 
 /**
  * Calculates the asset amount that will be received once the exchange executes.
+ * - Example: calculateExchange(value = 100 USDT, rate = 65000 USDT/BTC) => 0.00154 BTC
  * @param value
  * @param rate
  * @param config?
