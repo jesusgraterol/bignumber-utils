@@ -1,5 +1,5 @@
 import { encodeError } from 'error-message-utils';
-import { IBigNumber, IBigNumberValue } from '../shared/types.js';
+import { IBigNumber } from '../shared/types.js';
 import { ERRORS } from '../shared/errors.js';
 
 /* ************************************************************************************************
@@ -25,7 +25,7 @@ const validateDecimalPlaces = (decimalPlaces: number): void => {
  * @throws
  * - INVALID_VALUES_ARRAY: if values is not a valid array
  */
-const validateValuesArray = (values: IBigNumberValue[], calculationName: string): void => {
+const validateValuesArray = (values: any[], calculationName: string): void => {
   if (!Array.isArray(values)) {
     throw new Error(encodeError(`Cannot run ${calculationName} on an invalid sequence of BigNumber Values. Received: ${values}`, ERRORS.INVALID_VALUES_ARRAY));
   }

@@ -21,6 +21,7 @@ import {
   calculatePercentageRepresentation,
   calculateExchangeFee,
   calculateExchange,
+  calculateWeightedEntry,
 } from './index.js';
 
 /* ************************************************************************************************
@@ -589,6 +590,46 @@ describe('Financial Calculations', () => {
       expect(calculateExchangeFee(25.2774561, 0.075, { decimalPlaces: 8 })).toBe(0.01895809);
       expect(calculateExchangeFee(1007857.5445, 0.075, { decimalPlaces: 8 })).toBe(755.89315838);
       expect(calculateExchangeFee(158794.2755, 0.075, { decimalPlaces: 8 })).toBe(119.09570663);
+    });
+  });
+
+  describe('calculateWeightedEntry', () => {
+    test('returns 0 if an empty list of values is provided', () => {
+      expect(calculateWeightedEntry([])).toBe(0);
+    });
+
+    test('can calculate the weighted entry price for a position (1)', () => {
+      expect(calculateWeightedEntry([
+        [27340.15, 0.01],
+        [22077.21, 0.03],
+        [21175.76, 0.08],
+      ])).toBe(21914.82);
+    });
+
+    test('can calculate the weighted entry price for a position (2)', () => {
+      expect(calculateWeightedEntry([
+        [15699.65, 0.13562],
+        [15500.32, 0.24210],
+        [16665.88, 0.16644],
+        [19555.11, 0.2886],
+        [24655.44, 0.16665],
+        [22113.65, 0.2001],
+        [28966.11, 0.13661],
+        [33154.24, 0.1774],
+        [36764.81, 0.266],
+        [32145.46, 0.18546],
+      ])).toBe(24637.82);
+    });
+
+    test('throws if an invalid array of values is provided', () => {
+      expect(() => calculateWeightedEntry(undefined!)).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+      expect(() => calculateWeightedEntry(null!)).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+      // @ts-ignore
+      expect(() => calculateWeightedEntry({})).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+      // @ts-ignore
+      expect(() => calculateWeightedEntry(1)).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
+      // @ts-ignore
+      expect(() => calculateWeightedEntry('asd')).toThrowError(ERRORS.INVALID_VALUES_ARRAY);
     });
   });
 });

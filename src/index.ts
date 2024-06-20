@@ -514,7 +514,46 @@ const calculateExchangeFee = <T extends Partial<IConfig>>(
   return processValue(feePercentageBN.times(value).dividedBy(100), config);
 };
 
+/**
+ * Calculates the weighted average trade price when a position can have several entries at different
+ * prices for different amounts. If the array is empty, it returns 0.
+ * Important: the trades' tuples must follow: [price, amount].
+ * @param trades // Array<[price, amount]>
+ * @param config?
+ * @returns IOutput<T>
+ * @throws
+ * - INVALID_VALUE: if any of the given values is NaN (not a number) or BigNumber throws an error
+ * - INVALID_DECIMAL_PLACES: if the number of decimal places is invalid for any reason
+ * - INVALID_ROUNDING_MODE: if the rounding mode name is not supported
+ * - INVALID_TYPE: if the processing type is not supported
+ * - INVALID_VALUES_ARRAY: if the provided values arg is not a valid array
+ */
+const calculateWeightedEntry = <T extends Partial<IConfig>>(
+  trades: Array<[IBigNumberValue, IBigNumberValue]>,
+  config?: T,
+): IOutput<T> => {
+  validateValuesArray(trades, 'calculateWeightedEntry');
 
+  // proceed if there are items in the array. Otherwise, the entry is 0
+  if (trades.length) {
+    // init values
+    const priceTimesShares: IBigNumber[] = [];
+    let totalShares: IBigNumber = getBigNumber(0);
+
+    // iterate over each trade
+    trades.forEach((trade) => {
+      // append the price times shares value
+      priceTimesShares.push(getBigNumber(trade[0]).times(trade[1]));
+
+      // add the shared acquired
+      totalShares = totalShares.plus(trade[1]);
+    });
+
+    // calculate the real entry price and return it
+    return processValue(BigNumber.sum.apply(null, priceTimesShares).dividedBy(totalShares), config);
+  }
+  return processValue(0, config);
+};
 
 
 
@@ -559,4 +598,5 @@ export {
   // financial calculations
   calculateExchange,
   calculateExchangeFee,
+  calculateWeightedEntry,
 };
