@@ -142,7 +142,7 @@ const isBigNumber = (value: any): value is IBigNumber => BigNumber.isBigNumber(v
  * @param value
  * @returns boolean
  */
-const isNumber = (value: any): value is number => {
+const isNumber = (value: any): boolean => {
   try {
     getBigNumber(value);
     return true;
@@ -156,7 +156,7 @@ const isNumber = (value: any): value is number => {
  * @param value
  * @returns boolean
  */
-const isInteger = (value: any): value is number => {
+const isInteger = (value: any): boolean => {
   try {
     const bn = getBigNumber(value);
     return bn.isInteger();
@@ -170,7 +170,7 @@ const isInteger = (value: any): value is number => {
  * @param value
  * @returns boolean
  */
-const isFloat = (value: any): value is number => {
+const isFloat = (value: any): boolean => {
   try {
     const bn = getBigNumber(value);
     return !bn.isInteger();

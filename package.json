@@ -1,6 +1,6 @@
 {
   "name": "bignumber-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The bignumber-utils package empowers developers to effortlessly perform accurate and reliable decimal and non-decimal arithmetic in JavaScript, leveraging the robust foundation of the bignumber.js library.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
