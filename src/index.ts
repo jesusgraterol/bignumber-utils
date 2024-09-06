@@ -441,7 +441,7 @@ const calculatePercentageRepresentation = <T extends Partial<IConfig>>(
   // init and validate values
   const valueBN = getBigNumber(value);
   const totalBN = getBigNumber(total);
-  validatePositiveValue(valueBN);
+  validatePositiveValue(valueBN, true);
   validatePositiveValue(totalBN);
 
   // return the representation

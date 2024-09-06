@@ -516,7 +516,7 @@ describe('Percentage Calculations', () => {
   describe('calculatePercentageRepresentation', () => {
     test('throws if the value or the total are less than or equal to 0', () => {
       expect(
-        () => calculatePercentageRepresentation(0, 100),
+        () => calculatePercentageRepresentation(-1, 100),
       ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
       expect(
         () => calculatePercentageRepresentation(-10, 100),
@@ -530,6 +530,7 @@ describe('Percentage Calculations', () => {
     });
 
     test('can calculate the percentage representation of a value', () => {
+      expect(calculatePercentageRepresentation(0, 100)).toBe(0);
       expect(calculatePercentageRepresentation(50, 100)).toBe(50);
       expect(calculatePercentageRepresentation(100, 1000)).toBe(10);
       expect(calculatePercentageRepresentation(30, 100)).toBe(30);
