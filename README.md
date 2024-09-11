@@ -139,7 +139,7 @@ calculateSum(
 
 ### BigNumber Methods
 
-Since this library is built on top of `bignumber.js`, whenever you invoke `getBigNumber(value)` or `buildNumber(value, { buildType: 'bignumber' })` you can make use of any method within the BigNumber Instace. 
+Since this library is built on top of `bignumber.js`, whenever you invoke `getBigNumber(value)` or `buildNumber(value, { buildType: 'bignumber' })` you can make use of any method within the BigNumber Instance. 
 
 The list of methods can be found [here](https://mikemcl.github.io/bignumber.js/)
 
