@@ -268,11 +268,53 @@ calculateSum(
 
 ### Percentage Calculations
 
-- **`calculatePercentageChange`** calculates the percentage change experienced by a value.
+<details>
+  <summary><code>calculatePercentageChange</code></summary>
+  
+  Calculates the percentage change experienced by a value. Note that if the value increased, the change will be positive. Otherwise, it will be negative. If there was no change, it returns 0. Moreover, the largest decrease supported by this library is -100%. If newValue is less than or equal to 0, -100 will be returned.
+  ```typescript
+  import { calculatePercentageChange } from 'bignumber-utils';
 
-- **`adjustByPercentage`** changes a value by a percentage.
+  calculatePercentageChange(100, 150); // 50
+  calculatePercentageChange(1555.6544122, 554366.123124); // 35535.56
+  calculatePercentageChange(745.655, 1225.446, { decimalPlaces: 4 }); // 64.3449
+  calculatePercentageChange(
+    '5412151.54561245487451',
+    '78998154125.6632113',
+    { decimalPlaces: 10, type: 'string' },
+  ); // '1459544.1629522691'
+  ```
+</details>
 
-- **`calculatePercentageRepresentation`** calculates the percentage representation of a value based on a total.
+<details>
+  <summary><code>adjustByPercentage</code></summary>
+  
+  Changes a value by a percentage. If the % is positive, it increases the value. Otherwise, it decreases it.
+  ```typescript
+  import { adjustByPercentage, getBigNumber } from 'bignumber-utils';
+
+  adjustByPercentage(100, 50); // 150
+  adjustByPercentage(100, -50); // 50
+  adjustByPercentage(57700, 1); // 58277
+  adjustByPercentage('12.536', getBigNumber(-0.00797703), { decimalPlaces: 3 }); // 12.535
+  ```
+</details>
+
+<details>
+  <summary><code>calculatePercentageRepresentation</code></summary>
+  
+  Changes a value by a percentage. If the % is positive, it increases the value. Otherwise, it decreases it.
+  ```typescript
+  import { calculatePercentageRepresentation } from 'bignumber-utils';
+
+  calculatePercentageRepresentation(50, 100); // 50
+  calculatePercentageRepresentation(100, 1000); // 10
+  calculatePercentageRepresentation(50, 75, { decimalPlaces: 3 }) // 66.667
+  ```
+</details>
+
+
+
 
 
 
