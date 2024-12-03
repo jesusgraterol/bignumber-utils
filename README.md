@@ -15,13 +15,7 @@ Install the package:
 npm install -S bignumber-utils
 ```
 
-
-
-
-
-</br>
-
-## Examples
+### Examples
 
 ```typescript
 import { getBigNumber, prettifyValue, calculateSum } from 'bignumber-utils';
