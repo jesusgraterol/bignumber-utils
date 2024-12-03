@@ -83,11 +83,57 @@ calculateSum(
 
 ### Value Processors
 
-- **`getBigNumber`** instantiates `BigNumber` from a valid numeric value.
+<details>
+  <summary><code>getBigNumber</code></summary>
+  
+  Instantiates `BigNumber` from a valid numeric value.
+  ```typescript
+  import { BigNumber } from 'bignumber.js';
+  import { getBigNumber } from 'bignumber-utils';
 
-- **`processValue`** processes and outputs a value to match the requirements specified in the configuration (if any).
+  getBigNumber(355).dividedBy(113).toString();
+  getBigNumber('355').dividedBy(113).toString();
+  getBigNumber(BigNumber(355)).dividedBy(113).toString();
+  // '3.14159292035398230088'
+  ```
+</details>
 
-- **`prettifyValue`** generates the string representation of a value after being processed and formatted to match the requirements specified in the configuration (if any).
+<details>
+  <summary><code>processValue</code></summary>
+  
+  Processes and outputs a value to match the requirements specified in the configuration (if any).
+  ```typescript
+  import { processValue } from 'bignumber-utils';
+
+  processValue(100.585) // 100.59
+  processValue(110.55, { type: 'number' }) // 110.55
+  processValue(110.55, { type: 'string', decimalPlaces: 1 }) // '110.6'
+  processValue(110.55, { type: 'bignumber' }) // BigNumber
+  ```
+</details>
+
+<details>
+  <summary><code>prettifyValue</code></summary>
+  
+  Generates the string representation of a value after being processed and formatted to match the requirements specified in the configuration (if any).
+  ```typescript
+  import { prettifyValue } from 'bignumber-utils';
+
+  prettifyValue(
+    15426525.846545124, 
+    { 
+      processing: { 
+        decimalPlaces: 8 
+      }, 
+      format: { 
+        prefix: 'BTC ' 
+      } 
+    }
+  ); // 'BTC 15,426,525.84654512'
+  ```
+</details>
+
+
 
 
 
@@ -145,7 +191,7 @@ calculateSum(
 
 Since this library is built on top of `bignumber.js`, whenever you invoke `getBigNumber(value)` or `buildNumber(value, { buildType: 'bignumber' })` you can make use of any method within the BigNumber Instance. 
 
-The list of methods can be found [here](https://mikemcl.github.io/bignumber.js/)
+The list of methods can be found [here](https://mikemcl.github.io/bignumber.js/).
 
 
 
