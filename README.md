@@ -51,7 +51,9 @@ prettifyValue(value, {
 });
 // '1.456.550.199,54631547 BTC'
 
-calculateSum([1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]);
+calculateSum(
+  [1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]
+);
 // 8061
 
 processValue(
