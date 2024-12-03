@@ -17,8 +17,9 @@ npm install -S bignumber-utils
 
 ### Examples
 
+Handle and format large numeric values with ease:
 ```typescript
-import { getBigNumber, prettifyValue, calculateSum } from 'bignumber-utils';
+import { getBigNumber, prettifyValue } from 'bignumber-utils';
 
 let value = getBigNumber('1456550199.54631546987123654159');
 
@@ -44,21 +45,28 @@ prettifyValue(value, {
   } 
 });
 // '1.456.550.199,54631547 BTC'
+```
+
+Leverage the utility functions provided by this package:
+```typescript
+import { getBigNumber, calculateSum, adjustByPercentage } from 'bignumber-utils';
 
 calculateSum(
   [1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]
 );
 // 8061
 
-processValue(
-  getBigNumber(14513.622145123884031).dividedBy(655.1232), 
-  { decimalPlaces: 18, type: 'bignumber' }
-);
-// BigNumber(22.154034760368558158)
+adjustByPercentage(56936.63, -35); // 37008.81
 ```
 
+Access the full `bignumber.js` API directly using the getBigNumber function when needed for advanced operations:
+```typescript
+import { getBigNumber, processValue } from 'bignumber-utils';
 
-
+const result = getBigNumber(14513.622145123884031).dividedBy(655.1232);
+processValue(result,  { decimalPlaces: 18, type: 'bignumber' });
+// BigNumber(22.154034760368558158)
+```
 
 
 </br>
