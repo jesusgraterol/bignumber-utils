@@ -108,7 +108,8 @@ calculateSum(
   processValue(100.585) // 100.59
   processValue(110.55, { type: 'number' }) // 110.55
   processValue(110.55, { type: 'string', decimalPlaces: 1 }) // '110.6'
-  processValue(110.55, { type: 'bignumber' }) // BigNumber
+  processValue(110.55, { type: 'bignumber' }) // BigNumber(100.55)
+  processValue(512.155, { roundingMode: 'ROUND_CEIL' }) // 513
   ```
 </details>
 
@@ -200,15 +201,68 @@ calculateSum(
 
 ### Essential Calculations
 
-- **`calculateSum`** calculates the sum for an array of values.
+<details>
+  <summary><code>calculateSum</code></summary>
+  
+  Calculates the sum for an array of values. It returns 0 if the array is empty.
+  ```typescript
+  import { calculateSum, getBigNumber } from 'bignumber-utils';
 
-- **`calculateMin`** identifies the smallest value in an array.
+  calculateSum([1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]); 
+  // 8061
+  ```
+</details>
 
-- **`calculateMax`** identifies the largest value in an array.
+<details>
+  <summary><code>calculateMin</code></summary>
+  
+  Identifies the smallest value in an array. It returns 0 if the array is empty.
+  ```typescript
+  import { calculateMin, getBigNumber } from 'bignumber-utils';
 
-- **`calculateMean`** calculates the mean for an array of values.
+  calculateMin([1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]); 
+  // -800.65
+  ```
+</details>
 
-- **`calculateMedian`** calculates the median for an array of values.
+<details>
+  <summary><code>calculateMax</code></summary>
+  
+  Identifies the largest value in an array. It returns 0 if the array is empty.
+  ```typescript
+  import { calculateMax, getBigNumber } from 'bignumber-utils';
+
+  calculateMax([1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]); 
+  // 8041.66
+  ```
+</details>
+
+<details>
+  <summary><code>calculateMean</code></summary>
+  
+  Calculates the mean for an array of values. It returns 0 if the array is empty.
+  ```typescript
+  import { calculateMean, getBigNumber } from 'bignumber-utils';
+
+  calculateMean([1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]); 
+  // 895.67
+  ```
+</details>
+
+<details>
+  <summary><code>calculateMedian</code></summary>
+  
+  Calculates the median for an array of values. It returns 0 if the array is empty.
+  ```typescript
+  import { calculateMedian, getBigNumber } from 'bignumber-utils';
+
+  calculateMedian([1093.55, '711.41', getBigNumber(987.13), 342, '654.99', getBigNumber(84.32), '-55.99', 25132.33,]); 
+  // 683.2
+  ```
+</details>
+
+
+
 
 
 
