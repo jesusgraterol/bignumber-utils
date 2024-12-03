@@ -21,23 +21,12 @@ npm install -S bignumber-utils
 
 </br>
 
-## Usage
+## Examples
 
 ```typescript
-import {
-  getBigNumber,
-  isBigNumber,
-  isInteger,
-  isFloat
-  prettifyValue,
-  calculateSum,
-} from 'bignumber-utils';
+import { getBigNumber, prettifyValue, calculateSum } from 'bignumber-utils';
 
 let value = getBigNumber('1456550199.54631546987123654159');
-
-
-isBigNumber(value); // true
-
 
 value = processValue(value, { 
   decimalPlaces: 18, 
@@ -46,31 +35,30 @@ value = processValue(value, {
 });
 // '1456550199.546315469871236542'
 
-isBigNumber(value); // false
-isInteger(value); // false
-isFloat(value); // true
-
-
 prettifyValue(value, { format: { prefix: '$' } });
-// '$1,456,550,199.546315469871236542'
+// '$1,456,550,199.55'
 
 prettifyValue(value, { 
+  processing: {
+    decimalPlaces: 8,
+    roundingMode: 'ROUND_HALF_DOWN'
+  },
   format: { 
     groupSeparator: '.', 
     decimalSeparator: ',',
     suffix: ' BTC'
   } 
 });
-// '1.456.550.199,546315469871236542 BTC'
-
+// '1.456.550.199,54631547 BTC'
 
 calculateSum([1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.11', getBigNumber(-800.654)]);
 // 8061
 
-calculateSum(
-  ['0.286304850273819327', '0.00290532', '0.00251940040614675', '0.03506759540691015'], 
-  { decimalPlaces: 18, type: 'string' });
-// '0.326797166086876227'
+processValue(
+  getBigNumber(14513.622145123884031).dividedBy(655.1232), 
+  { decimalPlaces: 18, type:'string' }
+);
+// '22.154034760368558158'
 ```
 
 
@@ -130,7 +118,8 @@ calculateSum(
         prefix: 'BTC ' 
       } 
     }
-  ); // 'BTC 15,426,525.84654512'
+  ); 
+  // 'BTC 15,426,525.84654512'
   ```
 </details>
 
@@ -282,7 +271,8 @@ calculateSum(
     '5412151.54561245487451',
     '78998154125.6632113',
     { decimalPlaces: 10, type: 'string' },
-  ); // '1459544.1629522691'
+  ); 
+  // '1459544.1629522691'
   ```
 </details>
 
@@ -320,11 +310,56 @@ calculateSum(
 
 ### Financial Calculations
 
-- **`calculateExchange`** calculates the asset amount that will be received once the exchange executes.
+<details>
+  <summary><code>calculateExchange</code></summary>
+  
+  Calculates the asset amount that will be received once the exchange executes.
+  - Example: calculateExchange(value = 100 USDT, rate = 65000 USDT/BTC) => 0.00154 BTC
+  ```typescript
+  import { calculateExchange } from 'bignumber-utils';
 
-- **`calculateExchangeFee`** calculates the fee amount that will be charged when executing a currency exchange based on a percentage.
+  calculateExchange(100, 65000, { decimalPlaces: 5 }); // 0.00154
+  calculateExchange(158794.2755, 64813.99); // 2.45
+  calculateExchange(0.08970286, 0.05409, { decimalPlaces: 4 }); // 1.6584
+  ```
+</details>
 
-- **`calculateWeightedEntry`** calculates the weighted average trade price when a position can have several entries at different prices for different amounts.
+<details>
+  <summary><code>calculateExchangeFee</code></summary>
+  
+  Calculates the fee amount that will be charged when executing a currency exchange based on a percentage.
+  ```typescript
+  import { calculateExchangeFee } from 'bignumber-utils';
+
+  calculateExchangeFee(1000, 1); // 10
+  calculateExchangeFee(25.2774561, 0.075, { decimalPlaces: 8 }); // 0.01895809
+  ```
+</details>
+
+<details>
+  <summary><code>calculateWeightedEntry</code></summary>
+  
+  Calculates the weighted average trade price when a position can have several entries at different prices for different amounts. If the array is empty, it returns 0. 
+  
+  Important: the trades' tuples must follow: [price, amount].
+  ```typescript
+  import { calculateWeightedEntry } from 'bignumber-utils';
+
+  calculateWeightedEntry([
+    [15699.65, 0.13562],
+    [15500.32, 0.24210],
+    [16665.88, 0.16644],
+    [19555.11, 0.2886],
+    [24655.44, 0.16665],
+    [22113.65, 0.2001],
+    [28966.11, 0.13661],
+    [33154.24, 0.1774],
+    [36764.81, 0.266],
+    [32145.46, 0.18546],
+  ]);
+  // 24637.82
+  ```
+</details>
 
 
 
