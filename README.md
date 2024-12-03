@@ -139,13 +139,62 @@ calculateSum(
 
 ### Helpers
 
-- **`isBigNumber`** verifies if the value is a `BigNumber` Instance.
+<details>
+  <summary><code>isBigNumber</code></summary>
+  
+  Verifies if the value is a `BigNumber` Instance.
+  ```typescript
+  import { isBigNumber, getBigNumber } from 'bignumber-utils';
 
-- **`isNumber`** verifies if the value is a number in any of the supported types (`IBigNumberValue`).
+  isBigNumber(getBigNumber(123)); // true
+  isBigNumber(123); // false
+  isBigNumber('123'); // false
+  ```
+</details>
 
-- **`isInteger`** verifies if the value is an integer in any of the supported types (`IBigNumberValue`).
+<details>
+  <summary><code>isNumber</code></summary>
+  
+  Verifies if the value is a `number` in any of the supported types (`IBigNumberValue`).
+  ```typescript
+  import { isNumber, getBigNumber } from 'bignumber-utils';
 
-- **`isFloat`** verifies if the value is a float in any of the supported types (`IBigNumberValue`).
+  isNumber(NaN); // false
+  isNumber(getBigNumber(123)); // true
+  isNumber(123); // true
+  isNumber('123'); // true
+  ```
+</details>
+
+<details>
+  <summary><code>isInteger</code></summary>
+  
+  Verifies if the value is an `integer` in any of the supported types (`IBigNumberValue`).
+  ```typescript
+  import { isInteger, getBigNumber } from 'bignumber-utils';
+
+  isInteger(getBigNumber(123)); // true
+  isInteger(getBigNumber(123.551)); // false
+  isInteger(54122); // true
+  isInteger('241.44332'); // false
+  ```
+</details>
+
+<details>
+  <summary><code>isFloat</code></summary>
+  
+  Verifies if the value is a `float` in any of the supported types (`IBigNumberValue`).
+  ```typescript
+  import { isInteger, getBigNumber } from 'bignumber-utils';
+
+  isFloat(getBigNumber(123)); // false
+  isFloat(getBigNumber(123.551)); // true
+  isFloat(54122); // false
+  isFloat('241.44332'); // true
+  ```
+</details>
+
+
 
 
 
