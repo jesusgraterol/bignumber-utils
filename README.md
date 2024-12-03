@@ -58,7 +58,7 @@ calculateSum(
 
 processValue(
   getBigNumber(14513.622145123884031).dividedBy(655.1232), 
-  { decimalPlaces: 18, type:'bignumber' }
+  { decimalPlaces: 18, type: 'bignumber' }
 );
 // BigNumber(22.154034760368558158)
 ```
