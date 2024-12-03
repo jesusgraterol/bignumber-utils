@@ -56,9 +56,9 @@ calculateSum([1, 86, '55', 46.33, '47.55', getBigNumber(8041.663321), 485, '99.1
 
 processValue(
   getBigNumber(14513.622145123884031).dividedBy(655.1232), 
-  { decimalPlaces: 18, type:'string' }
+  { decimalPlaces: 18, type:'bignumber' }
 );
-// '22.154034760368558158'
+// BigNumber(22.154034760368558158)
 ```
 
 
