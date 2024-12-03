@@ -364,11 +364,6 @@ processValue(
 </details>
 
 
-
-
-
-<br/>
-
 ### BigNumber API
 
 Since this library is built on top of `bignumber.js`, whenever you invoke `getBigNumber(value)` or `buildNumber(value, { buildType: 'bignumber' })` you can make use of any method within the BigNumber Instance. 
