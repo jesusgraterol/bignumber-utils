@@ -343,7 +343,7 @@ processValue(
   
   Calculates the weighted average trade price when a position can have several entries at different prices for different amounts. If the array is empty, it returns 0. 
   
-  Important: the trades' tuples must follow: [price, amount].
+  Important: the trades' tuples must follow: `[price, amount]`.
   ```typescript
   import { calculateWeightedEntry } from 'bignumber-utils';
 
