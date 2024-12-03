@@ -1,6 +1,6 @@
 {
   "name": "bignumber-utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The bignumber-utils package empowers developers to effortlessly perform accurate and reliable decimal and non-decimal arithmetic in JavaScript, leveraging the robust foundation of the bignumber.js library.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -36,16 +36,16 @@
   },
   "homepage": "https://github.com/jesusgraterol/bignumber-utils#readme",
   "devDependencies": {
-    "@types/node": "^20.14.2",
-    "@typescript-eslint/eslint-plugin": "^7.12.0",
-    "@typescript-eslint/parser": "^7.12.0",
+    "@types/node": "^20.17.9",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
-    "ts-lib-builder": "^1.0.3",
-    "typescript": "^5.4.5",
+    "ts-lib-builder": "^1.0.5",
+    "typescript": "^5.7.2",
     "vitest": "^1.6.0"
   },
   "dependencies": {
     "bignumber.js": "^9.1.2",
-    "error-message-utils": "^1.1.0"
+    "error-message-utils": "^1.1.2"
   }
 }
