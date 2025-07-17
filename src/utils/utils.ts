@@ -11,9 +11,6 @@ import {
 import { ERRORS } from '../shared/errors.js';
 import { validateDecimalPlaces } from '../validations/validations.js';
 
-
-
-
 /* ************************************************************************************************
  *                                         IMPLEMENTATION                                         *
  ************************************************************************************************ */
@@ -29,11 +26,17 @@ import { validateDecimalPlaces } from '../validations/validations.js';
 const buildInvalidValueErrorMessage = (value: any, error?: any): string => {
   try {
     return error
-      ? encodeError(`BigNumber could not be instantiated with: ${value} | ${extractMessage(error)}`, ERRORS.INVALID_VALUE)
+      ? encodeError(
+          `BigNumber could not be instantiated with: ${value} | ${extractMessage(error)}`,
+          ERRORS.INVALID_VALUE,
+        )
       : encodeError(`BigNumber could not be instantiated with: ${value}.`, ERRORS.INVALID_VALUE);
   } catch (e) {
     return error
-      ? encodeError(`BigNumber could not be instantiated with: UNKNOWN | ${extractMessage(error)}`, ERRORS.INVALID_VALUE)
+      ? encodeError(
+          `BigNumber could not be instantiated with: UNKNOWN | ${extractMessage(error)}`,
+          ERRORS.INVALID_VALUE,
+        )
       : encodeError('BigNumber could not be instantiated with: UNKNOWN.', ERRORS.INVALID_VALUE);
   }
 };
@@ -100,7 +103,9 @@ const __getRoundingMode = (name: IBigNumberRoundingModeName): IBigNumberRounding
     case 'ROUND_HALF_FLOOR':
       return 8;
     default:
-      throw new Error(encodeError(`The rounding mode '${name}' is invalid.`, ERRORS.INVALID_ROUNDING_MODE));
+      throw new Error(
+        encodeError(`The rounding mode '${name}' is invalid.`, ERRORS.INVALID_ROUNDING_MODE),
+      );
   }
 };
 
@@ -139,7 +144,9 @@ const convertBigNumberToType = <T extends IType>(
     case 'bignumber':
       return value as IBigNumberToType<T>;
     default:
-      throw new Error(encodeError(`The buildType '${type}' is invalid for '${value}'.`, ERRORS.INVALID_TYPE));
+      throw new Error(
+        encodeError(`The buildType '${type}' is invalid for '${value}'.`, ERRORS.INVALID_TYPE),
+      );
   }
 };
 
@@ -164,22 +171,17 @@ const buildFormatConfig = (config?: Partial<IBigNumberFormat>): IBigNumberFormat
  * @param direction
  * @returns (a: IBigNumber, b: IBigNumber): number
  */
-const sortBigNumbers = (direction: 'asc' | 'desc') => (
-  a: IBigNumber,
-  b: IBigNumber,
-): number => {
-  if (a.isLessThan(b)) {
-    return direction === 'asc' ? -1 : 1;
-  }
-  if (a.isGreaterThan(b)) {
-    return direction === 'asc' ? 1 : -1;
-  }
-  return 0;
-};
-
-
-
-
+const sortBigNumbers =
+  (direction: 'asc' | 'desc') =>
+  (a: IBigNumber, b: IBigNumber): number => {
+    if (a.isLessThan(b)) {
+      return direction === 'asc' ? -1 : 1;
+    }
+    if (a.isGreaterThan(b)) {
+      return direction === 'asc' ? 1 : -1;
+    }
+    return 0;
+  };
 
 /* ************************************************************************************************
  *                                         MODULE EXPORTS                                         *

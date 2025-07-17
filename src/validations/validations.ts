@@ -14,7 +14,12 @@ import { ERRORS } from '../shared/errors.js';
  */
 const validateDecimalPlaces = (decimalPlaces: number): void => {
   if (typeof decimalPlaces !== 'number' || decimalPlaces < 0 || decimalPlaces > 100) {
-    throw new Error(encodeError(`The decimalPlaces '${decimalPlaces}' must be a number ranging 0 - 100.`, ERRORS.INVALID_DECIMAL_PLACES));
+    throw new Error(
+      encodeError(
+        `The decimalPlaces '${decimalPlaces}' must be a number ranging 0 - 100.`,
+        ERRORS.INVALID_DECIMAL_PLACES,
+      ),
+    );
   }
 };
 
@@ -27,7 +32,12 @@ const validateDecimalPlaces = (decimalPlaces: number): void => {
  */
 const validateValuesArray = (values: any[], calculationName: string): void => {
   if (!Array.isArray(values)) {
-    throw new Error(encodeError(`Cannot run ${calculationName} on an invalid sequence of BigNumber Values. Received: ${values}`, ERRORS.INVALID_VALUES_ARRAY));
+    throw new Error(
+      encodeError(
+        `Cannot run ${calculationName} on an invalid sequence of BigNumber Values. Received: ${values}`,
+        ERRORS.INVALID_VALUES_ARRAY,
+      ),
+    );
   }
 };
 
@@ -40,15 +50,21 @@ const validateValuesArray = (values: any[], calculationName: string): void => {
  */
 const validatePositiveValue = (value: IBigNumber, allowZero?: boolean) => {
   if (allowZero && value.isLessThan(0)) {
-    throw new Error(encodeError(`The value '${value}' must be greater than or equal to 0.`, ERRORS.NEGATIVE_VALUE_NOT_ALLOWED));
+    throw new Error(
+      encodeError(
+        `The value '${value}' must be greater than or equal to 0.`,
+        ERRORS.NEGATIVE_VALUE_NOT_ALLOWED,
+      ),
+    );
   } else if (!allowZero && value.isLessThanOrEqualTo(0)) {
-    throw new Error(encodeError(`The value '${value}' must be greater than 0.`, ERRORS.NEGATIVE_VALUE_NOT_ALLOWED));
+    throw new Error(
+      encodeError(
+        `The value '${value}' must be greater than 0.`,
+        ERRORS.NEGATIVE_VALUE_NOT_ALLOWED,
+      ),
+    );
   }
 };
-
-
-
-
 
 /* ************************************************************************************************
  *                                         MODULE EXPORTS                                         *

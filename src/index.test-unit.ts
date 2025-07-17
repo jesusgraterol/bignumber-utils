@@ -30,21 +30,50 @@ import {
 
 // valid and invalid numeric values
 const valid = [
-  -854.11, 100.54, 154124564.655, 100.00,
-  '-4561.551', '100.54', '9845418.455561', '100.00', '100.',
-  BigNumber(-854.11), BigNumber(100.54), BigNumber('9845418.455561'), BigNumber('-4561.551'),
-  0, -0, Infinity, -Infinity,
+  -854.11,
+  100.54,
+  154124564.655,
+  100.0,
+  '-4561.551',
+  '100.54',
+  '9845418.455561',
+  '100.00',
+  '100.',
+  BigNumber(-854.11),
+  BigNumber(100.54),
+  BigNumber('9845418.455561'),
+  BigNumber('-4561.551'),
+  0,
+  -0,
+  Infinity,
+  -Infinity,
 ];
 const invalid = [
-  {}, [], [1, 2, 3], undefined, null, NaN, '', new Date(), Buffer.from('Hello!'), true, false,
-  Symbol('Hello'), Symbol.for('Hello'), new Set([1, 2, 3]), new Map([['dog', 'woof'], ['asd', 'true']]),
-  BigNumber(NaN), BigNumber('123,123.11'), BigNumber(undefined!), BigNumber(null!),
-  '00.00.00', '123123.1231.555,28',
+  {},
+  [],
+  [1, 2, 3],
+  undefined,
+  null,
+  NaN,
+  '',
+  new Date(),
+  Buffer.from('Hello!'),
+  true,
+  false,
+  Symbol('Hello'),
+  Symbol.for('Hello'),
+  new Set([1, 2, 3]),
+  new Map([
+    ['dog', 'woof'],
+    ['asd', 'true'],
+  ]),
+  BigNumber(NaN),
+  BigNumber('123,123.11'),
+  BigNumber(undefined!),
+  BigNumber(null!),
+  '00.00.00',
+  '123123.1231.555,28',
 ];
-
-
-
-
 
 /* ************************************************************************************************
  *                                             TESTS                                              *
@@ -137,8 +166,6 @@ describe('Value Procesors', () => {
     });
   });
 
-
-
   describe('processValue', () => {
     test('can process any valid value w/ default config', () => {
       const val = processValue(100.585);
@@ -154,7 +181,9 @@ describe('Value Procesors', () => {
 
     test('can specify the number of decimal places for the processing output', () => {
       expect(processValue('512.1111', { decimalPlaces: 2, type: 'string' })).toBe('512.11');
-      expect(processValue('512.1111111111111111111', { decimalPlaces: 18, type: 'string' })).toBe('512.111111111111111111');
+      expect(processValue('512.1111111111111111111', { decimalPlaces: 18, type: 'string' })).toBe(
+        '512.111111111111111111',
+      );
       expect(processValue('512.855', { decimalPlaces: 2, type: 'string' })).toBe('512.86');
       expect(processValue('512.855', { decimalPlaces: 15, type: 'string' })).toBe('512.855');
     });
@@ -179,23 +208,29 @@ describe('Value Procesors', () => {
     });
 
     test('throws if an invalid rounding mode is provided', () => {
-      expect(() => processValue(1, { roundingMode: <IBigNumberRoundingModeName>'invalid' })).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
+      expect(() =>
+        processValue(1, { roundingMode: <IBigNumberRoundingModeName>'invalid' }),
+      ).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
     });
 
     test('throws if an invalid number of decimal places is provided', () => {
-      expect(
-        () => processValue(1, { decimalPlaces: -5 }),
-      ).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
+      expect(() => processValue(1, { decimalPlaces: -5 })).toThrowError(
+        ERRORS.INVALID_DECIMAL_PLACES,
+      );
     });
   });
-
-
 
   describe('prettifyValue', () => {
     test('can prettify a number with any number of decimals and any rounding mode', () => {
       expect(prettifyValue(1.555, { processing: { roundingMode: 'ROUND_HALF_UP' } })).toBe('1.56');
-      expect(prettifyValue(1.555, { processing: { roundingMode: 'ROUND_HALF_DOWN' } })).toBe('1.55');
-      expect(prettifyValue(105142.821546985, { processing: { decimalPlaces: 8, roundingMode: 'ROUND_HALF_DOWN' } })).toBe('105,142.82154698');
+      expect(prettifyValue(1.555, { processing: { roundingMode: 'ROUND_HALF_DOWN' } })).toBe(
+        '1.55',
+      );
+      expect(
+        prettifyValue(105142.821546985, {
+          processing: { decimalPlaces: 8, roundingMode: 'ROUND_HALF_DOWN' },
+        }),
+      ).toBe('105,142.82154698');
     });
 
     test('can separate groups with any character', () => {
@@ -204,43 +239,57 @@ describe('Value Procesors', () => {
     });
 
     test('can use any character to separate thousands and decimals', () => {
-      expect(prettifyValue(15426525.84, { format: { groupSeparator: '.', decimalSeparator: ',' } })).toBe('15.426.525,84');
+      expect(
+        prettifyValue(15426525.84, { format: { groupSeparator: '.', decimalSeparator: ',' } }),
+      ).toBe('15.426.525,84');
     });
 
     test('can add a prefix to any number', () => {
       expect(prettifyValue(15426525.84, { format: { prefix: '$' } })).toBe('$15,426,525.84');
       expect(prettifyValue(15426525.84, { format: { prefix: 'USD ' } })).toBe('USD 15,426,525.84');
-      expect(prettifyValue(15426525.846545124, { processing: { decimalPlaces: 8 }, format: { prefix: 'BTC ' } })).toBe('BTC 15,426,525.84654512');
-      expect(prettifyValue('15426525.846545124846545124', { processing: { decimalPlaces: 18 }, format: { prefix: 'ETH ' } })).toBe('ETH 15,426,525.846545124846545124');
+      expect(
+        prettifyValue(15426525.846545124, {
+          processing: { decimalPlaces: 8 },
+          format: { prefix: 'BTC ' },
+        }),
+      ).toBe('BTC 15,426,525.84654512');
+      expect(
+        prettifyValue('15426525.846545124846545124', {
+          processing: { decimalPlaces: 18 },
+          format: { prefix: 'ETH ' },
+        }),
+      ).toBe('ETH 15,426,525.846545124846545124');
     });
 
     test('can add a suffix to any number', () => {
       expect(prettifyValue(15426525.84, { format: { suffix: '$' } })).toBe('15,426,525.84$');
       expect(prettifyValue(15426525.84, { format: { suffix: ' USD' } })).toBe('15,426,525.84 USD');
-      expect(prettifyValue(15426525.846545124, { processing: { decimalPlaces: 8 }, format: { suffix: ' BTC' } })).toBe('15,426,525.84654512 BTC');
-      expect(prettifyValue('15426525.846545124846545124', { processing: { decimalPlaces: 18 }, format: { suffix: ' ETH' } })).toBe('15,426,525.846545124846545124 ETH');
+      expect(
+        prettifyValue(15426525.846545124, {
+          processing: { decimalPlaces: 8 },
+          format: { suffix: ' BTC' },
+        }),
+      ).toBe('15,426,525.84654512 BTC');
+      expect(
+        prettifyValue('15426525.846545124846545124', {
+          processing: { decimalPlaces: 18 },
+          format: { suffix: ' ETH' },
+        }),
+      ).toBe('15,426,525.846545124846545124 ETH');
     });
   });
 });
 
-
-
-
-
 describe('Helpers', () => {
   describe('isBigNumber', () => {
     test('can identify when a value is a BigNumber Instance', () => {
-      [
-        getBigNumber(1), getBigNumber('123'), getBigNumber(BigNumber(1)),
-      ].forEach((val) => {
+      [getBigNumber(1), getBigNumber('123'), getBigNumber(BigNumber(1))].forEach((val) => {
         expect(isBigNumber(val)).toBe(true);
       });
     });
 
     test('can identify when a value is not a BigNumber Instance', () => {
-      [
-        112.55, '1234.55', new Date(), getBigNumber('123').toString(),
-      ].forEach((val) => {
+      [112.55, '1234.55', new Date(), getBigNumber('123').toString()].forEach((val) => {
         expect(isBigNumber(val)).toBe(false);
       });
     });
@@ -256,7 +305,6 @@ describe('Helpers', () => {
     });
   });
 
-
   describe('isInteger', () => {
     test('can determine if a value is an integer', () => {
       expect(isInteger(100)).toBe(true);
@@ -270,7 +318,6 @@ describe('Helpers', () => {
       expect(isInteger('1.01')).toBe(false);
     });
   });
-
 
   describe('isFloat', () => {
     test('can determine if a value is a float', () => {
@@ -287,10 +334,6 @@ describe('Helpers', () => {
   });
 });
 
-
-
-
-
 describe('Essential Calculations', () => {
   describe('calculateSum', () => {
     test('returns 0 if an empty list of values is provided', () => {
@@ -298,11 +341,26 @@ describe('Essential Calculations', () => {
     });
 
     test('can calculate the sum for any array of values', () => {
-      expect(calculateSum([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(8061);
+      expect(
+        calculateSum([
+          1,
+          86,
+          '55',
+          46.33,
+          '47.55',
+          BigNumber(8041.663321),
+          485,
+          '99.11',
+          BigNumber(-800.654),
+        ]),
+      ).toBe(8061);
       expect(calculateSum([100, 50, 99.11, 68.3])).toBe(317.41);
-      expect(calculateSum([
-        '0.286304850273819327', '0.00290532', '0.00251940040614675', '0.03506759540691015',
-      ], { decimalPlaces: 18, type: 'string' })).toBe('0.326797166086876227');
+      expect(
+        calculateSum(
+          ['0.286304850273819327', '0.00290532', '0.00251940040614675', '0.03506759540691015'],
+          { decimalPlaces: 18, type: 'string' },
+        ),
+      ).toBe('0.326797166086876227');
     });
 
     test('throws if an invalid array of values is provided', () => {
@@ -317,29 +375,40 @@ describe('Essential Calculations', () => {
     });
 
     test('throws if any of the values in the array is invalid', () => {
-      expect(() => calculateSum([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654), NaN])).toThrowError(ERRORS.INVALID_VALUE);
+      expect(() =>
+        calculateSum([
+          1,
+          86,
+          '55',
+          46.33,
+          '47.55',
+          BigNumber(8041.663321),
+          485,
+          '99.11',
+          BigNumber(-800.654),
+          NaN,
+        ]),
+      ).toThrowError(ERRORS.INVALID_VALUE);
     });
 
     test('throws if the decimal places are invalid', () => {
-      expect(
-        () => calculateSum([1, 86], { decimalPlaces: -1 }),
-      ).toThrowError(ERRORS.INVALID_DECIMAL_PLACES);
+      expect(() => calculateSum([1, 86], { decimalPlaces: -1 })).toThrowError(
+        ERRORS.INVALID_DECIMAL_PLACES,
+      );
     });
 
     test('throws if the processing output type is invalid', () => {
-      expect(
-        () => calculateSum([1, 86], { type: <IType>'invalid' }),
-      ).toThrowError(ERRORS.INVALID_TYPE);
+      expect(() => calculateSum([1, 86], { type: <IType>'invalid' })).toThrowError(
+        ERRORS.INVALID_TYPE,
+      );
     });
 
     test('throws if the rounding mode is invalid', () => {
-      expect(
-        () => calculateSum([1, 86], { roundingMode: <IBigNumberRoundingModeName>'invalid' }),
+      expect(() =>
+        calculateSum([1, 86], { roundingMode: <IBigNumberRoundingModeName>'invalid' }),
       ).toThrowError(ERRORS.INVALID_ROUNDING_MODE);
     });
   });
-
-
 
   describe('calculateMin', () => {
     test('returns 0 if an empty list of values is provided', () => {
@@ -352,11 +421,21 @@ describe('Essential Calculations', () => {
     });
 
     test('can identify the smallest value in an array of mixed types', () => {
-      expect(calculateMin([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(-800.65);
+      expect(
+        calculateMin([
+          1,
+          86,
+          '55',
+          46.33,
+          '47.55',
+          BigNumber(8041.663321),
+          485,
+          '99.11',
+          BigNumber(-800.654),
+        ]),
+      ).toBe(-800.65);
     });
   });
-
-
 
   describe('calculateMax', () => {
     test('returns 0 if an empty list of values is provided', () => {
@@ -369,11 +448,21 @@ describe('Essential Calculations', () => {
     });
 
     test('can identify the largest value in an array of mixed types', () => {
-      expect(calculateMax([1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654)])).toBe(8041.66);
+      expect(
+        calculateMax([
+          1,
+          86,
+          '55',
+          46.33,
+          '47.55',
+          BigNumber(8041.663321),
+          485,
+          '99.11',
+          BigNumber(-800.654),
+        ]),
+      ).toBe(8041.66);
     });
   });
-
-
 
   describe('calculateMean', () => {
     test('returns 0 if an empty list of values is provided', () => {
@@ -386,13 +475,21 @@ describe('Essential Calculations', () => {
     });
 
     test('can calculate the mean for a list comprised by values with mixed types', () => {
-      expect(calculateMean([
-        1, 86, '55', 46.33, '47.55', BigNumber(8041.663321), 485, '99.11', BigNumber(-800.654),
-      ])).toBe(895.67);
+      expect(
+        calculateMean([
+          1,
+          86,
+          '55',
+          46.33,
+          '47.55',
+          BigNumber(8041.663321),
+          485,
+          '99.11',
+          BigNumber(-800.654),
+        ]),
+      ).toBe(895.67);
     });
   });
-
-
 
   describe('calculateMedian', () => {
     test('returns 0 if an empty list of values is provided', () => {
@@ -406,32 +503,37 @@ describe('Essential Calculations', () => {
       expect(calculateMedian([1093, 987, 342, 654])).toBe(820.5);
       expect(calculateMedian([342, 654, 987, 1093, 2234, 6243, 7087, 20123])).toBe(1663.5);
       expect(calculateMedian([1093.55, 711.41, 987.13, 342, 654.99, 84.32, -55.99])).toBe(654.99);
-      expect(calculateMedian([
-        1093.55, 711.41, 987.13, 342, 654.99, 84.32, -55.99, 25132.33,
-      ])).toBe(683.2);
+      expect(calculateMedian([1093.55, 711.41, 987.13, 342, 654.99, 84.32, -55.99, 25132.33])).toBe(
+        683.2,
+      );
     });
 
     test('can calculate the mean for a list comprised by values with mixed types', () => {
-      expect(calculateMedian([
-        1093.55, '711.41', BigNumber(987.13), 342, '654.99', BigNumber(84.32), '-55.99', 25132.33,
-      ])).toBe(683.2);
+      expect(
+        calculateMedian([
+          1093.55,
+          '711.41',
+          BigNumber(987.13),
+          342,
+          '654.99',
+          BigNumber(84.32),
+          '-55.99',
+          25132.33,
+        ]),
+      ).toBe(683.2);
     });
   });
 });
 
-
-
-
-
 describe('Percentage Calculations', () => {
   describe('calculatePercentageChange', () => {
     test('throws if the oldValue is less than or equal to 0', () => {
-      expect(
-        () => calculatePercentageChange(0, 100),
-      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
-      expect(
-        () => calculatePercentageChange(-10, 100),
-      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(() => calculatePercentageChange(0, 100)).toThrowError(
+        ERRORS.NEGATIVE_VALUE_NOT_ALLOWED,
+      );
+      expect(() => calculatePercentageChange(-10, 100)).toThrowError(
+        ERRORS.NEGATIVE_VALUE_NOT_ALLOWED,
+      );
     });
 
     test('can calculate the % change when a value has not changed', () => {
@@ -446,28 +548,26 @@ describe('Percentage Calculations', () => {
       expect(calculatePercentageChange(1635.661, 1639.55, { decimalPlaces: 6 })).toBe(0.237763);
       expect(calculatePercentageChange(4.66, 4.67, { decimalPlaces: 6 })).toBe(0.214592);
       expect(
-        calculatePercentageChange(
-          '5412151.54561245487451',
-          '78998154125.6632113',
-          { decimalPlaces: 10, type: 'string' },
-        ),
+        calculatePercentageChange('5412151.54561245487451', '78998154125.6632113', {
+          decimalPlaces: 10,
+          type: 'string',
+        }),
       ).toBe('1459544.1629522691');
     });
 
     test('can calculate the % change of a value decrease', () => {
       expect(calculatePercentageChange(150, 100, { decimalPlaces: 4 })).toBe(-33.3333);
-      expect(
-        calculatePercentageChange(554366.123124, 1555.6544122, { decimalPlaces: 4 }),
-      ).toBe(-99.7194);
+      expect(calculatePercentageChange(554366.123124, 1555.6544122, { decimalPlaces: 4 })).toBe(
+        -99.7194,
+      );
       expect(calculatePercentageChange(1225.446, 745.655, { decimalPlaces: 4 })).toBe(-39.1524);
       expect(calculatePercentageChange(1639.55, 1635.661, { decimalPlaces: 6 })).toBe(-0.237199);
       expect(calculatePercentageChange(4.67, 4.66, { decimalPlaces: 6 })).toBe(-0.214133);
       expect(
-        calculatePercentageChange(
-          '78998154125.6632113',
-          '5412151.54561245487451',
-          { decimalPlaces: 4, type: 'string' },
-        ),
+        calculatePercentageChange('78998154125.6632113', '5412151.54561245487451', {
+          decimalPlaces: 4,
+          type: 'string',
+        }),
       ).toBe('-99.9931');
     });
 
@@ -476,7 +576,6 @@ describe('Percentage Calculations', () => {
       expect(calculatePercentageChange(1, -1)).toBe(-100);
     });
   });
-
 
   describe('adjustByPercentage', () => {
     test('throws if the value is less than or equal to 0', () => {
@@ -512,21 +611,20 @@ describe('Percentage Calculations', () => {
     });
   });
 
-
   describe('calculatePercentageRepresentation', () => {
     test('throws if the value or the total are less than or equal to 0', () => {
-      expect(
-        () => calculatePercentageRepresentation(-1, 100),
-      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
-      expect(
-        () => calculatePercentageRepresentation(-10, 100),
-      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
-      expect(
-        () => calculatePercentageRepresentation(100, 0),
-      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
-      expect(
-        () => calculatePercentageRepresentation(100, -10),
-      ).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
+      expect(() => calculatePercentageRepresentation(-1, 100)).toThrowError(
+        ERRORS.NEGATIVE_VALUE_NOT_ALLOWED,
+      );
+      expect(() => calculatePercentageRepresentation(-10, 100)).toThrowError(
+        ERRORS.NEGATIVE_VALUE_NOT_ALLOWED,
+      );
+      expect(() => calculatePercentageRepresentation(100, 0)).toThrowError(
+        ERRORS.NEGATIVE_VALUE_NOT_ALLOWED,
+      );
+      expect(() => calculatePercentageRepresentation(100, -10)).toThrowError(
+        ERRORS.NEGATIVE_VALUE_NOT_ALLOWED,
+      );
     });
 
     test('can calculate the percentage representation of a value', () => {
@@ -545,13 +643,9 @@ describe('Percentage Calculations', () => {
   });
 });
 
-
-
-
-
 describe('Financial Calculations', () => {
   describe('calculateExchange', () => {
-    test('throws if the value or the rate aren\'t positive values', () => {
+    test("throws if the value or the rate aren't positive values", () => {
       expect(() => calculateExchange(0, 1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
       expect(() => calculateExchange(-1, 1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
       expect(() => calculateExchange(1, 0)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
@@ -563,18 +657,18 @@ describe('Financial Calculations', () => {
       expect(calculateExchange(158794.2755, 64813.99)).toBe(2.45);
       expect(calculateExchange(0.6481399, 64813.99, { decimalPlaces: 5 })).toBe(0.00001);
       expect(calculateExchange(132798.00856, 85.64, { decimalPlaces: 3 })).toBe(1550.654);
-      expect(calculateExchange(132280620.06660, 85.64, { decimalPlaces: 3 })).toBe(1544612.565);
+      expect(calculateExchange(132280620.0666, 85.64, { decimalPlaces: 3 })).toBe(1544612.565);
       expect(calculateExchange(2032794.0782869, 0.0001691)).toBe(12021254159);
       expect(calculateExchange(0.0001691, 0.0001691)).toBe(1);
       expect(calculateExchange(0.08970286, 0.05409, { decimalPlaces: 4 })).toBe(1.6584);
-      expect(calculateExchange(3761.50243950, 0.05409)).toBe(69541.55);
+      expect(calculateExchange(3761.5024395, 0.05409)).toBe(69541.55);
       expect(calculateExchange(8476.59012425, 0.00001003)).toBe(845123641.5);
       expect(calculateExchange('6584205701.94816543', 0.00001003)).toBe(656451216545181);
     });
   });
 
   describe('calculateExchangeFee', () => {
-    test('throws if the value or the fee aren\'t positive values', () => {
+    test("throws if the value or the fee aren't positive values", () => {
       expect(() => calculateExchangeFee(0, 0.1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
       expect(() => calculateExchangeFee(-1, 0.1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
       expect(() => calculateExchangeFee(1, -0.1)).toThrowError(ERRORS.NEGATIVE_VALUE_NOT_ALLOWED);
@@ -600,26 +694,30 @@ describe('Financial Calculations', () => {
     });
 
     test('can calculate the weighted entry price for a position (1)', () => {
-      expect(calculateWeightedEntry([
-        [27340.15, 0.01],
-        [22077.21, 0.03],
-        [21175.76, 0.08],
-      ])).toBe(21914.82);
+      expect(
+        calculateWeightedEntry([
+          [27340.15, 0.01],
+          [22077.21, 0.03],
+          [21175.76, 0.08],
+        ]),
+      ).toBe(21914.82);
     });
 
     test('can calculate the weighted entry price for a position (2)', () => {
-      expect(calculateWeightedEntry([
-        [15699.65, 0.13562],
-        [15500.32, 0.24210],
-        [16665.88, 0.16644],
-        [19555.11, 0.2886],
-        [24655.44, 0.16665],
-        [22113.65, 0.2001],
-        [28966.11, 0.13661],
-        [33154.24, 0.1774],
-        [36764.81, 0.266],
-        [32145.46, 0.18546],
-      ])).toBe(24637.82);
+      expect(
+        calculateWeightedEntry([
+          [15699.65, 0.13562],
+          [15500.32, 0.2421],
+          [16665.88, 0.16644],
+          [19555.11, 0.2886],
+          [24655.44, 0.16665],
+          [22113.65, 0.2001],
+          [28966.11, 0.13661],
+          [33154.24, 0.1774],
+          [36764.81, 0.266],
+          [32145.46, 0.18546],
+        ]),
+      ).toBe(24637.82);
     });
 
     test('throws if an invalid array of values is provided', () => {

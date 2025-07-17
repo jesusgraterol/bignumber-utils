@@ -1,12 +1,12 @@
 {
   "name": "bignumber-utils",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The bignumber-utils package empowers developers to effortlessly perform accurate and reliable decimal and non-decimal arithmetic in JavaScript, leveraging the robust foundation of the bignumber.js library.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "start": "ts-lib-builder --tsconfig=tsconfig.build.json",
+    "build": "ts-lib-builder --tsconfig=tsconfig.build.json",
     "test": "echo \"Error: tests are executed with  npm run test:unit\" && exit 1",
     "test:unit": "vitest run --config vitest.test-unit.config.ts",
     "watch-test:unit": "vitest --config vitest.test-unit.config.ts",
@@ -36,16 +36,18 @@
   },
   "homepage": "https://github.com/jesusgraterol/bignumber-utils#readme",
   "devDependencies": {
-    "@types/node": "^20.17.9",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint-config-airbnb-typescript": "^18.0.0",
-    "ts-lib-builder": "^1.0.5",
-    "typescript": "^5.7.2",
-    "vitest": "^1.6.0"
+    "@types/node": "20.17.9",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "eslint-config-airbnb-typescript": "18.0.0",
+    "eslint-config-prettier": "10.1.5",
+    "prettier": "3.6.2",
+    "ts-lib-builder": "1.0.7",
+    "typescript": "5.7.2",
+    "vitest": "3.2.4"
   },
   "dependencies": {
-    "bignumber.js": "^9.1.2",
-    "error-message-utils": "^1.1.2"
+    "bignumber.js": "9.1.2",
+    "error-message-utils": "1.1.5"
   }
 }
