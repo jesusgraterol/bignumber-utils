@@ -30,8 +30,16 @@ type IBigNumber = BigNumber;
  * - https://mikemcl.github.io/bignumber.js/#rounding-mode
  * - https://mikemcl.github.io/bignumber.js/#constructor-properties
  */
-type IBigNumberRoundingModeName = 'ROUND_UP' | 'ROUND_DOWN' | 'ROUND_CEIL' | 'ROUND_FLOOR'
-| 'ROUND_HALF_UP' | 'ROUND_HALF_DOWN' | 'ROUND_HALF_EVEN' | 'ROUND_HALF_CEIL' | 'ROUND_HALF_FLOOR';
+type IBigNumberRoundingModeName =
+  | 'ROUND_UP'
+  | 'ROUND_DOWN'
+  | 'ROUND_CEIL'
+  | 'ROUND_FLOOR'
+  | 'ROUND_HALF_UP'
+  | 'ROUND_HALF_DOWN'
+  | 'ROUND_HALF_EVEN'
+  | 'ROUND_HALF_CEIL'
+  | 'ROUND_HALF_FLOOR';
 type IBigNumberRoundingMode = BigNumber.RoundingMode;
 
 /**
@@ -58,8 +66,6 @@ type IBigNumberValue = BigNumber.Value;
  * - https://mikemcl.github.io/bignumber.js/#toFor
  */
 type IBigNumberFormat = Required<BigNumber.Format>;
-
-
 
 /* ************************************************************************************************
  *                                             TYPES                                              *
@@ -91,26 +97,26 @@ type IConfig = {
  * BigNumber to Type
  * A generic type helper used when converting a BigNumber Instance into a custom type.
  */
-type IBigNumberToType<T> =
-  T extends 'string' ? string
-    : T extends 'number' ? number
-      : T extends 'bignumber' ? IBigNumber
-        : never;
+type IBigNumberToType<T> = T extends 'string'
+  ? string
+  : T extends 'number'
+    ? number
+    : T extends 'bignumber'
+      ? IBigNumber
+      : never;
 
 /**
  * Output
  * A generic type that sets the return type for the function that processes value based on the
  * provided configuration (type prop).
  */
-type IOutput<T> =
-  T extends { type: 'string' } ? string
-    : T extends { type: 'number' } ? number
-      : T extends { type: 'bignumber' } ? IBigNumber
-        : number;
-
-
-
-
+type IOutput<T> = T extends { type: 'string' }
+  ? string
+  : T extends { type: 'number' }
+    ? number
+    : T extends { type: 'bignumber' }
+      ? IBigNumber
+      : number;
 
 /* ************************************************************************************************
  *                                         MODULE EXPORTS                                         *

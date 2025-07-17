@@ -29,12 +29,8 @@ import {
  */
 BigNumber.config({
   // the exponent value(s) at which toString returns exponential notation.
-  EXPONENTIAL_AT: 1e+9, // almost never return exponential notation
+  EXPONENTIAL_AT: 1e9, // almost never return exponential notation
 });
-
-
-
-
 
 /* ************************************************************************************************
  *                                        VALUE PROCESSORS                                        *
@@ -103,16 +99,13 @@ const processValue = <T extends Partial<IConfig>>(
  */
 const prettifyValue = (
   value: IBigNumberValue,
-  config: { processing?: Partial<IConfig>, format?: Partial<IBigNumberFormat> } = {},
+  config: { processing?: Partial<IConfig>; format?: Partial<IBigNumberFormat> } = {},
 ): string => {
   try {
-    return processValue(
-      value,
-      {
-        ...config.processing,
-        type: 'bignumber',
-      },
-    ).toFormat(buildFormatConfig(config.format));
+    return processValue(value, {
+      ...config.processing,
+      type: 'bignumber',
+    }).toFormat(buildFormatConfig(config.format));
   } catch (e) {
     // if it is a known error, just rethrow it
     if (isEncodedError(e)) {
@@ -121,10 +114,6 @@ const prettifyValue = (
     throw new Error(encodeError(extractMessage(e), ERRORS.INVALID_BIGNUMBER_FORMAT));
   }
 };
-
-
-
-
 
 /* ************************************************************************************************
  *                                            HELPERS                                             *
@@ -178,10 +167,6 @@ const isFloat = (value: any): boolean => {
     return false;
   }
 };
-
-
-
-
 
 /* ************************************************************************************************
  *                                     ESSENTIAL CALCULATIONS                                     *
@@ -300,19 +285,14 @@ const calculateMedian = <T extends Partial<IConfig>>(
 
     // if the total number of items is an uneven number, just pick the middle one. Otherwise,
     // calculate the mean of both middle values
-    const res = values.length % 2
-      ? bnValues[half]
-      : bnValues[half - 1].plus(bnValues[half]).dividedBy(2);
+    const res =
+      values.length % 2 ? bnValues[half] : bnValues[half - 1].plus(bnValues[half]).dividedBy(2);
 
     // finally, return the median
     return processValue(res, config);
   }
   return processValue(0, config);
 };
-
-
-
-
 
 /* ************************************************************************************************
  *                                     PERCENTAGE CALCULATIONS                                    *
@@ -349,18 +329,11 @@ const calculatePercentageChange = <T extends Partial<IConfig>>(
 
   // calculate the change experienced by the value based on the direction
   if (newValueBN.isGreaterThan(oldValueBN)) {
-    change = newValueBN
-      .minus(oldValueBN)
-      .dividedBy(oldValueBN)
-      .times(100);
+    change = newValueBN.minus(oldValueBN).dividedBy(oldValueBN).times(100);
   } else if (oldValueBN.isGreaterThan(newValueBN)) {
     // the max decrease supported by this func is 100%
     change = newValueBN.isGreaterThan(0)
-      ? oldValueBN
-        .minus(newValueBN)
-        .dividedBy(oldValueBN)
-        .times(100)
-        .negated()
+      ? oldValueBN.minus(newValueBN).dividedBy(oldValueBN).times(100).negated()
       : getBigNumber(-100);
   } else {
     change = getBigNumber(0);
@@ -399,18 +372,10 @@ const adjustByPercentage = <T extends Partial<IConfig>>(
 
   // perform the adjustment based on the percentage and direction
   if (percentageBN.isGreaterThan(0)) {
-    adjusted = percentageBN
-      .dividedBy(100)
-      .plus(1)
-      .times(valueBN);
+    adjusted = percentageBN.dividedBy(100).plus(1).times(valueBN);
   } else if (percentageBN.isLessThan(0)) {
     adjusted = percentageBN.isGreaterThan(-100)
-      ? percentageBN
-        .times(-1)
-        .dividedBy(100)
-        .minus(1)
-        .times(valueBN)
-        .times(-1)
+      ? percentageBN.times(-1).dividedBy(100).minus(1).times(valueBN).times(-1)
       : getBigNumber(0);
   } else {
     adjusted = valueBN;
@@ -447,10 +412,6 @@ const calculatePercentageRepresentation = <T extends Partial<IConfig>>(
   // return the representation
   return processValue(valueBN.times(100).dividedBy(totalBN), config);
 };
-
-
-
-
 
 /* ************************************************************************************************
  *                                     FINANCIAL CALCULATIONS                                     *
@@ -554,10 +515,6 @@ const calculateWeightedEntry = <T extends Partial<IConfig>>(
   }
   return processValue(0, config);
 };
-
-
-
-
 
 /* ************************************************************************************************
  *                                         MODULE EXPORTS                                         *
