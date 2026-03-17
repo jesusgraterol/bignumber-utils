@@ -597,7 +597,7 @@ The list of methods can be found [here](https://mikemcl.github.io/bignumber.js/)
 ## Running the Tests
 
 ```bash
-npm run test:unit
+npm run test
 ```
 
 

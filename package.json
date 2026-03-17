@@ -1,13 +1,13 @@
 {
   "name": "bignumber-utils",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "The bignumber-utils package empowers developers to effortlessly perform accurate and reliable decimal and non-decimal arithmetic in JavaScript, leveraging the robust foundation of the bignumber.js library.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "ts-lib-builder --tsconfig=tsconfig.build.json",
-    "test": "echo \"Error: tests are executed with  npm run test:unit\" && exit 1",
+    "test": "npm run test:unit",
     "test:unit": "vitest run --config vitest.test-unit.config.ts",
     "watch-test:unit": "vitest --config vitest.test-unit.config.ts",
     "test:bench": "vitest bench"
@@ -42,12 +42,12 @@
     "eslint-config-airbnb-typescript": "18.0.0",
     "eslint-config-prettier": "10.1.5",
     "prettier": "3.6.2",
-    "ts-lib-builder": "1.0.7",
+    "ts-lib-builder": "1.0.8",
     "typescript": "5.7.2",
     "vitest": "3.2.4"
   },
   "dependencies": {
     "bignumber.js": "9.1.2",
-    "error-message-utils": "1.1.5"
+    "error-message-utils": "1.1.6"
   }
 }
